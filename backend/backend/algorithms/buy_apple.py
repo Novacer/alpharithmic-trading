@@ -1,6 +1,8 @@
 from zipline.api import order, record, symbol
 from zipline import run_algorithm
 import pandas as pd
+import matplotlib.pyplot as plt
+import mpld3 as mp
 
 
 def initialize(context):
@@ -23,5 +25,13 @@ def run():
 
 
 data = run()
+data.dropna(inplace=True)
 
+print(data.head())
+
+plt.plot(data['benchmark_period_return'])
+
+fig = plt.gcf()
+
+print(mp.fig_to_html(fig))
 
