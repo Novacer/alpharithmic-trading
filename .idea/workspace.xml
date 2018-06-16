@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6793e2ab-b005-40af-a311-d4b01687bc56" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/api/example_endpoint.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/backend/api/hello_world.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/api/hello_world.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/backend/api/hello_world.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/backend/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/backend/urls.py" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -19,11 +18,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="hello_world.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="hello_world.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/backend/backend/api/hello_world.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="80">
-              <caret line="4" column="11" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="16" />
+            <state relative-caret-position="200">
+              <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
               <folding>
                 <element signature="e#0#40#0" expanded="true" />
               </folding>
@@ -31,20 +30,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/backend/backend/settings.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="40" column="17" selection-start-line="40" selection-start-column="17" selection-end-line="40" selection-end-column="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/backend/backend/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="366">
-              <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+            <state relative-caret-position="152">
+              <caret line="22" column="59" selection-start-line="22" selection-start-column="59" selection-end-line="22" selection-end-column="59" />
               <folding>
                 <element signature="e#631#663#0" expanded="true" />
               </folding>
@@ -84,6 +74,7 @@
         <option value="$PROJECT_DIR$/backend/backend/settings.py" />
         <option value="$PROJECT_DIR$/backend/backend/api/example_endpoint.py" />
         <option value="$PROJECT_DIR$/backend/backend/urls.py" />
+        <option value="$PROJECT_DIR$/backend/backend/api/hello_world.py" />
       </list>
     </option>
   </component>
@@ -246,12 +237,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1529168552742</updated>
-      <workItem from="1529168557067" duration="4769000" />
+      <workItem from="1529168557067" duration="5206000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4769000" />
+    <option name="totallyTimeSpent" value="5206000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1295" height="697" extended-state="6" />
@@ -266,7 +257,7 @@
       <window_info anchor="right" id="Maven Projects" weight="0.32955465" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.07308378" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3939394" />
       <window_info anchor="bottom" id="Terminal" weight="0.5151515" />
       <window_info id="Capture Tool" />
       <window_info id="Designer" />
@@ -306,9 +297,6 @@
     <entry file="file://$PROJECT_DIR$/backend/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/backend/manage.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/backend/backend/api/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="140">
@@ -333,22 +321,25 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/backend/backend/api/hello_world.py">
+    <entry file="file://$PROJECT_DIR$/backend/manage.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/backend/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="4" column="11" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="16" />
+        <state relative-caret-position="152">
+          <caret line="22" column="59" selection-start-line="22" selection-start-column="59" selection-end-line="22" selection-end-column="59" />
           <folding>
-            <element signature="e#0#40#0" expanded="true" />
+            <element signature="e#631#663#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/backend/backend/urls.py">
+    <entry file="file://$PROJECT_DIR$/backend/backend/api/hello_world.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="366">
-          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+        <state relative-caret-position="200">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
           <folding>
-            <element signature="e#631#663#0" expanded="true" />
+            <element signature="e#0#40#0" expanded="true" />
           </folding>
         </state>
       </provider>
