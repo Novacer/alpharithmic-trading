@@ -16,9 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .api import hello_world
+from .api import algo_results
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/get/hello/', hello_world.HelloWorld.as_view()),
-    path('api/post/hello', hello_world.PostWorld.as_view())
+    path('api/post/hello', hello_world.PostWorld.as_view()),
+    path('api/post/buy-apple', algo_results.BuyAppleResult.as_view())
 ]
