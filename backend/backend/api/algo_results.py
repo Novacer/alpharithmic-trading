@@ -23,12 +23,13 @@ class BuyAppleResult(APIView):
 
         beta_fig = plt.gcf()
 
-        atb_html = mp.fig_to_html(algo_to_bench_fig)
-        beta_html = mp.fig_to_html(beta_fig)
+        atb_html = mp.fig_to_html(algo_to_bench_fig, no_extras=True, template_type='simple')
+        beta_html = mp.fig_to_html(beta_fig, no_extras=True, template_type='simple')
 
         final_alpha = result['alpha'].iloc[-1]
 
         json = {"alpha": final_alpha,
-                "figures": [atb_html, beta_html]}
+                "algo_to_benchmark": atb_html,
+                "rolling_beta": beta_html}
 
         return Response(json)
