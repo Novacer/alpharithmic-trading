@@ -23,8 +23,8 @@ class BuyAppleResult(APIView):
 
         beta_fig = plt.gcf()
 
-        atb_html = mp.fig_to_html(algo_to_bench_fig, no_extras=True, template_type='simple')
-        beta_html = mp.fig_to_html(beta_fig, no_extras=True, template_type='simple')
+        atb_html = mp.fig_to_html(algo_to_bench_fig, no_extras=True, template_type='simple', figid="fig_1")
+        beta_html = mp.fig_to_html(beta_fig, no_extras=True, template_type='simple', figid="fig_2")
 
         final_alpha = result['alpha'].iloc[-1]
 
