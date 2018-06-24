@@ -83,8 +83,3 @@ def mean_rev_run(start_date, end_date, capital_base):
     result.dropna(inplace=True)
 
     return result
-
-
-data = mean_rev_run("2012-01-01", "2013-01-01", 100000)
-
-print(data.head())
