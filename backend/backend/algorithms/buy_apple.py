@@ -3,7 +3,7 @@ from zipline import run_algorithm
 import pandas as pd
 
 
-def run(shares_per_day, capital_base, start_date, end_date):
+def apple_run(shares_per_day, capital_base, start_date, end_date):
 
     def init(context):
         pass
