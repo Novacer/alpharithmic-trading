@@ -51,3 +51,5 @@ fabric.properties
 
 # *.iml
 # modules.xml
+
+__pycache__/
