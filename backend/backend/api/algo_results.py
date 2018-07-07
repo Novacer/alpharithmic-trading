@@ -17,11 +17,13 @@ class BuyAppleResult(APIView):
         plt.figure(1)
         plt.plot(result['algorithm_period_return'])
         plt.plot(result['benchmark_period_return'])
+        plt.legend()
 
         algo_to_bench_fig = plt.gcf()
 
         plt.figure(2)
         plt.plot(result['beta'])
+        plt.legend()
 
         beta_fig = plt.gcf()
 
@@ -46,11 +48,13 @@ class MeanReversionResult(APIView):
         plt.figure(1)
         plt.plot(result['algorithm_period_return'])
         plt.plot(result['benchmark_period_return'])
+        plt.legend()
 
         algo_to_bench_fig = plt.gcf()
 
         plt.figure(2)
         plt.plot(result['beta'])
+        plt.legend()
 
         beta_fig = plt.gcf()
 
