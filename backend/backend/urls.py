@@ -23,5 +23,6 @@ urlpatterns = [
     path('api/get/hello/', hello_world.HelloWorld.as_view()),
     path('api/post/hello', hello_world.PostWorld.as_view()),
     path('api/post/buy-apple', algo_results.BuyAppleResult.as_view()),
-    path('api/post/mean-reversion', algo_results.MeanReversionResult.as_view())
+    path('api/post/mean-reversion', algo_results.MeanReversionResult.as_view()),
+    path('api/post/random-forest-regression', algo_results.RandomForestRegressionResult.as_view())
 ]
