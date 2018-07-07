@@ -7,6 +7,7 @@ from zipline import run_algorithm
 
 import matplotlib.pyplot as plt
 
+
 def rfr_run(start_date, end_date, capital_base, ticker):
 
     def initialize(context):
@@ -40,7 +41,6 @@ def rfr_run(start_date, end_date, capital_base, ticker):
         if len(y) > 1:
             context.trained = True
 
-
     def trade(context, data):
 
         if context.trained and context.model:
@@ -60,10 +60,8 @@ def rfr_run(start_date, end_date, capital_base, ticker):
                 order_target_percent(context.security, -1.0)
                 print("Shorted 100% of portfolio")
 
-
     def handle_data(context, data):
         pass
-
 
     start = pd.to_datetime(start_date).tz_localize('US/Eastern')
     end = pd.to_datetime(end_date).tz_localize('US/Eastern')
@@ -75,11 +73,3 @@ def rfr_run(start_date, end_date, capital_base, ticker):
     result.dropna(inplace=True)
 
     return result
-
-
-result = rfr_run("2016-01-01", "2017-01-01", 1000000, "MSFT")
-
-plt.plot(result['algorithm_period_return'])
-plt.plot(result['benchmark_period_return'])
-plt.legend()
-plt.show()
