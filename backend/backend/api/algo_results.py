@@ -53,13 +53,13 @@ class MeanReversionResult(APIView):
 
         beta_fig = plt.gcf()
 
-        atb_html = mp.fig_to_html(algo_to_bench_fig, no_extras=True, template_type='simple', figid="fig_1")
-        beta_html = mp.fig_to_html(beta_fig, no_extras=True, template_type='simple', figid="fig_2")
+        algo_result = mp.fig_to_dict(algo_to_bench_fig)
+        beta_result = mp.fig_to_dict(beta_fig)
 
         final_alpha = result['alpha'].iloc[-1]
 
         json = {"alpha": final_alpha,
-                "algo_to_benchmark": atb_html,
-                "rolling_beta": beta_html}
+                "algo_to_benchmark": algo_result,
+                "rolling_beta": beta_result}
 
         return Response(json)
