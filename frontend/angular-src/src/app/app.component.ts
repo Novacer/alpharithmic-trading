@@ -9,14 +9,20 @@ import {HttpClient} from "@angular/common/http";
 export class AppComponent implements OnInit {
 
   private url: string;
-  public algoToBench : string;
-  public rollingBeta: string;
+  public algoToBench : any;
+  public rollingBeta: any;
+
+  public xaxis : string[];
+  public yaxis : number[];
 
   public done: boolean;
 
   constructor(private http: HttpClient, private elementRef: ElementRef) {
     this.url = "/api/post/buy-apple";
     this.done = false;
+
+    this.xaxis = [];
+    this.yaxis = [];
   }
 
   ngOnInit() {
@@ -38,9 +44,23 @@ export class AppComponent implements OnInit {
 
       console.log(this.algoToBench);
 
-      this.algoToBench = this.algoToBench.slice(this.algoToBench.indexOf("!f"), this.algoToBench.lastIndexOf("</"));
+      let date = new Date();
+
+      for (let point of this.algoToBench.data.data01) {
+
+        this.xaxis.push(this.dateNumToUTC(point[0], date));
+        this.yaxis.push(point[1]);
+      }
+
       this.done = true;
     });
+  }
+
+  dateNumToUTC(num, date: Date) {
+
+    date.setTime((num - 719529) * 86400000);
+
+    return date.toDateString().substring(4);
   }
 }
 

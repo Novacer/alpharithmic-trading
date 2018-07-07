@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import {HttpClientModule} from "@angular/common/http";
 import { GraphComponent } from './graph/graph.component';
+import { ChartsModule } from "ng2-charts";
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { GraphComponent } from './graph/graph.component';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    ChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
