@@ -1,1 +1,6 @@
-<app-graph [html]="algoToBench" *ngIf="done"></app-graph>
+<div style="display: block" *ngIf="done">
+  <canvas baseChart [data]="yaxis"
+                    [labels]="xaxis"
+                    [chartType]="'line'">
+  </canvas>
+</div>
