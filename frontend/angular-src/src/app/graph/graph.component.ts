@@ -28,6 +28,8 @@ export class GraphComponent implements OnInit {
   private xaxis : string[];
   private dataset1: any[];
   private dataset2: any[];
+  private options: Object;
+  private colors: any[];
 
 
 
@@ -36,6 +38,35 @@ export class GraphComponent implements OnInit {
     this.xaxis = [];
     this.dataset1 = [];
     this.dataset2 = [];
+
+    this.options = {
+      responsive: true,
+      elements: {
+        point: {
+          radius: 0,
+          hitRadius: 10,
+          hoverRadius: 5,
+        }
+      }
+    };
+
+    this.colors = [
+      {
+        backgroundColor: 'rgba(46, 134, 193,0.2)',
+        borderColor: 'rgba(46, 134, 193,1)',
+        pointBackgroundColor: 'rgba(46, 134, 193,1)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgba(46, 134, 193,0.8)'
+      },
+      {
+        backgroundColor: 'rgba(237, 41, 57,0.2)',
+        borderColor: 'rgba(237, 41, 57,1)',
+        pointBackgroundColor: 'rgba(237, 41, 57,1)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgba(237, 41, 57,0.8)'
+      }];
   }
 
   ngOnInit() {
@@ -75,11 +106,13 @@ export class GraphComponent implements OnInit {
 
       this.dataset1.push({
         data: algo,
-        label: "Algorithm Return %"
+        label: "Algorithm Return %",
+        fill: true,
       });
       this.dataset1.push({
         data: bench,
-        label: "Benchmark Return %"
+        label: "Benchmark Return %",
+        fill: false,
       });
 
       let beta = [];

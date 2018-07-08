@@ -1,10 +1,13 @@
 <div style="display: block" *ngIf="done">
   <canvas baseChart [datasets]="dataset1"
           [labels]="xaxis"
-          [chartType]="'line'">
+          [chartType]="'line'"
+          [options]="options"
+          [colors]="colors">
   </canvas>
   <canvas baseChart [datasets]="dataset2"
           [labels]="xaxis"
-          [chartType]="'line'">
+          [chartType]="'line'"
+          [options]="options">
   </canvas>
 </div>
