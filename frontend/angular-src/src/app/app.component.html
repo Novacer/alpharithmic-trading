@@ -1,6 +1,5 @@
-<div style="display: block" *ngIf="done">
-  <canvas baseChart [data]="yaxis"
-                    [labels]="xaxis"
-                    [chartType]="'line'">
-  </canvas>
+<app-navbar></app-navbar>
+
+<div class="container-fluid">
+  <router-outlet></router-outlet>
 </div>

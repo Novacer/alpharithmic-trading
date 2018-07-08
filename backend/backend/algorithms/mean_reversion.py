@@ -78,7 +78,7 @@ def mean_rev_run(start_date, end_date, capital_base):
     result = run_algorithm(start, end,
                            initialize=initialize, before_trading_start=before_trading_start,
                            capital_base=capital_base,
-                           bundle="quandl")
+                           bundle="quantopian-quandl")
 
     result.dropna(inplace=True)
 
