@@ -2,23 +2,32 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import {HttpClientModule} from "@angular/common/http";
+import { HttpClientModule } from "@angular/common/http";
 import { GraphComponent } from './graph/graph.component';
 import { ChartsModule } from "ng2-charts";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NavbarComponent } from './navbar/navbar.component'
+import { Routes, RouterModule } from "@angular/router";
+import { IntroComponent } from './intro/intro.component';
+
+const appRoutes : Routes = [
+  { path: '', component: IntroComponent },
+  { path: '**', redirectTo: '' }
+];
 
 @NgModule({
   declarations: [
     AppComponent,
     GraphComponent,
-    NavbarComponent
+    NavbarComponent,
+    IntroComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     ChartsModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    RouterModule.forRoot(appRoutes)
   ],
   providers: [],
   bootstrap: [AppComponent]
