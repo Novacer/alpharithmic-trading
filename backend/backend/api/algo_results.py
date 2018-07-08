@@ -38,6 +38,9 @@ class BuyAppleResult(APIView):
         algo_result = mp.fig_to_dict(algo_to_bench_fig)
         beta_result = mp.fig_to_dict(beta_fig)
 
+        plt.close(1)  # clear the memory
+        plt.close(2)  # clear the memory
+
         final_alpha = result['alpha'].iloc[-1]
 
         json = {"alpha": final_alpha,
@@ -75,6 +78,9 @@ class MeanReversionResult(APIView):
 
         algo_result = mp.fig_to_dict(algo_to_bench_fig)
         beta_result = mp.fig_to_dict(beta_fig)
+
+        plt.close(1)  # clear the memory
+        plt.close(2)  # clear the memory
 
         final_alpha = result['alpha'].iloc[-1]
 
@@ -114,6 +120,9 @@ class RandomForestRegressionResult(APIView):
 
         algo_result = mp.fig_to_dict(algo_to_bench_fig)
         beta_result = mp.fig_to_dict(beta_fig)
+
+        plt.close(1)  # clear the memory
+        plt.close(2)  # clear the memory
 
         final_alpha = result['alpha'].iloc[-1]
 
