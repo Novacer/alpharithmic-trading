@@ -1,0 +1,6 @@
+.sizing img {
+  width: 1280px;
+  height: auto;
+  max-height: 400px;
+  background-size: cover;
+}

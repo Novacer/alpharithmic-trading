@@ -7,7 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class IntroComponent implements OnInit {
 
-  constructor() { }
+  public images: string[];
+
+  constructor() {
+    this.images = [""]
+  }
 
   ngOnInit() {
   }
