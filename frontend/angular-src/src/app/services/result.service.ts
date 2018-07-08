@@ -26,7 +26,7 @@ export class ResultService {
       start: start,
       end: end,
       shares: shares,
-      capitalBase: capitalBase
+      capital_base: capitalBase
     };
 
     return this.http.post(this.buyAppleURL, body);

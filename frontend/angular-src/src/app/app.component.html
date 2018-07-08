@@ -1,6 +1,5 @@
-<div style="display: block" *ngIf="done">
-  <canvas baseChart [data]="yaxis"
-                    [labels]="xaxis"
-                    [chartType]="'line'">
-  </canvas>
-</div>
+<app-graph [start]="'2016-01-01'"
+           [end]="'2017-01-01'"
+           [numberOfShares]="50"
+           [capitalBase]="1000000"
+           [type]="'apple'"></app-graph>
