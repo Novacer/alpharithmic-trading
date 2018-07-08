@@ -9,10 +9,18 @@ import mpld3 as mp
 
 class BuyAppleResult(APIView):
     def post(self, request, format=None):
+        print(request.data['start'])
         result = apple_run(request.data['shares'],
                            request.data['capital_base'],
                            request.data['start'],
                            request.data['end'])
+
+        dates = result.index.values.tolist()
+
+        result['unix'] = dates
+        result['unix'] = result['unix'].divide(1000000)
+
+        result.set_index('unix', inplace=True)
 
         plt.figure(1)
         plt.plot(result['algorithm_period_return'])
@@ -45,6 +53,13 @@ class MeanReversionResult(APIView):
                               request.data['end'],
                               request.data['capital_base'])
 
+        dates = result.index.values.tolist()
+
+        result['unix'] = dates
+        result['unix'] = result['unix'].divide(1000000)
+
+        result.set_index('unix', inplace=True)
+
         plt.figure(1)
         plt.plot(result['algorithm_period_return'])
         plt.plot(result['benchmark_period_return'])
@@ -76,6 +91,14 @@ class RandomForestRegressionResult(APIView):
                          request.data['end'],
                          request.data['capital_base'],
                          request.data['ticker'])
+
+        dates = result.index.values.tolist()
+
+        result['unix'] = dates
+        result['unix'] = result['unix'].divide(1000000)
+
+        result.set_index('unix', inplace=True)
+
         plt.figure(1)
         plt.plot(result['algorithm_period_return'])
         plt.plot(result['benchmark_period_return'])

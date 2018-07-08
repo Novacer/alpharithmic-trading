@@ -17,7 +17,7 @@ def apple_run(shares_per_day, capital_base, start_date, end_date):
     result = run_algorithm(start, end, capital_base=capital_base,
                            initialize=init,
                            handle_data=handle,
-                           bundle="quandl")
+                           bundle="quantopian-quandl")
 
     result.dropna(inplace=True)
 
