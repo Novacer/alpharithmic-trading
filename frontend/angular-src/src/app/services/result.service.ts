@@ -7,7 +7,7 @@ import {HttpClient} from "@angular/common/http";
 })
 export class ResultService {
 
-  private buyAppleURL : string;
+  readonly buyAppleURL : string;
 
   constructor(private http: HttpClient) {
     this.buyAppleURL = "/api/post/buy-apple";
@@ -20,13 +20,16 @@ export class ResultService {
    * @param {number} shares the number of shares to buy each day
    * @param {number} capitalBase the total amount of money you have
    */
-  buyAppleResult(start: string, end: string, shares: number, capitalBase: number) : Observable<any> {
+  buyAppleResult(start: string, end: string,
+                 shares: number, capitalBase: number,
+                 logChannel: string) : Observable<any> {
 
     let body = {
       start: start,
       end: end,
       shares: shares,
-      capital_base: capitalBase
+      capital_base: capitalBase,
+      log_channel: logChannel
     };
 
     return this.http.post(this.buyAppleURL, body);
