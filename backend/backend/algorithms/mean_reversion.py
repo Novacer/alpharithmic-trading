@@ -5,8 +5,11 @@ from zipline.api import attach_pipeline, pipeline_output, schedule_function, ord
 from zipline.pipeline.factors import AverageDollarVolume
 from zipline.utils.events import date_rules
 from zipline import run_algorithm
+from websocket import create_connection
 
 def mean_rev_run(start_date, end_date, capital_base):
+
+    ws = create_connection("ws://127.0.0.1:8000/ws/chat/lobby/")
 
     def initialize(context):
         pipe = Pipeline()
@@ -57,10 +60,13 @@ def mean_rev_run(start_date, end_date, capital_base):
 
                     if close > high_band and notional > context.min_notional:
                         order(stock, -5000)
-                        print("Shorted 5000 of " + str(stock))
+                        message = "{\"message\": \"Shorted 5000 of " + str(stock) + "\"}"
+                        ws.send(message)
+
                     elif close < low_band and notional < context.max_notional:
                         order(stock, 5000)
-                        print("Bought 5000 of " + str(stock))
+                        message = "{\"message\": \"Bought 5000 of " + str(stock) + "\"}"
+                        ws.send(message)
             except:
                 return
 
