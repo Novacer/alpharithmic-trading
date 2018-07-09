@@ -11,8 +11,13 @@ from websocket import create_connection
 def mean_rev_run(start_date, end_date, capital_base, log_channel):
 
     ws = create_connection("ws://127.0.0.1:8000/ws/chat/%s/" % log_channel)
+    msg_placeholder = "{\"message\": \"%s\"}"
+
+    ws.send(msg_placeholder % "Link Start")
 
     def initialize(context):
+        ws.send(msg_placeholder % "Simulation Start")
+
         pipe = Pipeline()
         attach_pipeline(pipe, "volume_pipeline")
 
@@ -61,13 +66,11 @@ def mean_rev_run(start_date, end_date, capital_base, log_channel):
 
                     if close > high_band and notional > context.min_notional:
                         order(stock, -5000)
-                        message = "{\"message\": \"Shorted 5000 of %s\"}" % str(stock)
-                        ws.send(message)
+                        ws.send(msg_placeholder % ("Shorted 5000 of " + str(stock)))
 
                     elif close < low_band and notional < context.max_notional:
                         order(stock, 5000)
-                        message = "{\"message\": \"Bought 5000 of %s\"}" % str(stock)
-                        ws.send(message)
+                        ws.send(msg_placeholder % ("Bought 5000 of " + str(stock)))
             except:
                 return
 
@@ -87,6 +90,7 @@ def mean_rev_run(start_date, end_date, capital_base, log_channel):
                            capital_base=capital_base,
                            bundle="quantopian-quandl")
 
+    ws.send(msg_placeholder % "Simulation End")
     ws.close()
 
     result.dropna(inplace=True)

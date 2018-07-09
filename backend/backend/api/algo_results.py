@@ -13,7 +13,8 @@ class BuyAppleResult(APIView):
         result = apple_run(request.data['shares'],
                            request.data['capital_base'],
                            request.data['start'],
-                           request.data['end'])
+                           request.data['end'],
+                           request.data['log_channel'])
 
         dates = result.index.values.tolist()
 
@@ -97,7 +98,8 @@ class RandomForestRegressionResult(APIView):
         result = rfr_run(request.data['start'],
                          request.data['end'],
                          request.data['capital_base'],
-                         request.data['ticker'])
+                         request.data['ticker'],
+                         request.data['log_channel'])
 
         dates = result.index.values.tolist()
 

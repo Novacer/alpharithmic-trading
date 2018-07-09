@@ -1,16 +1,21 @@
 from sklearn.ensemble import RandomForestRegressor
 import numpy as np
 import pandas as pd
+from websocket import create_connection
 from zipline.api import schedule_function, order_target_percent, symbol
 from zipline.utils.events import date_rules, time_rules
 from zipline import run_algorithm
 
-import matplotlib.pyplot as plt
 
+def rfr_run(start_date, end_date, capital_base, ticker, log_channel):
 
-def rfr_run(start_date, end_date, capital_base, ticker):
+    ws = create_connection("ws://127.0.0.1:8000/ws/chat/%s/" % log_channel)
+    msg_placeholder = "{\"message\": \"%s\"}"
+
+    ws.send(msg_placeholder % "Link Start")
 
     def initialize(context):
+        ws.send(msg_placeholder % "Simulation Start")
         context.security = symbol(ticker)
         context.model = RandomForestRegressor()
         context.trained = False
@@ -36,6 +41,7 @@ def rfr_run(start_date, end_date, capital_base, ticker):
             X.append(price_changes[i: i + context.lookback])  # historical price changes
             y.append(price_changes[i + context.lookback])  # today's price change
 
+        ws.send(msg_placeholder % "Retraining the ML Model")
         context.model.fit(X, y)  # train the ML model
 
         if len(y) > 1:
@@ -51,14 +57,14 @@ def rfr_run(start_date, end_date, capital_base, ticker):
 
             prediction = context.model.predict(price_changes)
 
-            print("Predicted Change is", prediction)
+            ws.send(msg_placeholder % ("The model predicts that the change is %s percent" % str(price_changes * 100)))
 
             if prediction > 0:
                 order_target_percent(context.security, 1.0)
-                print("Bought 100% of portfolio")
+                ws.send(msg_placeholder % "Bought shares")
             else:
                 order_target_percent(context.security, -1.0)
-                print("Shorted 100% of portfolio")
+                ws.send(msg_placeholder % "Sold shares")
 
     def handle_data(context, data):
         pass
@@ -69,6 +75,9 @@ def rfr_run(start_date, end_date, capital_base, ticker):
     result = run_algorithm(start, end, initialize=initialize,
                            handle_data=handle_data,
                            capital_base=capital_base, bundle='quantopian-quandl')
+
+    ws.send(msg_placeholder % "Simulation End")
+    ws.close()
 
     result.dropna(inplace=True)
 
