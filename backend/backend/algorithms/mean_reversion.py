@@ -7,9 +7,9 @@ from zipline.utils.events import date_rules
 from zipline import run_algorithm
 from websocket import create_connection
 
-def mean_rev_run(start_date, end_date, capital_base):
+def mean_rev_run(start_date, end_date, capital_base, log_channel):
 
-    ws = create_connection("ws://127.0.0.1:8000/ws/chat/lobby/")
+    ws = create_connection("ws://127.0.0.1:8000/ws/chat/" + log_channel)
 
     def initialize(context):
         pipe = Pipeline()

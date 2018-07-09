@@ -54,7 +54,8 @@ class MeanReversionResult(APIView):
     def post(self, request, format=None):
         result = mean_rev_run(request.data['start'],
                               request.data['end'],
-                              request.data['capital_base'])
+                              request.data['capital_base'],
+                              request.data['log_channel'])
 
         dates = result.index.values.tolist()
 
