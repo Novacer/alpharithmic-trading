@@ -7,9 +7,10 @@ from zipline.utils.events import date_rules
 from zipline import run_algorithm
 from websocket import create_connection
 
+
 def mean_rev_run(start_date, end_date, capital_base, log_channel):
 
-    ws = create_connection("ws://127.0.0.1:8000/ws/chat/" + log_channel)
+    ws = create_connection("ws://127.0.0.1:8000/ws/chat/%s/" % log_channel)
 
     def initialize(context):
         pipe = Pipeline()
@@ -60,12 +61,12 @@ def mean_rev_run(start_date, end_date, capital_base, log_channel):
 
                     if close > high_band and notional > context.min_notional:
                         order(stock, -5000)
-                        message = "{\"message\": \"Shorted 5000 of " + str(stock) + "\"}"
+                        message = "{\"message\": \"Shorted 5000 of %s\"}" % str(stock)
                         ws.send(message)
 
                     elif close < low_band and notional < context.max_notional:
                         order(stock, 5000)
-                        message = "{\"message\": \"Bought 5000 of " + str(stock) + "\"}"
+                        message = "{\"message\": \"Bought 5000 of %s\"}" % str(stock)
                         ws.send(message)
             except:
                 return
@@ -85,6 +86,8 @@ def mean_rev_run(start_date, end_date, capital_base, log_channel):
                            initialize=initialize, before_trading_start=before_trading_start,
                            capital_base=capital_base,
                            bundle="quantopian-quandl")
+
+    ws.close()
 
     result.dropna(inplace=True)
 
