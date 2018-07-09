@@ -9,6 +9,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NavbarComponent } from './navbar/navbar.component'
 import { Routes, RouterModule } from "@angular/router";
 import { IntroComponent } from './intro/intro.component';
+import {FormsModule} from "@angular/forms";
 
 const appRoutes : Routes = [
   { path: '', component: IntroComponent },
@@ -26,6 +27,7 @@ const appRoutes : Routes = [
     BrowserModule,
     HttpClientModule,
     ChartsModule,
+    FormsModule,
     NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],

@@ -25,19 +25,25 @@ export class GraphComponent implements OnInit {
   private numberOfShares : number;
 
   private done : boolean;
+
   private xaxis : string[];
   private dataset1: any[];
   private dataset2: any[];
   private options: Object;
   private colors: any[];
 
-
+  private logChannel: string;
+  private ws: WebSocket;
+  private log: string;
 
   constructor(private result : ResultService) {
     this.done = false;
+    this.logChannel = null;
     this.xaxis = [];
     this.dataset1 = [];
     this.dataset2 = [];
+    this.ws = null;
+    this.log = "";
 
     this.options = {
       responsive: true,
@@ -71,10 +77,20 @@ export class GraphComponent implements OnInit {
 
   ngOnInit() {
 
+    this.logChannel = GraphComponent.generateRandomString();
+
+    this.ws = new WebSocket("ws://127.0.0.1:8000/ws/logs/" + this.logChannel + "/");
+    this.ws.onmessage = (event) => {
+      let msg = JSON.parse(event.data).message;
+      this.log = this.log.concat(msg , "\n");
+      console.log(this.log);
+    };
+
     if (this.type === 'apple') {
-      console.log(this.start);
+
       this.extractDataFromAPI(
-        this.result.buyAppleResult(this.start, this.end, this.numberOfShares, this.capitalBase)
+        this.result.buyAppleResult(this.start, this.end,
+          this.numberOfShares, this.capitalBase, this.logChannel)
       );
     }
   }
@@ -86,6 +102,11 @@ export class GraphComponent implements OnInit {
     return date.toDateString().substring(4);
   }
 
+  private static generateRandomString() : string {
+    return Math.random().toString(36).substring(2, 15)
+      + Math.random().toString(36).substring(2, 15);
+  }
+
   private extractDataFromAPI(observable : Observable<any>) {
     observable.subscribe(response => {
       let algoToBench = response.algo_to_benchmark;
@@ -95,8 +116,6 @@ export class GraphComponent implements OnInit {
 
       let algo = [];
       let bench = [];
-
-      console.log(algoToBench.data);
 
       for (let point of algoToBench.data.data01) {
         this.xaxis.push(GraphComponent.dateNumToString(point[0], date));
@@ -125,6 +144,10 @@ export class GraphComponent implements OnInit {
         data: beta,
         label: "Beta"
       });
+
+      if (this.ws) {
+        this.ws.close();
+      }
 
       this.done = true;
     });

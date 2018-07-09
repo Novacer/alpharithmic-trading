@@ -9,7 +9,7 @@ from zipline import run_algorithm
 
 def rfr_run(start_date, end_date, capital_base, ticker, log_channel):
 
-    ws = create_connection("ws://127.0.0.1:8000/ws/chat/%s/" % log_channel)
+    ws = create_connection("ws://127.0.0.1:8000/ws/logs/%s/" % log_channel)
     msg_placeholder = "{\"message\": \"%s\"}"
 
     ws.send(msg_placeholder % "Link Start")
