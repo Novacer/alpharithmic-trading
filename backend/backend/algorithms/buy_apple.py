@@ -6,7 +6,7 @@ import pandas as pd
 
 def apple_run(shares_per_day, capital_base, start_date, end_date, log_channel):
 
-    ws = create_connection("ws://127.0.0.1:8000/ws/chat/%s/" % log_channel)
+    ws = create_connection("ws://127.0.0.1:8000/ws/logs/%s/" % log_channel)
     msg_placeholder = "{\"message\": \"%s\"}"
 
     ws.send(msg_placeholder % "Link Start")
