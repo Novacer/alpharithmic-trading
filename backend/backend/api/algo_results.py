@@ -9,10 +9,19 @@ import mpld3 as mp
 
 class BuyAppleResult(APIView):
     def post(self, request, format=None):
+        print(request.data['start'])
         result = apple_run(request.data['shares'],
                            request.data['capital_base'],
                            request.data['start'],
-                           request.data['end'])
+                           request.data['end'],
+                           request.data['log_channel'])
+
+        dates = result.index.values.tolist()
+
+        result['unix'] = dates
+        result['unix'] = result['unix'].divide(1000000)
+
+        result.set_index('unix', inplace=True)
 
         plt.figure(1)
         plt.plot(result['algorithm_period_return'])
@@ -29,6 +38,9 @@ class BuyAppleResult(APIView):
 
         algo_result = mp.fig_to_dict(algo_to_bench_fig)
         beta_result = mp.fig_to_dict(beta_fig)
+
+        plt.close(1)  # clear the memory
+        plt.close(2)  # clear the memory
 
         final_alpha = result['alpha'].iloc[-1]
 
@@ -43,7 +55,15 @@ class MeanReversionResult(APIView):
     def post(self, request, format=None):
         result = mean_rev_run(request.data['start'],
                               request.data['end'],
-                              request.data['capital_base'])
+                              request.data['capital_base'],
+                              request.data['log_channel'])
+
+        dates = result.index.values.tolist()
+
+        result['unix'] = dates
+        result['unix'] = result['unix'].divide(1000000)
+
+        result.set_index('unix', inplace=True)
 
         plt.figure(1)
         plt.plot(result['algorithm_period_return'])
@@ -60,6 +80,9 @@ class MeanReversionResult(APIView):
 
         algo_result = mp.fig_to_dict(algo_to_bench_fig)
         beta_result = mp.fig_to_dict(beta_fig)
+
+        plt.close(1)  # clear the memory
+        plt.close(2)  # clear the memory
 
         final_alpha = result['alpha'].iloc[-1]
 
@@ -75,7 +98,16 @@ class RandomForestRegressionResult(APIView):
         result = rfr_run(request.data['start'],
                          request.data['end'],
                          request.data['capital_base'],
-                         request.data['ticker'])
+                         request.data['ticker'],
+                         request.data['log_channel'])
+
+        dates = result.index.values.tolist()
+
+        result['unix'] = dates
+        result['unix'] = result['unix'].divide(1000000)
+
+        result.set_index('unix', inplace=True)
+
         plt.figure(1)
         plt.plot(result['algorithm_period_return'])
         plt.plot(result['benchmark_period_return'])
@@ -91,6 +123,9 @@ class RandomForestRegressionResult(APIView):
 
         algo_result = mp.fig_to_dict(algo_to_bench_fig)
         beta_result = mp.fig_to_dict(beta_fig)
+
+        plt.close(1)  # clear the memory
+        plt.close(2)  # clear the memory
 
         final_alpha = result['alpha'].iloc[-1]
 
