@@ -1,12 +1,7 @@
-.nav>li {
-  display: inline-block;
-}
-
-.navbar-nav > li{
-  padding-left:30px;
-  padding-right:30px;
-}
-
-.navbar-nav > a {
-  color: white;
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%  !important;
 }
