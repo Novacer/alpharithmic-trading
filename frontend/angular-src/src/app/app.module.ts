@@ -10,6 +10,8 @@ import { NavbarComponent } from './navbar/navbar.component'
 import { Routes, RouterModule } from "@angular/router";
 import { IntroComponent } from './intro/intro.component';
 import {FormsModule} from "@angular/forms";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatToolbarModule} from "@angular/material";
 
 const appRoutes : Routes = [
   { path: '', component: IntroComponent },
@@ -28,6 +30,8 @@ const appRoutes : Routes = [
     HttpClientModule,
     ChartsModule,
     FormsModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
     NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
