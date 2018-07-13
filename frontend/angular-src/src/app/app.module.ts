@@ -13,9 +13,11 @@ import {FormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatToolbarModule} from "@angular/material";
 import { MatButtonModule } from "@angular/material/button";
+import { SelectAlgoComponent } from './select-algo/select-algo.component';
 
 const appRoutes : Routes = [
-  { path: '', component: IntroComponent },
+  { path: '', component: IntroComponent, pathMatch: 'full'},
+  { path: 'algorithms', component: SelectAlgoComponent, },
   { path: '**', redirectTo: '' }
 ];
 
@@ -24,7 +26,8 @@ const appRoutes : Routes = [
     AppComponent,
     GraphComponent,
     NavbarComponent,
-    IntroComponent
+    IntroComponent,
+    SelectAlgoComponent
   ],
   imports: [
     BrowserModule,
