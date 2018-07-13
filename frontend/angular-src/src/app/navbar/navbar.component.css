@@ -1,12 +1,14 @@
-.nav>li {
-  display: inline-block;
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%  !important;
 }
 
-.navbar-nav > li{
-  padding-left:30px;
-  padding-right:30px;
-}
-
-.navbar-nav > a {
+.nav-option {
+  padding: 0 14px;
+  background-color: #c50000;
   color: white;
+  outline: 0 none;
 }
