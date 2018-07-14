@@ -1,6 +1,14 @@
 <div class="container-fluid">
   <div class="body">
-    <mat-vertical-stepper [linear]="true" #stepper>
+    <div class="container">
+      <div class="py-5 text-center">
+        <img class="d-block mx-auto mb-4" src="../../../assets/icons/candlesticks.png" alt="" width="72" height="72">
+        <h2>Buy Apple Everyday</h2>
+        <h4>Class: Naive Algorithm</h4>
+        <p class="lead">Everyday at market open, buy a set amount of Apple Stocks (AAPL) until you run out of money.
+        How much return will you have at the end of the trading period?</p>
+      </div>
+    <mat-vertical-stepper [linear]="false" #stepper>
       <mat-step [stepControl]="firstForm">
         <form [formGroup]="firstForm">
           <ng-template matStepLabel>Basic Configuration</ng-template>
@@ -8,14 +16,16 @@
           <div class="row">
             <div class="col-md-4 mb-3">
               <mat-form-field>
-                <input matInput [matDatepicker]="picker1" placeholder="Simulation Start" [value]="startDate.value">
+                <input matInput [matDatepicker]="picker1" placeholder="Simulation Start"
+                       [value]="startDate.value" [(ngModel)]="startDate.value" [ngModelOptions]="{standalone: true}">
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
               </mat-form-field>
             </div>
             <div class="col-md-4 mb-3">
               <mat-form-field>
-                <input matInput [matDatepicker]="picker2" placeholder="Simulation End" [value]="endDate.value">
+                <input matInput [matDatepicker]="picker2" placeholder="Simulation End"
+                       [value]="endDate.value" [(ngModel)]="endDate.value" [ngModelOptions]="{standalone: true}">
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
               </mat-form-field>
@@ -23,12 +33,48 @@
             <div class="col-md-4 mb-3">
               <mat-form-field>
                 <mat-icon matPrefix>attach_money</mat-icon>
-                <input matInput type="number" placeholder="Initial Capital Base" [value]="capitalBase">
+                <input matInput type="number" placeholder="Initial Capital Base"
+                       [value]="capitalBase" [(ngModel)]="capitalBase" [ngModelOptions]="{standalone: true}">
               </mat-form-field>
             </div>
           </div>
         </form>
       </mat-step>
+      <mat-step [stepControl]="secondForm">
+        <form [formGroup]="secondForm">
+          <ng-template matStepLabel>How Many Shares to Buy Per Day</ng-template>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <mat-form-field>
+                <input matInput type="number" placeholder="# of Shares To Buy"
+                       [value]="numOfShares" [(ngModel)]="numOfShares" [ngModelOptions]="{standalone: true}">
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="thirdForm">
+        <form [formGroup]="thirdForm">
+          <ng-template matStepLabel>Done</ng-template>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <button mat-button (click)="onDoneClick()">Begin Trading</button>
+            </div>
+          </div>
+        </form>
+      </mat-step>
     </mat-vertical-stepper>
+  </div>
+</div>
+  <div id="results">
+    <ng-container *ngIf="beginSim">
+      <app-graph [type]="'apple'"
+                 [start]="getDate(startDate)"
+                 [end]="getDate(endDate)"
+                 [capitalBase]="capitalBase"
+                 [numberOfShares]="numOfShares"></app-graph>
+    </ng-container>
   </div>
 </div>

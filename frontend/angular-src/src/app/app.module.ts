@@ -21,6 +21,7 @@ import {
 import { MatButtonModule } from "@angular/material/button";
 import { SelectAlgoComponent } from './select-algo/select-algo.component';
 import { BuyAppleComponent } from './algorithms/buy-apple/buy-apple.component';
+import {ScrollToModule} from "@nicky-lenaers/ngx-scroll-to";
 
 const appRoutes : Routes = [
   { path: '', component: IntroComponent, pathMatch: 'full'},
@@ -55,6 +56,7 @@ const appRoutes : Routes = [
     MatSliderModule,
     MatIconModule,
     NgbModule.forRoot(),
+    ScrollToModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
   providers: [],
