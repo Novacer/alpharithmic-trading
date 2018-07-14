@@ -25,7 +25,7 @@ export class GraphComponent implements OnInit {
   @Input()
   private numberOfShares : number;
 
-  private done : boolean;
+  public done : boolean;
 
   private xaxis : string[];
   private dataset1: any[];

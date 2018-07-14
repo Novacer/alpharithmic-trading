@@ -23,5 +23,10 @@
               [options]="options">
       </canvas>
     </div>
+    <ng-container *ngIf="!done">
+      <div class="spinner">
+        <mat-spinner></mat-spinner>
+      </div>
+    </ng-container>
   </div>
 </div>
