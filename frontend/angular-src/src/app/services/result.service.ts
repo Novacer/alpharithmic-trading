@@ -9,10 +9,12 @@ export class ResultService {
 
   private readonly buyAppleURL : string;
   private readonly meanReversionURL : string;
+  private readonly randForestRegURL : string;
 
   constructor(private http: HttpClient) {
     this.buyAppleURL = "/api/post/buy-apple";
-    this.meanReversionURL = "/api/post/mean-reversion"
+    this.meanReversionURL = "/api/post/mean-reversion";
+    this.randForestRegURL = "/api/post/random-forest-regression";
   }
 
   /**
@@ -52,5 +54,22 @@ export class ResultService {
     };
 
     return this.http.post(this.meanReversionURL, body);
+  }
+
+
+  randForestRegResult(start: string, end: string,
+                      ticker: string, capitalBase: number,
+                      minutes: number, logChannel: string) : Observable<any> {
+
+    let body = {
+      start: start,
+      end: end,
+      ticker: ticker,
+      minutes: minutes,
+      capital_base: capitalBase,
+      log_channel: logChannel
+    }
+
+    return this.http.post(this.randForestRegURL, body);
   }
 }
