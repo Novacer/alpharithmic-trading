@@ -86,7 +86,7 @@ export class GraphComponent implements OnInit {
 
     this.logChannel = GraphComponent.generateRandomString();
 
-    this.ws = new WebSocket("ws://127.0.0.1:8000/ws/logs/" + this.logChannel + "/");
+    this.ws = new WebSocket("ws://alpharithmic.herokuapp.com/ws/logs/" + this.logChannel + "/");
     this.ws.onmessage = (event) => {
       let msg = JSON.parse(event.data).message;
       this.log = this.log.concat(msg , "\n");
