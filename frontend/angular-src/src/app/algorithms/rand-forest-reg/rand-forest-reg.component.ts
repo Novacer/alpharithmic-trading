@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-rand-forest-reg',
@@ -7,9 +8,44 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RandForestRegComponent implements OnInit {
 
-  constructor() { }
+  public firstForm : FormGroup;
+  public secondForm : FormGroup;
+  public thirdForm : FormGroup;
+
+  public startDate : FormControl;
+  public endDate : FormControl;
+
+  public capitalBase : number;
+  public ticker : string;
+  public minutesAfterOpen : number;
+
+  public beginSim : boolean;
+
+  constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit() {
+    this.firstForm =  this.formBuilder.group({firstCtrl: ['', Validators.required]});
+    this.secondForm = this.formBuilder.group({secondCtrl: ['', Validators.required]});
+    this.thirdForm = this.formBuilder.group({thirdCtrl: ['', Validators.required]});
+
+    let start = new Date();
+    start.setFullYear(2017);
+    start.setMonth(3);
+    start.setDate(1);
+
+    this.startDate = new FormControl(start);
+
+    let end = new Date();
+    end.setFullYear(2018);
+    end.setMonth(3);
+    end.setDate(1);
+
+    this.endDate = new FormControl(end);
+
+    this.capitalBase = 1000000;
+    this.ticker = "";
+    this.minutesAfterOpen = 1;
+    this.beginSim = false;
   }
 
 }
