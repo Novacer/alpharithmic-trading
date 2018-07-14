@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ResultService} from "../services/result.service";
 import {Observable} from "rxjs/internal/Observable";
+import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
 
 @Component({
   selector: 'app-graph',
@@ -36,7 +37,7 @@ export class GraphComponent implements OnInit {
   private ws: WebSocket;
   private log: string;
 
-  constructor(private result : ResultService) {
+  constructor(private result : ResultService, private scroll: ScrollToService) {
     this.done = false;
     this.logChannel = null;
     this.xaxis = [];
@@ -150,6 +151,10 @@ export class GraphComponent implements OnInit {
       }
 
       this.done = true;
+
+      this.scroll.scrollTo({
+        target: "graph"
+      });
     });
   }
 
