@@ -24,6 +24,10 @@ export class BuyAppleComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private scroll: ScrollToService) { }
 
   ngOnInit() {
+    this.scroll.scrollTo({
+      target: 'top'
+    });
+
     this.firstForm =  this.formBuilder.group({firstCtrl: ['', Validators.required]});
     this.secondForm = this.formBuilder.group({secondCtrl: ['', Validators.required]});
     this.thirdForm = this.formBuilder.group({thirdCtrl: ['', Validators.required]});

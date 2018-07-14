@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="body">
+  <div class="body" id="top">
     <div class="container">
       <div class="py-5 text-center">
         <img class="d-block mx-auto mb-4" src="../../../assets/icons/candlesticks.png" alt="" width="72" height="72">
@@ -48,7 +48,7 @@
             <div class="row">
               <div class="col-md-6 mb-3">
                 <mat-form-field>
-                  <input matInput type="number" placeholder="# of Shares To Buy"
+                  <input matInput type="number" placeholder="# of Shares To Trade"
                          [value]="numOfShares" [(ngModel)]="numOfShares" [ngModelOptions]="{standalone: true}">
                 </mat-form-field>
               </div>
