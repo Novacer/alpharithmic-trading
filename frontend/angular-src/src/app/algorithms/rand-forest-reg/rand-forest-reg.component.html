@@ -3,11 +3,12 @@
     <div class="container">
       <div class="py-5 text-center">
         <img class="d-block mx-auto mb-4" src="../../../assets/icons/candlesticks.png" alt="" width="72" height="72">
-        <h2>Mean Reversion</h2>
-        <h4>Class: Advanced Algorithm</h4>
-        <p class="lead">Every 20 days at market open, filter out only the top 1% of stocks by Average Dollar Volume.
-        If the price of any of these stocks is below the Lower Bollinger Band, buy a set number of shares.
-        If the price is above the Upper Bollinger Band, sell a set number of shares.</p>
+        <h2>Random Forest Regression</h2>
+        <h4>Class: Machine Learning Algorithm</h4>
+        <p class="lead">At the end of every week train a Random Forest Regression model. The feature set is the last
+        400 days of price changes, and the labels are the last 3 days of prices changes. Everyday at
+        a set time after market open, predict if the price change is positive or negative. Buy or sell the stock
+        based on this prediction.</p>
       </div>
       <mat-vertical-stepper [linear]="false" #stepper>
         <mat-step [stepControl]="firstForm">
@@ -43,13 +44,24 @@
         </mat-step>
         <mat-step [stepControl]="secondForm">
           <form [formGroup]="secondForm">
-            <ng-template matStepLabel>How Many Shares to Trade Per Transaction</ng-template>
+            <ng-template matStepLabel>Plan Your Transactions</ng-template>
 
             <div class="row">
-              <div class="col-md-6 mb-3">
+              <div class="col-md-4 mb-3">
                 <mat-form-field>
-                  <input matInput type="number" placeholder="# of Shares To Trade"
-                         [value]="numOfShares" [(ngModel)]="numOfShares" [ngModelOptions]="{standalone: true}">
+                  <input matInput type="text" placeholder="Stock Ticker Symbol"
+                         [value]="ticker" [(ngModel)]="ticker" [ngModelOptions]="{standalone: true}">
+                </mat-form-field>
+              </div>
+              <div class="col-md-4 mb-3" style="padding-top: 2%">
+                <p>Execute at {{ minutesAfterOpen }} minute(s) after market opens</p>
+              </div>
+              <div class="col-md-4 mb-3">
+                <mat-form-field>
+                  <input matInput type="number"
+                         [placeholder]="'Minutes'"
+                         [value]="minutesAfterOpen" [(ngModel)]="minutesAfterOpen"
+                         [ngModelOptions]="{standalone: true}">
                 </mat-form-field>
               </div>
             </div>
@@ -72,11 +84,12 @@
   <div id="results">
     <ng-container *ngIf="beginSim">
       <div class="body">
-        <app-graph [type]="'mean-rev'"
+        <app-graph [type]="'rfr'"
                    [start]="getDate(startDate)"
                    [end]="getDate(endDate)"
                    [capitalBase]="capitalBase"
-                   [numberOfShares]="numOfShares"></app-graph>
+                   [ticker]="ticker"
+                   [minutes]="minutesAfterOpen"></app-graph>
       </div>
     </ng-container>
   </div>

@@ -3,11 +3,11 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
 
 @Component({
-  selector: 'app-buy-apple',
-  templateUrl: './buy-apple.component.html',
-  styleUrls: ['./buy-apple.component.css']
+  selector: 'app-rand-forest-reg',
+  templateUrl: './rand-forest-reg.component.html',
+  styleUrls: ['./rand-forest-reg.component.css']
 })
-export class BuyAppleComponent implements OnInit {
+export class RandForestRegComponent implements OnInit {
 
   public firstForm : FormGroup;
   public secondForm : FormGroup;
@@ -17,13 +17,15 @@ export class BuyAppleComponent implements OnInit {
   public endDate : FormControl;
 
   public capitalBase : number;
-  public numOfShares : number;
+  public ticker : string;
+  public minutesAfterOpen : number;
 
   public beginSim : boolean;
 
   constructor(private formBuilder: FormBuilder, private scroll: ScrollToService) { }
 
   ngOnInit() {
+
     this.scroll.scrollTo({
       target: 'top'
     });
@@ -47,7 +49,8 @@ export class BuyAppleComponent implements OnInit {
     this.endDate = new FormControl(end);
 
     this.capitalBase = 1000000;
-    this.numOfShares = 50;
+    this.ticker = "";
+    this.minutesAfterOpen = 1;
     this.beginSim = false;
   }
 

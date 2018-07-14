@@ -100,6 +100,7 @@ class RandomForestRegressionResult(APIView):
                          request.data['end'],
                          request.data['capital_base'],
                          request.data['ticker'],
+                         request.data['minutes'],
                          request.data['log_channel'])
 
         dates = result.index.values.tolist()

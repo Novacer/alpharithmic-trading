@@ -25,7 +25,13 @@ export class GraphComponent implements OnInit {
   @Input()
   private numberOfShares : number;
 
-  private done : boolean;
+  @Input()
+  private ticker : string;
+
+  @Input()
+  private minutes : number;
+
+  public done : boolean;
 
   private xaxis : string[];
   private dataset1: any[];
@@ -99,6 +105,14 @@ export class GraphComponent implements OnInit {
 
       this.extractDataFromAPI(this.result.meanReversionResult(this.start, this.end,
         this.numberOfShares, this.capitalBase, this.logChannel)
+      );
+    }
+
+    else if (this.type === 'rfr') {
+
+      this.extractDataFromAPI(
+        this.result.randForestRegResult(this.start, this.end,
+          this.ticker, this.capitalBase, this.minutes, this.logChannel)
       );
     }
   }

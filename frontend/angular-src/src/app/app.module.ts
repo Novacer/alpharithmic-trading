@@ -14,7 +14,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {
   MatDatepickerModule,
   MatFormFieldModule, MatIconModule, MatInputModule,
-  MatNativeDateModule, MatSliderModule,
+  MatNativeDateModule, MatProgressSpinnerModule, MatSliderModule,
   MatStepperModule,
   MatToolbarModule
 } from "@angular/material";
@@ -23,12 +23,14 @@ import { SelectAlgoComponent } from './select-algo/select-algo.component';
 import { BuyAppleComponent } from './algorithms/buy-apple/buy-apple.component';
 import {ScrollToModule} from "@nicky-lenaers/ngx-scroll-to";
 import { MeanReversionComponent } from './algorithms/mean-reversion/mean-reversion.component';
+import { RandForestRegComponent } from './algorithms/rand-forest-reg/rand-forest-reg.component';
 
 const appRoutes : Routes = [
   { path: '', component: IntroComponent, pathMatch: 'full'},
   { path: 'algorithms', component: SelectAlgoComponent },
   { path: 'algorithms/buy-apple', component: BuyAppleComponent },
   { path: 'algorithms/mean-reversion', component: MeanReversionComponent },
+  { path: 'algorithms/random-forest-regression', component: RandForestRegComponent },
   { path: '**', redirectTo: '' }
 ];
 
@@ -40,7 +42,8 @@ const appRoutes : Routes = [
     IntroComponent,
     SelectAlgoComponent,
     BuyAppleComponent,
-    MeanReversionComponent
+    MeanReversionComponent,
+    RandForestRegComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +61,7 @@ const appRoutes : Routes = [
     MatInputModule,
     MatSliderModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     NgbModule.forRoot(),
     ScrollToModule.forRoot(),
     RouterModule.forRoot(appRoutes)
