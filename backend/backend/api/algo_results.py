@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use("Agg")
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from ..algorithms.buy_apple import apple_run
