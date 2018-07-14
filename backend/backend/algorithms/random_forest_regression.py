@@ -7,7 +7,7 @@ from zipline.utils.events import date_rules, time_rules
 from zipline import run_algorithm
 
 
-def rfr_run(start_date, end_date, capital_base, ticker, log_channel):
+def rfr_run(start_date, end_date, capital_base, ticker, minutes, log_channel):
 
     ws = create_connection("ws://127.0.0.1:8000/ws/logs/%s/" % log_channel)
     msg_placeholder = "{\"message\": \"%s\"}"
@@ -25,7 +25,9 @@ def rfr_run(start_date, end_date, capital_base, ticker, log_channel):
 
         schedule_function(create_model, date_rules.week_end(), time_rules.market_close(minutes=10))
 
-        schedule_function(trade, date_rules.every_day(), time_rules.market_open(minutes=1))
+        schedule_function(trade, date_rules.every_day(), time_rules.market_open(minutes=minutes))
+
+        ws.send(msg_placeholder % "Execution of Training and Trading functions scheduled")
 
 
     def create_model(context, data):
@@ -61,10 +63,10 @@ def rfr_run(start_date, end_date, capital_base, ticker, log_channel):
 
             if prediction > 0:
                 order_target_percent(context.security, 1.0)
-                ws.send(msg_placeholder % "Bought shares")
+                ws.send(msg_placeholder % ("Bought" + str(context.security)))
             else:
                 order_target_percent(context.security, -1.0)
-                ws.send(msg_placeholder % "Sold shares")
+                ws.send(msg_placeholder % ("Sold shares" + str(context.security)))
 
     def handle_data(context, data):
         pass
