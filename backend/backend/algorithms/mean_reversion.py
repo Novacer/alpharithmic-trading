@@ -10,7 +10,7 @@ from websocket import create_connection
 
 def mean_rev_run(start_date, end_date, capital_base, shares, log_channel):
 
-    ws = create_connection("ws://127.0.0.1:8000/ws/logs/%s/" % log_channel)
+    ws = create_connection("ws://alpharithmic.herokuapp.com/ws/logs/%s/" % log_channel)
     msg_placeholder = "{\"message\": \"%s\"}"
 
     ws.send(msg_placeholder % "Link Start")
