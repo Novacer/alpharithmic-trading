@@ -48,7 +48,7 @@ export class BuyAppleComponent implements OnInit {
 
   }
 
-  getDate(form: FormGroup) {
+  getDate(form: FormControl) {
     return form.value.toISOString().substring(0, 10);
   }
 
