@@ -5,8 +5,8 @@
         <img class="d-block mx-auto mb-4" src="../../../assets/icons/candlesticks.png" alt="" width="72" height="72">
         <h2>Mean Reversion</h2>
         <h4>Class: Advanced Algorithm</h4>
-        <p class="lead">Everyday at market open, filter out only the top 1% of stocks by Average Dollar Volume.
-        If the price of one of these stocks is below the Lower Bollinger Band, buy a set number of shares.
+        <p class="lead">Every 20 days at market open, filter out only the top 1% of stocks by Average Dollar Volume.
+        If the price of any of these stocks is below the Lower Bollinger Band, buy a set number of shares.
         If the price is above the Upper Bollinger Band, sell a set number of shares.</p>
       </div>
       <mat-vertical-stepper [linear]="false" #stepper>
@@ -43,7 +43,7 @@
         </mat-step>
         <mat-step [stepControl]="secondForm">
           <form [formGroup]="secondForm">
-            <ng-template matStepLabel>How Many Shares to Buy Per Day</ng-template>
+            <ng-template matStepLabel>How Many Shares to Trade Per Transaction</ng-template>
 
             <div class="row">
               <div class="col-md-6 mb-3">

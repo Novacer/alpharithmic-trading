@@ -28,6 +28,7 @@ const appRoutes : Routes = [
   { path: '', component: IntroComponent, pathMatch: 'full'},
   { path: 'algorithms', component: SelectAlgoComponent },
   { path: 'algorithms/buy-apple', component: BuyAppleComponent },
+  { path: 'algorithms/mean-reversion', component: MeanReversionComponent },
   { path: '**', redirectTo: '' }
 ];
 

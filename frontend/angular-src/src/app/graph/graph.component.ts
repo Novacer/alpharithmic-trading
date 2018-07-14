@@ -94,6 +94,13 @@ export class GraphComponent implements OnInit {
           this.numberOfShares, this.capitalBase, this.logChannel)
       );
     }
+
+    else if (this.type === 'mean-rev') {
+
+      this.extractDataFromAPI(this.result.meanReversionResult(this.start, this.end,
+        this.numberOfShares, this.capitalBase, this.logChannel)
+      );
+    }
   }
 
   public static dateNumToString(num, date: Date) {

@@ -17,6 +17,7 @@ export class MeanReversionComponent implements OnInit {
   public endDate : FormControl;
 
   public capitalBase : number;
+  public numOfShares: number;
 
   public beginSim : boolean;
 
@@ -27,13 +28,22 @@ export class MeanReversionComponent implements OnInit {
     this.secondForm = this.formBuilder.group({secondCtrl: ['', Validators.required]});
     this.thirdForm = this.formBuilder.group({thirdCtrl: ['', Validators.required]});
 
-    let today = new Date();
-    today.setFullYear(today.getFullYear() - 1);
+    let start = new Date();
+    start.setFullYear(2017);
+    start.setMonth(3);
+    start.setDate(1);
 
-    this.startDate = new FormControl(today);
-    this.endDate = new FormControl(new Date());
+    this.startDate = new FormControl(start);
+
+    let end = new Date();
+    end.setFullYear(2018);
+    end.setMonth(3);
+    end.setDate(1);
+
+    this.endDate = new FormControl(end);
 
     this.capitalBase = 1000000;
+    this.numOfShares = 300;
     this.beginSim = false;
   }
 

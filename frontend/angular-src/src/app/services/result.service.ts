@@ -7,8 +7,8 @@ import {HttpClient} from "@angular/common/http";
 })
 export class ResultService {
 
-  readonly buyAppleURL : string;
-  readonly meanReversionURL : string;
+  private readonly buyAppleURL : string;
+  private readonly meanReversionURL : string;
 
   constructor(private http: HttpClient) {
     this.buyAppleURL = "/api/post/buy-apple";
