@@ -1,22 +1,27 @@
-<form>
-  <div class="form-group">
-    <label for="exampleFormControlTextarea1">Logs</label>
-    <textarea class="form-control" id="exampleFormControlTextarea1"
-              rows="10" [(ngModel)]="this.log" name="log"
-              #scrollMe [scrollTop]="scrollMe.scrollHeight"></textarea>
-  </div>
-</form>
+<div class="container-fluid">
 
-<div style="display: block" *ngIf="done">
-  <canvas baseChart [datasets]="dataset1"
-          [labels]="xaxis"
-          [chartType]="'line'"
-          [options]="options"
-          [colors]="colors">
-  </canvas>
-  <canvas baseChart [datasets]="dataset2"
-          [labels]="xaxis"
-          [chartType]="'line'"
-          [options]="options">
-  </canvas>
+  <form>
+    <div class="form-group">
+      <label for="exampleFormControlTextarea1">Logs</label>
+      <textarea class="form-control" id="exampleFormControlTextarea1"
+                rows="10" [(ngModel)]="this.log" name="log"
+                #scrollMe [scrollTop]="scrollMe.scrollHeight"></textarea>
+    </div>
+  </form>
+
+  <div id="graph">
+    <div style="display: block; padding-top: 65px;" *ngIf="done">
+      <canvas baseChart [datasets]="dataset1"
+              [labels]="xaxis"
+              [chartType]="'line'"
+              [options]="options"
+              [colors]="colors">
+      </canvas>
+      <canvas baseChart [datasets]="dataset2"
+              [labels]="xaxis"
+              [chartType]="'line'"
+              [options]="options">
+      </canvas>
+    </div>
+  </div>
 </div>

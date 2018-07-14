@@ -8,7 +8,7 @@ from zipline import run_algorithm
 from websocket import create_connection
 
 
-def mean_rev_run(start_date, end_date, capital_base, log_channel):
+def mean_rev_run(start_date, end_date, capital_base, shares, log_channel):
 
     ws = create_connection("ws://127.0.0.1:8000/ws/logs/%s/" % log_channel)
     msg_placeholder = "{\"message\": \"%s\"}"
@@ -34,6 +34,8 @@ def mean_rev_run(start_date, end_date, capital_base, log_channel):
         context.max_notional = 1000000
         context.min_notional = -1000000
         context.days_traded = 0
+
+        ws.send(msg_placeholder % "Pipeline filter attached")
 
         schedule_function(func=choose_and_order, date_rule=date_rules.every_day())
 
@@ -65,12 +67,12 @@ def mean_rev_run(start_date, end_date, capital_base, log_channel):
                     low_band = moving_avg - dev_mult * moving_dev
 
                     if close > high_band and notional > context.min_notional:
-                        order(stock, -5000)
-                        ws.send(msg_placeholder % ("Shorted 5000 of " + str(stock)))
+                        order(stock, -shares)
+                        ws.send(msg_placeholder % ("Shorted " + str(shares) + " of " + str(stock)))
 
                     elif close < low_band and notional < context.max_notional:
-                        order(stock, 5000)
-                        ws.send(msg_placeholder % ("Bought 5000 of " + str(stock)))
+                        order(stock, shares)
+                        ws.send(msg_placeholder % ("Bought " + str(shares) + " of " + str(stock)))
             except:
                 return
 
