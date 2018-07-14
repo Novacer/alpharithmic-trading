@@ -35,6 +35,8 @@ def mean_rev_run(start_date, end_date, capital_base, shares, log_channel):
         context.min_notional = -1000000
         context.days_traded = 0
 
+        ws.send(msg_placeholder % "Pipeline filter attached")
+
         schedule_function(func=choose_and_order, date_rule=date_rules.every_day())
 
     def before_trading_start(context, data):
@@ -66,11 +68,11 @@ def mean_rev_run(start_date, end_date, capital_base, shares, log_channel):
 
                     if close > high_band and notional > context.min_notional:
                         order(stock, -shares)
-                        ws.send(msg_placeholder % ("Shorted " + shares + " of " + str(stock)))
+                        ws.send(msg_placeholder % ("Shorted " + str(shares) + " of " + str(stock)))
 
                     elif close < low_band and notional < context.max_notional:
                         order(stock, shares)
-                        ws.send(msg_placeholder % ("Bought " + shares + " of " + str(stock)))
+                        ws.send(msg_placeholder % ("Bought " + str(shares) + " of " + str(stock)))
             except:
                 return
 
