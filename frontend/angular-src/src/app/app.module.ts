@@ -22,6 +22,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { SelectAlgoComponent } from './select-algo/select-algo.component';
 import { BuyAppleComponent } from './algorithms/buy-apple/buy-apple.component';
 import {ScrollToModule} from "@nicky-lenaers/ngx-scroll-to";
+import { MeanReversionComponent } from './algorithms/mean-reversion/mean-reversion.component';
 
 const appRoutes : Routes = [
   { path: '', component: IntroComponent, pathMatch: 'full'},
@@ -37,7 +38,8 @@ const appRoutes : Routes = [
     NavbarComponent,
     IntroComponent,
     SelectAlgoComponent,
-    BuyAppleComponent
+    BuyAppleComponent,
+    MeanReversionComponent
   ],
   imports: [
     BrowserModule,

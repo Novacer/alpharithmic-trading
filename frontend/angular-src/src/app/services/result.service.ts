@@ -40,13 +40,15 @@ export class ResultService {
 
 
   meanReversionResult(start: string, end: string,
-                      capitalBase: number,
+                      shares: number, capitalBase: number,
                       logChannel: string) :Observable<any> {
 
     let body = {
       start: start,
       end: end,
-      capital_base: capitalBase
+      shares: shares,
+      capital_base: capitalBase,
+      log_channel: logChannel
     };
 
     return this.http.post(this.meanReversionURL, body);
