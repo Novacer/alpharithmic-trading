@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
 
 @Component({
   selector: 'app-rand-forest-reg',
@@ -21,7 +22,7 @@ export class RandForestRegComponent implements OnInit {
 
   public beginSim : boolean;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private scroll: ScrollToService) { }
 
   ngOnInit() {
     this.firstForm =  this.formBuilder.group({firstCtrl: ['', Validators.required]});
@@ -46,6 +47,19 @@ export class RandForestRegComponent implements OnInit {
     this.ticker = "";
     this.minutesAfterOpen = 1;
     this.beginSim = false;
+  }
+
+  onDoneClick() {
+
+    this.scroll.scrollTo({
+      target: "results"
+    });
+    this.beginSim = true;
+
+  }
+
+  getDate(form: FormControl) {
+    return form.value.toISOString().substring(0, 10);
   }
 
 }

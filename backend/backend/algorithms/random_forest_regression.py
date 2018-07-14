@@ -34,7 +34,8 @@ def rfr_run(start_date, end_date, capital_base, ticker, minutes, log_channel):
         recent_prices = data.history(assets=context.security, bar_count=context.history_range,
                                      frequency="1d", fields="price").values
 
-        price_changes = np.diff(recent_prices).tolist()
+        price_changes = np.diff(recent_prices)
+        price_changes = np.nan_to_num(price_changes, copy=False).tolist()
 
         X = []
         y = []
@@ -57,16 +58,19 @@ def rfr_run(start_date, end_date, capital_base, ticker, minutes, log_channel):
 
             price_changes = np.diff(recent_prices).reshape(1, -1)
 
+            price_changes = np.nan_to_num(price_changes, copy=False)  # replace nan
+
             prediction = context.model.predict(price_changes)
 
-            ws.send(msg_placeholder % ("The model predicts that the change is %s percent" % str(price_changes * 100)))
+            ws.send(msg_placeholder % ("The model predicts that the change is $ %s" %
+                                       str(round(prediction[0], 2))))
 
             if prediction > 0:
                 order_target_percent(context.security, 1.0)
-                ws.send(msg_placeholder % ("Bought" + str(context.security)))
+                ws.send(msg_placeholder % ("Bought " + str(context.security)))
             else:
                 order_target_percent(context.security, -1.0)
-                ws.send(msg_placeholder % ("Sold shares" + str(context.security)))
+                ws.send(msg_placeholder % ("Sold " + str(context.security)))
 
     def handle_data(context, data):
         pass

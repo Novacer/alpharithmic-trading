@@ -83,11 +83,12 @@
   <div id="results">
     <ng-container *ngIf="beginSim">
       <div class="body">
-        <app-graph [type]="'rand-forest-reg'"
+        <app-graph [type]="'rfr'"
                    [start]="getDate(startDate)"
                    [end]="getDate(endDate)"
                    [capitalBase]="capitalBase"
-                   [numberOfShares]="numOfShares"></app-graph>
+                   [ticker]="ticker"
+                   [minutes]="minutesAfterOpen"></app-graph>
       </div>
     </ng-container>
   </div>
