@@ -6,10 +6,12 @@ from zipline.api import schedule_function, order_target_percent, symbol
 from zipline.utils.events import date_rules, time_rules
 from zipline import run_algorithm
 
+from ..api.create_response import create_json_response
 
-def rfr_run(start_date, end_date, capital_base, ticker, log_channel):
 
-    ws = create_connection("ws://127.0.0.1:8000/ws/logs/%s/" % log_channel)
+def rfr_run(start_date, end_date, capital_base, ticker, minutes, log_channel):
+
+    ws = create_connection("ws://alpharithmic.herokuapp.com/ws/logs/%s/" % log_channel)
     msg_placeholder = "{\"message\": \"%s\"}"
 
     ws.send(msg_placeholder % "Link Start")
@@ -25,14 +27,17 @@ def rfr_run(start_date, end_date, capital_base, ticker, log_channel):
 
         schedule_function(create_model, date_rules.week_end(), time_rules.market_close(minutes=10))
 
-        schedule_function(trade, date_rules.every_day(), time_rules.market_open(minutes=1))
+        schedule_function(trade, date_rules.every_day(), time_rules.market_open(minutes=minutes))
+
+        ws.send(msg_placeholder % "Execution of Training and Trading functions scheduled")
 
 
     def create_model(context, data):
         recent_prices = data.history(assets=context.security, bar_count=context.history_range,
                                      frequency="1d", fields="price").values
 
-        price_changes = np.diff(recent_prices).tolist()
+        price_changes = np.diff(recent_prices)
+        price_changes = np.nan_to_num(price_changes, copy=False).tolist()
 
         X = []
         y = []
@@ -55,16 +60,19 @@ def rfr_run(start_date, end_date, capital_base, ticker, log_channel):
 
             price_changes = np.diff(recent_prices).reshape(1, -1)
 
+            price_changes = np.nan_to_num(price_changes, copy=False)  # replace nan
+
             prediction = context.model.predict(price_changes)
 
-            ws.send(msg_placeholder % ("The model predicts that the change is %s percent" % str(price_changes * 100)))
+            ws.send(msg_placeholder % ("The model predicts that the change is $ %s" %
+                                       str(round(prediction[0], 2))))
 
             if prediction > 0:
                 order_target_percent(context.security, 1.0)
-                ws.send(msg_placeholder % "Bought shares")
+                ws.send(msg_placeholder % ("Bought " + str(context.security)))
             else:
                 order_target_percent(context.security, -1.0)
-                ws.send(msg_placeholder % "Sold shares")
+                ws.send(msg_placeholder % ("Sold " + str(context.security)))
 
     def handle_data(context, data):
         pass
@@ -77,8 +85,9 @@ def rfr_run(start_date, end_date, capital_base, ticker, log_channel):
                            capital_base=capital_base, bundle='quantopian-quandl')
 
     ws.send(msg_placeholder % "Simulation End")
-    ws.close()
+    ws.send(msg_placeholder % "Fetching backtest results from Redis Queue...")
 
     result.dropna(inplace=True)
+    ws.close()
 
-    return result
+    return create_json_response(result)

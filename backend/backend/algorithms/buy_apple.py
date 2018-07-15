@@ -3,10 +3,12 @@ from websocket import create_connection
 from zipline import run_algorithm
 import pandas as pd
 
+from ..api.create_response import create_json_response
+
 
 def apple_run(shares_per_day, capital_base, start_date, end_date, log_channel):
 
-    ws = create_connection("ws://127.0.0.1:8000/ws/logs/%s/" % log_channel)
+    ws = create_connection("ws://alpharithmic.herokuapp.com/ws/logs/%s/" % log_channel)
     msg_placeholder = "{\"message\": \"%s\"}"
 
     ws.send(msg_placeholder % "Link Start")
@@ -27,8 +29,10 @@ def apple_run(shares_per_day, capital_base, start_date, end_date, log_channel):
                            bundle="quantopian-quandl")
 
     ws.send(msg_placeholder % "Simulation End")
-    ws.close()
+    ws.send(msg_placeholder % "Fetching backtest results from Redis Queue...")
 
     result.dropna(inplace=True)
 
-    return result
+    ws.close()
+
+    return create_json_response(result)

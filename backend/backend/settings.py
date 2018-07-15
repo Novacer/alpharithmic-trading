@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -39,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'backend.api',
-    'channels'
+    'channels',
+    'django_rq'
 ]
 
 MIDDLEWARE = [
@@ -131,4 +133,25 @@ CHANNEL_LAYERS = {
         }
     },
 }
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+        'PASSWORD': 'some-password',
+        'DEFAULT_TIMEOUT': 1000000000,
+    },
+    'high': {
+        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'),  # If you're on Heroku
+        'DEFAULT_TIMEOUT': 1000000000,
+    },
+    'low': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+    }
+}
+
+django_heroku.settings(locals())
 

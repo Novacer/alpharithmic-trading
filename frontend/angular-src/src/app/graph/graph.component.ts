@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ResultService} from "../services/result.service";
 import {Observable} from "rxjs/internal/Observable";
+import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
 
 @Component({
   selector: 'app-graph',
@@ -24,7 +25,13 @@ export class GraphComponent implements OnInit {
   @Input()
   private numberOfShares : number;
 
-  private done : boolean;
+  @Input()
+  private ticker : string;
+
+  @Input()
+  private minutes : number;
+
+  public done : boolean;
 
   private xaxis : string[];
   private dataset1: any[];
@@ -36,7 +43,7 @@ export class GraphComponent implements OnInit {
   private ws: WebSocket;
   private log: string;
 
-  constructor(private result : ResultService) {
+  constructor(private result : ResultService, private scroll: ScrollToService) {
     this.done = false;
     this.logChannel = null;
     this.xaxis = [];
@@ -79,7 +86,7 @@ export class GraphComponent implements OnInit {
 
     this.logChannel = GraphComponent.generateRandomString();
 
-    this.ws = new WebSocket("ws://127.0.0.1:8000/ws/logs/" + this.logChannel + "/");
+    this.ws = new WebSocket("ws://alpharithmic.herokuapp.com/ws/logs/" + this.logChannel + "/");
     this.ws.onmessage = (event) => {
       let msg = JSON.parse(event.data).message;
       this.log = this.log.concat(msg , "\n");
@@ -91,6 +98,21 @@ export class GraphComponent implements OnInit {
       this.extractDataFromAPI(
         this.result.buyAppleResult(this.start, this.end,
           this.numberOfShares, this.capitalBase, this.logChannel)
+      );
+    }
+
+    else if (this.type === 'mean-rev') {
+
+      this.extractDataFromAPI(this.result.meanReversionResult(this.start, this.end,
+        this.numberOfShares, this.capitalBase, this.logChannel)
+      );
+    }
+
+    else if (this.type === 'rfr') {
+
+      this.extractDataFromAPI(
+        this.result.randForestRegResult(this.start, this.end,
+          this.ticker, this.capitalBase, this.minutes, this.logChannel)
       );
     }
   }
@@ -150,6 +172,10 @@ export class GraphComponent implements OnInit {
       }
 
       this.done = true;
+
+      this.scroll.scrollTo({
+        target: "graph"
+      });
     });
   }
 

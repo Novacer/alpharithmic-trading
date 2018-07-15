@@ -7,10 +7,14 @@ import {HttpClient} from "@angular/common/http";
 })
 export class ResultService {
 
-  readonly buyAppleURL : string;
+  private readonly buyAppleURL : string;
+  private readonly meanReversionURL : string;
+  private readonly randForestRegURL : string;
 
   constructor(private http: HttpClient) {
     this.buyAppleURL = "/api/post/buy-apple";
+    this.meanReversionURL = "/api/post/mean-reversion";
+    this.randForestRegURL = "/api/post/random-forest-regression";
   }
 
   /**
@@ -19,6 +23,7 @@ export class ResultService {
    * @param {string} end the end date (in YYYY-MM-DD)
    * @param {number} shares the number of shares to buy each day
    * @param {number} capitalBase the total amount of money you have
+   * @param {string} logChannel the channel for which logs will be pushed to
    */
   buyAppleResult(start: string, end: string,
                  shares: number, capitalBase: number,
@@ -33,5 +38,38 @@ export class ResultService {
     };
 
     return this.http.post(this.buyAppleURL, body);
+  }
+
+
+  meanReversionResult(start: string, end: string,
+                      shares: number, capitalBase: number,
+                      logChannel: string) :Observable<any> {
+
+    let body = {
+      start: start,
+      end: end,
+      shares: shares,
+      capital_base: capitalBase,
+      log_channel: logChannel
+    };
+
+    return this.http.post(this.meanReversionURL, body);
+  }
+
+
+  randForestRegResult(start: string, end: string,
+                      ticker: string, capitalBase: number,
+                      minutes: number, logChannel: string) : Observable<any> {
+
+    let body = {
+      start: start,
+      end: end,
+      ticker: ticker,
+      minutes: minutes,
+      capital_base: capitalBase,
+      log_channel: logChannel
+    }
+
+    return this.http.post(this.randForestRegURL, body);
   }
 }
