@@ -69,3 +69,4 @@ websocket-client==0.48.0
 zipline==1.2.0
 zope.interface==4.5.0
 django-rq==1.1.0
+django-spa==0.2.0
