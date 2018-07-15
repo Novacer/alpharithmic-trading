@@ -52,45 +52,20 @@ class MeanReversionResult(APIView):
 
 class RandomForestRegressionResult(APIView):
     def post(self, request, format=None):
-        result = rfr_run(request.data['start'],
-                         request.data['end'],
-                         request.data['capital_base'],
-                         request.data['ticker'],
-                         request.data['minutes'],
-                         request.data['log_channel'])
 
-        dates = result.index.values.tolist()
+        queue = django_rq.get_queue('high')
 
-        result['unix'] = dates
-        result['unix'] = result['unix'].divide(1000000)
-
-        result.set_index('unix', inplace=True)
-
-        plt.figure(1)
-        plt.plot(result['algorithm_period_return'])
-        plt.plot(result['benchmark_period_return'])
-        plt.legend()
-
-        algo_to_bench_fig = plt.gcf()
-
-        plt.figure(2)
-        plt.plot(result['beta'])
-        plt.legend()
-
-        beta_fig = plt.gcf()
-
-        algo_result = mp.fig_to_dict(algo_to_bench_fig)
-        beta_result = mp.fig_to_dict(beta_fig)
-
-        plt.close(1)  # clear the memory
-        plt.close(2)  # clear the memory
-
-        final_alpha = result['alpha'].iloc[-1]
+        job = queue.enqueue(rfr_run,
+                            request.data['start'],
+                            request.data['end'],
+                            request.data['capital_base'],
+                            request.data['ticker'],
+                            request.data['minutes'],
+                            request.data['log_channel'])
 
         json = {
-            "alpha": final_alpha,
-            "algo_to_benchmark": algo_result,
-            "rolling_beta": beta_result
+            'success': True,
+            'job_id': job.key
         }
 
         return Response(json)

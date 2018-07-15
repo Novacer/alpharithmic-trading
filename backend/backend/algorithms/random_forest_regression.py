@@ -6,6 +6,8 @@ from zipline.api import schedule_function, order_target_percent, symbol
 from zipline.utils.events import date_rules, time_rules
 from zipline import run_algorithm
 
+from ..api.create_response import create_json_response
+
 
 def rfr_run(start_date, end_date, capital_base, ticker, minutes, log_channel):
 
@@ -87,4 +89,4 @@ def rfr_run(start_date, end_date, capital_base, ticker, minutes, log_channel):
 
     result.dropna(inplace=True)
 
-    return result
+    return create_json_response(result)
