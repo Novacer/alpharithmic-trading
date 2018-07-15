@@ -1,7 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ResultService} from "../services/result.service";
-import {Observable} from "rxjs/internal/Observable";
+import { interval } from "rxjs";
 import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
+import {Subscription} from "rxjs/internal/Subscription";
+import {Observable} from "rxjs/internal/Observable";
 
 @Component({
   selector: 'app-graph',
@@ -43,6 +45,9 @@ export class GraphComponent implements OnInit {
   private ws: WebSocket;
   private log: string;
 
+  private jobId: string;
+  private subscription : Subscription;
+
   constructor(private result : ResultService, private scroll: ScrollToService) {
     this.done = false;
     this.logChannel = null;
@@ -51,6 +56,8 @@ export class GraphComponent implements OnInit {
     this.dataset2 = [];
     this.ws = null;
     this.log = "";
+    this.jobId = null;
+    this.subscription = null;
 
     this.options = {
       responsive: true,
@@ -90,15 +97,23 @@ export class GraphComponent implements OnInit {
     this.ws.onmessage = (event) => {
       let msg = JSON.parse(event.data).message;
       this.log = this.log.concat(msg , "\n");
-      console.log(this.log);
     };
 
     if (this.type === 'apple') {
 
-      this.extractDataFromAPI(
         this.result.buyAppleResult(this.start, this.end,
-          this.numberOfShares, this.capitalBase, this.logChannel)
-      );
+          this.numberOfShares, this.capitalBase, this.logChannel).subscribe(response => {
+            if (!response) {
+              alert("Something went wrong!");
+            }
+            else {
+              this.jobId = response.job_id;
+
+              this.subscription = interval(3000).subscribe(then => {
+                this.extractDataFromAPI(this.result.fetchResult(this.jobId));
+              });
+            }
+        });
     }
 
     else if (this.type === 'mean-rev') {
@@ -131,51 +146,65 @@ export class GraphComponent implements OnInit {
 
   private extractDataFromAPI(observable : Observable<any>) {
     observable.subscribe(response => {
-      let algoToBench = response.algo_to_benchmark;
-      let rollingBeta = response.rolling_beta;
 
-      let date = new Date();
-
-      let algo = [];
-      let bench = [];
-
-      for (let point of algoToBench.data.data01) {
-        this.xaxis.push(GraphComponent.dateNumToString(point[0], date));
-        algo.push(point[1] * 100);
-        bench.push(point[2] * 100);
+      if (!response) {
+        return;
       }
 
-      this.dataset1.push({
-        data: algo,
-        label: "Algorithm Return %",
-        fill: true,
-      });
-      this.dataset1.push({
-        data: bench,
-        label: "Benchmark Return %",
-        fill: false,
-      });
-
-      let beta = [];
-
-      for (let point of rollingBeta.data.data01) {
-        beta.push(point[1] * 100);
+      else if (!response.done) {
+        return;
       }
 
-      this.dataset2.push({
-        data: beta,
-        label: "Beta"
-      });
+      else {
 
-      if (this.ws) {
-        this.ws.close();
+        this.subscription.unsubscribe();
+
+        let algoToBench = response.algo_to_benchmark;
+        let rollingBeta = response.rolling_beta;
+
+        let date = new Date();
+
+        let algo = [];
+        let bench = [];
+
+        for (let point of algoToBench.data.data01) {
+          this.xaxis.push(GraphComponent.dateNumToString(point[0], date));
+          algo.push(point[1] * 100);
+          bench.push(point[2] * 100);
+        }
+
+        this.dataset1.push({
+          data: algo,
+          label: "Algorithm Return %",
+          fill: true,
+        });
+        this.dataset1.push({
+          data: bench,
+          label: "Benchmark Return %",
+          fill: false,
+        });
+
+        let beta = [];
+
+        for (let point of rollingBeta.data.data01) {
+          beta.push(point[1] * 100);
+        }
+
+        this.dataset2.push({
+          data: beta,
+          label: "Beta"
+        });
+
+        if (this.ws) {
+          this.ws.close();
+        }
+
+        this.done = true;
+
+        this.scroll.scrollTo({
+          target: "graph"
+        });
       }
-
-      this.done = true;
-
-      this.scroll.scrollTo({
-        target: "graph"
-      });
     });
   }
 

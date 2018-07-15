@@ -10,11 +10,13 @@ export class ResultService {
   private readonly buyAppleURL : string;
   private readonly meanReversionURL : string;
   private readonly randForestRegURL : string;
+  private readonly fetchResultURL : string;
 
   constructor(private http: HttpClient) {
     this.buyAppleURL = "/api/post/buy-apple";
     this.meanReversionURL = "/api/post/mean-reversion";
     this.randForestRegURL = "/api/post/random-forest-regression";
+    this.fetchResultURL = "/api/post/result";
   }
 
   /**
@@ -68,8 +70,17 @@ export class ResultService {
       minutes: minutes,
       capital_base: capitalBase,
       log_channel: logChannel
-    }
+    };
 
     return this.http.post(this.randForestRegURL, body);
+  }
+
+  fetchResult(jobId : string) {
+
+    let body = {
+      job_id: jobId.substring(7)
+    };
+
+    return this.http.post(this.fetchResultURL, body);
   }
 }
