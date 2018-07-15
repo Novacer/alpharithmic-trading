@@ -3,6 +3,9 @@ from websocket import create_connection
 from zipline import run_algorithm
 import pandas as pd
 
+from ..api.create_response import create_json_response
+
+
 
 def apple_run(shares_per_day, capital_base, start_date, end_date, log_channel):
 
@@ -31,4 +34,4 @@ def apple_run(shares_per_day, capital_base, start_date, end_date, log_channel):
 
     result.dropna(inplace=True)
 
-    return result
+    return create_json_response(result)

@@ -7,48 +7,24 @@ from ..algorithms.mean_reversion import mean_rev_run
 from ..algorithms.random_forest_regression import rfr_run
 import matplotlib.pyplot as plt
 import mpld3 as mp
+import django_rq
 
 
 class BuyAppleResult(APIView):
     def post(self, request, format=None):
-        print(request.data['start'])
-        result = apple_run(request.data['shares'],
-                           request.data['capital_base'],
-                           request.data['start'],
-                           request.data['end'],
-                           request.data['log_channel'])
 
-        dates = result.index.values.tolist()
+        queue = django_rq.get_queue('high')
 
-        result['unix'] = dates
-        result['unix'] = result['unix'].divide(1000000)
+        job = queue.enqueue(apple_run, request.data['shares'],
+                            request.data['capital_base'],
+                            request.data['start'],
+                            request.data['end'],
+                            request.data['log_channel'])
 
-        result.set_index('unix', inplace=True)
-
-        plt.figure(1)
-        plt.plot(result['algorithm_period_return'])
-        plt.plot(result['benchmark_period_return'])
-        plt.legend()
-
-        algo_to_bench_fig = plt.gcf()
-
-        plt.figure(2)
-        plt.plot(result['beta'])
-        plt.legend()
-
-        beta_fig = plt.gcf()
-
-        algo_result = mp.fig_to_dict(algo_to_bench_fig)
-        beta_result = mp.fig_to_dict(beta_fig)
-
-        plt.close(1)  # clear the memory
-        plt.close(2)  # clear the memory
-
-        final_alpha = result['alpha'].iloc[-1]
-
-        json = {"alpha": final_alpha,
-                "algo_to_benchmark": algo_result,
-                "rolling_beta": beta_result}
+        json = {
+            'success': True,
+            'job_id': job.key
+        }
 
         return Response(json)
 
@@ -140,3 +116,16 @@ class RandomForestRegressionResult(APIView):
         }
 
         return Response(json)
+
+
+class GetResult(APIView):
+    def post(self, request, format=None):
+        queue = django_rq.get_queue('high')
+
+        job = queue.fetch_job(request.data['job_id'])
+
+        if job.result is None:
+            return Response({'done': False})
+
+        else:
+            return Response(job.result)
