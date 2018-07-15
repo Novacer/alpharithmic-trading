@@ -85,8 +85,9 @@ def rfr_run(start_date, end_date, capital_base, ticker, minutes, log_channel):
                            capital_base=capital_base, bundle='quantopian-quandl')
 
     ws.send(msg_placeholder % "Simulation End")
-    ws.close()
+    ws.send(msg_placeholder % "Fetching backtest results from Redis Queue...")
 
     result.dropna(inplace=True)
+    ws.close()
 
     return create_json_response(result)

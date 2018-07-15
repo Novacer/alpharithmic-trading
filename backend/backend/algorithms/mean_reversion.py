@@ -96,8 +96,9 @@ def mean_rev_run(start_date, end_date, capital_base, shares, log_channel):
                            bundle="quantopian-quandl")
 
     ws.send(msg_placeholder % "Simulation End")
-    ws.close()
+    ws.send(msg_placeholder % "Fetching backtest results from Redis Queue...")
 
     result.dropna(inplace=True)
+    ws.close()
 
     return create_json_response(result)
