@@ -87,3 +87,8 @@
   line-height: 1;
   letter-spacing: -.05rem;
 }
+
+.featurette-img-size {
+  height: 300px;
+  width: 500px;
+}
