@@ -6,10 +6,12 @@ from zipline.api import schedule_function, order_target_percent, symbol
 from zipline.utils.events import date_rules, time_rules
 from zipline import run_algorithm
 
+from ..api.create_response import create_json_response
+
 
 def rfr_run(start_date, end_date, capital_base, ticker, minutes, log_channel):
 
-    ws = create_connection("ws://127.0.0.1:8000/ws/logs/%s/" % log_channel)
+    ws = create_connection("ws://alpharithmic.herokuapp.com/ws/logs/%s/" % log_channel)
     msg_placeholder = "{\"message\": \"%s\"}"
 
     ws.send(msg_placeholder % "Link Start")
@@ -83,8 +85,9 @@ def rfr_run(start_date, end_date, capital_base, ticker, minutes, log_channel):
                            capital_base=capital_base, bundle='quantopian-quandl')
 
     ws.send(msg_placeholder % "Simulation End")
-    ws.close()
+    ws.send(msg_placeholder % "Fetching backtest results from Redis Queue...")
 
     result.dropna(inplace=True)
+    ws.close()
 
-    return result
+    return create_json_response(result)
