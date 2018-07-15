@@ -7,6 +7,9 @@ from zipline.utils.events import date_rules
 from zipline import run_algorithm
 from websocket import create_connection
 
+from ..api.create_response import create_json_response
+
+
 
 def mean_rev_run(start_date, end_date, capital_base, shares, log_channel):
 
@@ -97,4 +100,4 @@ def mean_rev_run(start_date, end_date, capital_base, shares, log_channel):
 
     result.dropna(inplace=True)
 
-    return result
+    return create_json_response(result)
