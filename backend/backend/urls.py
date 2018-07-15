@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import include
 from .api import hello_world
 from .api import algo_results
 
@@ -24,5 +25,6 @@ urlpatterns = [
     path('api/post/hello', hello_world.PostWorld.as_view()),
     path('api/post/buy-apple', algo_results.BuyAppleResult.as_view()),
     path('api/post/mean-reversion', algo_results.MeanReversionResult.as_view()),
-    path('api/post/random-forest-regression', algo_results.RandomForestRegressionResult.as_view())
+    path('api/post/random-forest-regression', algo_results.RandomForestRegressionResult.as_view()),
+    path('django-rq/', include('django_rq.urls'))
 ]

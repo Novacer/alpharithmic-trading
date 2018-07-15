@@ -68,3 +68,4 @@ urllib3==1.23
 websocket-client==0.48.0
 zipline==1.2.0
 zope.interface==4.5.0
+django-rq==1.1.0

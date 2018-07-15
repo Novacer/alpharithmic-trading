@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'backend.api',
-    'channels'
+    'channels',
+    'django_rq'
 ]
 
 MIDDLEWARE = [
@@ -131,6 +132,25 @@ CHANNEL_LAYERS = {
             "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
         }
     },
+}
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+        'PASSWORD': 'some-password',
+        'DEFAULT_TIMEOUT': 1000000000,
+    },
+    'high': {
+        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'),  # If you're on Heroku
+        'DEFAULT_TIMEOUT': 1000000000,
+    },
+    'low': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+    }
 }
 
 django_heroku.settings(locals())
