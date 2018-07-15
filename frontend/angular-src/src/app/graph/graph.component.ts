@@ -135,10 +135,20 @@ export class GraphComponent implements OnInit {
 
     else if (this.type === 'rfr') {
 
-      this.extractDataFromAPI(
-        this.result.randForestRegResult(this.start, this.end,
-          this.ticker, this.capitalBase, this.minutes, this.logChannel)
-      );
+      this.result.randForestRegResult(this.start, this.end,
+        this.ticker, this.capitalBase, this.minutes, this.logChannel).subscribe(response => {
+          if (!response) {
+            alert("Something went wrong!");
+          }
+
+          else {
+            this.jobId = response.job_id;
+
+            this.subscription = interval(3000).subscribe(repeat => {
+              this.extractDataFromAPI(this.result.fetchResult(this.jobId));
+            });
+          }
+      });
     }
   }
 
@@ -205,15 +215,15 @@ export class GraphComponent implements OnInit {
           label: "Beta"
         });
 
-        if (this.ws) {
-          this.ws.close();
-        }
-
         this.done = true;
 
         this.scroll.scrollTo({
           target: "graph"
         });
+
+        if (this.ws) {
+          this.ws.close();
+        }
       }
     });
   }
