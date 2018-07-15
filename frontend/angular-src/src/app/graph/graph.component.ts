@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ResultService} from "../services/result.service";
-import { interval } from "rxjs";
+import {interval} from "rxjs";
 import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
 import {Subscription} from "rxjs/internal/Subscription";
 import {Observable} from "rxjs/internal/Observable";
@@ -13,29 +13,29 @@ import {Observable} from "rxjs/internal/Observable";
 export class GraphComponent implements OnInit {
 
   @Input()
-  private type : string;
+  private type: string;
 
   @Input()
-  private start : string;
+  private start: string;
 
   @Input()
-  private end : string;
+  private end: string;
 
   @Input()
-  private capitalBase : number;
+  private capitalBase: number;
 
   @Input()
-  private numberOfShares : number;
+  private numberOfShares: number;
 
   @Input()
-  private ticker : string;
+  private ticker: string;
 
   @Input()
-  private minutes : number;
+  private minutes: number;
 
-  public done : boolean;
+  public done: boolean;
 
-  private xaxis : string[];
+  private xaxis: string[];
   private dataset1: any[];
   private dataset2: any[];
   private options: Object;
@@ -46,9 +46,9 @@ export class GraphComponent implements OnInit {
   private log: string;
 
   private jobId: string;
-  private subscription : Subscription;
+  private subscription: Subscription;
 
-  constructor(private result : ResultService, private scroll: ScrollToService) {
+  constructor(private result: ResultService, private scroll: ScrollToService) {
     this.done = false;
     this.logChannel = null;
     this.xaxis = [];
@@ -96,31 +96,41 @@ export class GraphComponent implements OnInit {
     this.ws = new WebSocket("ws://alpharithmic.herokuapp.com/ws/logs/" + this.logChannel + "/");
     this.ws.onmessage = (event) => {
       let msg = JSON.parse(event.data).message;
-      this.log = this.log.concat(msg , "\n");
+      this.log = this.log.concat(msg, "\n");
     };
 
     if (this.type === 'apple') {
 
-        this.result.buyAppleResult(this.start, this.end,
-          this.numberOfShares, this.capitalBase, this.logChannel).subscribe(response => {
-            if (!response) {
-              alert("Something went wrong!");
-            }
-            else {
-              this.jobId = response.job_id;
+      this.result.buyAppleResult(this.start, this.end,
+        this.numberOfShares, this.capitalBase, this.logChannel).subscribe(response => {
+        if (!response) {
+          alert("Something went wrong!");
+        }
+        else {
+          this.jobId = response.job_id;
 
-              this.subscription = interval(3000).subscribe(then => {
-                this.extractDataFromAPI(this.result.fetchResult(this.jobId));
-              });
-            }
-        });
+          this.subscription = interval(3000).subscribe(repeat => {
+            this.extractDataFromAPI(this.result.fetchResult(this.jobId));
+          });
+        }
+      });
     }
 
     else if (this.type === 'mean-rev') {
 
-      this.extractDataFromAPI(this.result.meanReversionResult(this.start, this.end,
-        this.numberOfShares, this.capitalBase, this.logChannel)
-      );
+      this.result.meanReversionResult(this.start, this.end,
+        this.numberOfShares, this.capitalBase, this.logChannel).subscribe(response => {
+        if (!response) {
+          alert("Something went wrong!");
+        }
+        else {
+          this.jobId = response.job_id;
+
+          this.subscription = interval(3000).subscribe(repeat => {
+            this.extractDataFromAPI(this.result.fetchResult(this.jobId));
+          });
+        }
+      });
     }
 
     else if (this.type === 'rfr') {
@@ -139,12 +149,12 @@ export class GraphComponent implements OnInit {
     return date.toDateString().substring(4);
   }
 
-  private static generateRandomString() : string {
+  private static generateRandomString(): string {
     return Math.random().toString(36).substring(2, 15)
       + Math.random().toString(36).substring(2, 15);
   }
 
-  private extractDataFromAPI(observable : Observable<any>) {
+  private extractDataFromAPI(observable: Observable<any>) {
     observable.subscribe(response => {
 
       if (!response) {
