@@ -24,6 +24,8 @@ import { BuyAppleComponent } from './algorithms/buy-apple/buy-apple.component';
 import {ScrollToModule} from "@nicky-lenaers/ngx-scroll-to";
 import { MeanReversionComponent } from './algorithms/mean-reversion/mean-reversion.component';
 import { RandForestRegComponent } from './algorithms/rand-forest-reg/rand-forest-reg.component';
+import { TutorialComponent } from './tutorial/tutorial.component';
+import { BuilderComponent } from './builder/builder.component';
 
 const appRoutes : Routes = [
   { path: '', component: IntroComponent, pathMatch: 'full'},
@@ -31,6 +33,8 @@ const appRoutes : Routes = [
   { path: 'algorithms/buy-apple', component: BuyAppleComponent },
   { path: 'algorithms/mean-reversion', component: MeanReversionComponent },
   { path: 'algorithms/random-forest-regression', component: RandForestRegComponent },
+  { path: 'tutorial', component: TutorialComponent },
+  { path: 'build', component: BuilderComponent },
   { path: '**', redirectTo: '' }
 ];
 
@@ -43,7 +47,9 @@ const appRoutes : Routes = [
     SelectAlgoComponent,
     BuyAppleComponent,
     MeanReversionComponent,
-    RandForestRegComponent
+    RandForestRegComponent,
+    TutorialComponent,
+    BuilderComponent
   ],
   imports: [
     BrowserModule,

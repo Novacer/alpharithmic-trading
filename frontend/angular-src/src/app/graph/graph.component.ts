@@ -1,7 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ResultService} from "../services/result.service";
-import {Observable} from "rxjs/internal/Observable";
+import {interval} from "rxjs";
 import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
+import {Subscription} from "rxjs/internal/Subscription";
+import {Observable} from "rxjs/internal/Observable";
 
 @Component({
   selector: 'app-graph',
@@ -11,29 +13,29 @@ import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
 export class GraphComponent implements OnInit {
 
   @Input()
-  private type : string;
+  private type: string;
 
   @Input()
-  private start : string;
+  private start: string;
 
   @Input()
-  private end : string;
+  private end: string;
 
   @Input()
-  private capitalBase : number;
+  private capitalBase: number;
 
   @Input()
-  private numberOfShares : number;
+  private numberOfShares: number;
 
   @Input()
-  private ticker : string;
+  private ticker: string;
 
   @Input()
-  private minutes : number;
+  private minutes: number;
 
-  public done : boolean;
+  public done: boolean;
 
-  private xaxis : string[];
+  private xaxis: string[];
   private dataset1: any[];
   private dataset2: any[];
   private options: Object;
@@ -43,7 +45,10 @@ export class GraphComponent implements OnInit {
   private ws: WebSocket;
   private log: string;
 
-  constructor(private result : ResultService, private scroll: ScrollToService) {
+  private jobId: string;
+  private subscription: Subscription;
+
+  constructor(private result: ResultService, private scroll: ScrollToService) {
     this.done = false;
     this.logChannel = null;
     this.xaxis = [];
@@ -51,6 +56,8 @@ export class GraphComponent implements OnInit {
     this.dataset2 = [];
     this.ws = null;
     this.log = "";
+    this.jobId = null;
+    this.subscription = null;
 
     this.options = {
       responsive: true,
@@ -89,31 +96,59 @@ export class GraphComponent implements OnInit {
     this.ws = new WebSocket("ws://alpharithmic.herokuapp.com/ws/logs/" + this.logChannel + "/");
     this.ws.onmessage = (event) => {
       let msg = JSON.parse(event.data).message;
-      this.log = this.log.concat(msg , "\n");
-      console.log(this.log);
+      this.log = this.log.concat(msg, "\n");
     };
 
     if (this.type === 'apple') {
 
-      this.extractDataFromAPI(
-        this.result.buyAppleResult(this.start, this.end,
-          this.numberOfShares, this.capitalBase, this.logChannel)
-      );
+      this.result.buyAppleResult(this.start, this.end,
+        this.numberOfShares, this.capitalBase, this.logChannel).subscribe(response => {
+        if (!response) {
+          alert("Something went wrong!");
+        }
+        else {
+          this.jobId = response.job_id;
+
+          this.subscription = interval(3000).subscribe(repeat => {
+            this.extractDataFromAPI(this.result.fetchResult(this.jobId));
+          });
+        }
+      });
     }
 
     else if (this.type === 'mean-rev') {
 
-      this.extractDataFromAPI(this.result.meanReversionResult(this.start, this.end,
-        this.numberOfShares, this.capitalBase, this.logChannel)
-      );
+      this.result.meanReversionResult(this.start, this.end,
+        this.numberOfShares, this.capitalBase, this.logChannel).subscribe(response => {
+        if (!response) {
+          alert("Something went wrong!");
+        }
+        else {
+          this.jobId = response.job_id;
+
+          this.subscription = interval(3000).subscribe(repeat => {
+            this.extractDataFromAPI(this.result.fetchResult(this.jobId));
+          });
+        }
+      });
     }
 
     else if (this.type === 'rfr') {
 
-      this.extractDataFromAPI(
-        this.result.randForestRegResult(this.start, this.end,
-          this.ticker, this.capitalBase, this.minutes, this.logChannel)
-      );
+      this.result.randForestRegResult(this.start, this.end,
+        this.ticker, this.capitalBase, this.minutes, this.logChannel).subscribe(response => {
+          if (!response) {
+            alert("Something went wrong!");
+          }
+
+          else {
+            this.jobId = response.job_id;
+
+            this.subscription = interval(3000).subscribe(repeat => {
+              this.extractDataFromAPI(this.result.fetchResult(this.jobId));
+            });
+          }
+      });
     }
   }
 
@@ -124,58 +159,72 @@ export class GraphComponent implements OnInit {
     return date.toDateString().substring(4);
   }
 
-  private static generateRandomString() : string {
+  private static generateRandomString(): string {
     return Math.random().toString(36).substring(2, 15)
       + Math.random().toString(36).substring(2, 15);
   }
 
-  private extractDataFromAPI(observable : Observable<any>) {
+  private extractDataFromAPI(observable: Observable<any>) {
     observable.subscribe(response => {
-      let algoToBench = response.algo_to_benchmark;
-      let rollingBeta = response.rolling_beta;
 
-      let date = new Date();
-
-      let algo = [];
-      let bench = [];
-
-      for (let point of algoToBench.data.data01) {
-        this.xaxis.push(GraphComponent.dateNumToString(point[0], date));
-        algo.push(point[1] * 100);
-        bench.push(point[2] * 100);
+      if (!response) {
+        return;
       }
 
-      this.dataset1.push({
-        data: algo,
-        label: "Algorithm Return %",
-        fill: true,
-      });
-      this.dataset1.push({
-        data: bench,
-        label: "Benchmark Return %",
-        fill: false,
-      });
-
-      let beta = [];
-
-      for (let point of rollingBeta.data.data01) {
-        beta.push(point[1] * 100);
+      else if (!response.done) {
+        return;
       }
 
-      this.dataset2.push({
-        data: beta,
-        label: "Beta"
-      });
+      else {
 
-      if (this.ws) {
-        this.ws.close();
+        this.subscription.unsubscribe();
+
+        let algoToBench = response.algo_to_benchmark;
+        let rollingBeta = response.rolling_beta;
+
+        let date = new Date();
+
+        let algo = [];
+        let bench = [];
+
+        for (let point of algoToBench.data.data01) {
+          this.xaxis.push(GraphComponent.dateNumToString(point[0], date));
+          algo.push(point[1] * 100);
+          bench.push(point[2] * 100);
+        }
+
+        this.dataset1.push({
+          data: algo,
+          label: "Algorithm Return %",
+          fill: true,
+        });
+        this.dataset1.push({
+          data: bench,
+          label: "Benchmark Return %",
+          fill: false,
+        });
+
+        let beta = [];
+
+        for (let point of rollingBeta.data.data01) {
+          beta.push(point[1] * 100);
+        }
+
+        this.dataset2.push({
+          data: beta,
+          label: "Beta"
+        });
+
+        this.done = true;
+
+        this.scroll.scrollTo({
+          target: "graph"
+        });
+
+        if (this.ws) {
+          this.ws.close();
+        }
       }
-
-      this.done = true;
-
-      this.scroll.scrollTo({
-        target: "graph"
-      });
     });
   }
 
