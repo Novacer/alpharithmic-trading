@@ -13,4 +13,8 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
   }
 
+  onLearnMoreClick() {
+    window.location.href = 'https://github.com/Novacer/alpharithmic-trading#alpharithmic-trading';
+  }
+
 }
