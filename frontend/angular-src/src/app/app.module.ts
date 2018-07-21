@@ -9,19 +9,19 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NavbarComponent } from './navbar/navbar.component'
 import { Routes, RouterModule } from "@angular/router";
 import { IntroComponent } from './intro/intro.component';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import {
   MatDatepickerModule,
   MatFormFieldModule, MatIconModule, MatInputModule,
-  MatNativeDateModule, MatProgressSpinnerModule, MatSliderModule,
+  MatNativeDateModule, MatProgressSpinnerModule, MatSliderModule, MatSnackBarModule,
   MatStepperModule,
   MatToolbarModule
 } from "@angular/material";
 import { MatButtonModule } from "@angular/material/button";
 import { SelectAlgoComponent } from './select-algo/select-algo.component';
 import { BuyAppleComponent } from './algorithms/buy-apple/buy-apple.component';
-import {ScrollToModule} from "@nicky-lenaers/ngx-scroll-to";
+import { ScrollToModule } from "@nicky-lenaers/ngx-scroll-to";
 import { MeanReversionComponent } from './algorithms/mean-reversion/mean-reversion.component';
 import { RandForestRegComponent } from './algorithms/rand-forest-reg/rand-forest-reg.component';
 import { TutorialComponent } from './tutorial/tutorial.component';
@@ -68,6 +68,7 @@ const appRoutes : Routes = [
     MatSliderModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule,
     NgbModule.forRoot(),
     ScrollToModule.forRoot(),
     RouterModule.forRoot(appRoutes)
