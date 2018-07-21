@@ -14,7 +14,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import {
   MatDatepickerModule,
   MatFormFieldModule, MatIconModule, MatInputModule,
-  MatNativeDateModule, MatProgressSpinnerModule, MatSliderModule,
+  MatNativeDateModule, MatProgressSpinnerModule, MatSliderModule, MatSnackBarModule,
   MatStepperModule,
   MatToolbarModule
 } from "@angular/material";
@@ -68,6 +68,7 @@ const appRoutes : Routes = [
     MatSliderModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule,
     NgbModule.forRoot(),
     ScrollToModule.forRoot(),
     RouterModule.forRoot(appRoutes)

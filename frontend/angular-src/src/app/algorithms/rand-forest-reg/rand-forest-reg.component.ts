@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
 import {ValidationService} from "../../services/validation.service";
+import {MatSnackBar} from "@angular/material";
 
 @Component({
   selector: 'app-rand-forest-reg',
@@ -24,7 +25,7 @@ export class RandForestRegComponent implements OnInit {
   public beginSim : boolean;
 
   constructor(private formBuilder: FormBuilder, private scroll: ScrollToService,
-              private validation: ValidationService) { }
+              private validation: ValidationService, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
 
@@ -67,7 +68,10 @@ export class RandForestRegComponent implements OnInit {
       }
 
       else {
-
+        this.snackBar.open("Oops! We don't have your chosen stock in our database!",
+                            "Pick another one", {
+            duration: 10000
+          })
       }
     });
 
