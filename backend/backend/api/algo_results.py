@@ -5,8 +5,6 @@ from rest_framework.response import Response
 from ..algorithms.buy_apple import apple_run
 from ..algorithms.mean_reversion import mean_rev_run
 from ..algorithms.random_forest_regression import rfr_run
-import matplotlib.pyplot as plt
-import mpld3 as mp
 import django_rq
 
 
