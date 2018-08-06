@@ -20,7 +20,7 @@ export class ResultService {
   }
 
   /**
-   * Returns an Observable with the result of buying Apple Shares everyday
+   * Returns an Observable with the job_id of buying Apple Shares everyday
    * @param {string} start the start date (in YYYY-MM-DD)
    * @param {string} end the end date (in YYYY-MM-DD)
    * @param {number} shares the number of shares to buy each day
@@ -43,6 +43,15 @@ export class ResultService {
   }
 
 
+  /**
+   * Returns an Observable with the job_id of the Mean Reversion simulation
+   * @param {string} start the simulation start date
+   * @param {string} end the simulation end date
+   * @param {number} shares the number of shares to buy each time
+   * @param {number} capitalBase the initial capital base
+   * @param {string} logChannel the channel which logs will be pushed to
+   * @returns {Observable<any>}
+   */
   meanReversionResult(start: string, end: string,
                       shares: number, capitalBase: number,
                       logChannel: string) :Observable<any> {
@@ -59,6 +68,16 @@ export class ResultService {
   }
 
 
+  /**
+   * returns an Observable with the job_id the Random Forest Regression simulation
+   * @param {string} start the simulation start date
+   * @param {string} end the simulation end date
+   * @param {string} ticker the stock ticker to trade
+   * @param {number} capitalBase the initial capital base
+   * @param {number} minutes the minutes after market open to execute the trade
+   * @param {string} logChannel the channel for which logs are pushed to
+   * @returns {Observable<any>}
+   */
   randForestRegResult(start: string, end: string,
                       ticker: string, capitalBase: number,
                       minutes: number, logChannel: string) : Observable<any> {
@@ -75,6 +94,12 @@ export class ResultService {
     return this.http.post(this.randForestRegURL, body);
   }
 
+
+  /**
+   * Returns an Observable with the result of the job with job_id. The job may or may not be finished
+   * @param {string} jobId the job_id
+   * @returns {Observable<Object>}
+   */
   fetchResult(jobId : string) {
 
     let body = {
