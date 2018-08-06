@@ -141,8 +141,6 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
 
         divergence = bullish_divergence(rsi_prices, percent_baseline, low)
 
-        ws.send(msg_placeholder % "Calculated Divergence")
-
         if divergence is not None and divergence[1] > 1 and current_shares == 0:
             troughs = divergence[0]
             trough_diff = troughs[1] - troughs[0]  # strength of divergence

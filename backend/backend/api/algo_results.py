@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from ..algorithms.buy_apple import apple_run
 from ..algorithms.mean_reversion import mean_rev_run
 from ..algorithms.random_forest_regression import rfr_run
+from ..algorithms.rsi_divergence import rsi_div_run
 import django_rq
 
 
@@ -67,6 +68,16 @@ class RandomForestRegressionResult(APIView):
         }
 
         return Response(json)
+
+
+class RsiDivergenceResult(APIView):
+    def post(self, request, format=None):
+
+        return Response(rsi_div_run(request.data['start'],
+                           request.data['end'],
+                           request.data['capital_base'],
+                           request.data['ticker'],
+                           request.data['log_channel']))
 
 
 class GetResult(APIView):
