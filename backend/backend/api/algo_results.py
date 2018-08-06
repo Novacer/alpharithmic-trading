@@ -73,11 +73,21 @@ class RandomForestRegressionResult(APIView):
 class RsiDivergenceResult(APIView):
     def post(self, request, format=None):
 
-        return Response(rsi_div_run(request.data['start'],
-                           request.data['end'],
-                           request.data['capital_base'],
-                           request.data['ticker'],
-                           request.data['log_channel']))
+        queue = django_rq.get_queue('high')
+
+        job = queue.enqueue(rsi_div_run,
+                            request.data['start'],
+                            request.data['end'],
+                            request.data['capital_base'],
+                            request.data['ticker'],
+                            request.data['log_channel'])
+
+        json = {
+            'success': True,
+            'job_id': job.key
+        }
+
+        return Response(json)
 
 
 class GetResult(APIView):
@@ -86,7 +96,7 @@ class GetResult(APIView):
 
         job = queue.fetch_job(request.data['job_id'])
 
-        if job.result is None:
+        if job is None or job.result is None:
             return Response({'done': False})
 
         else:
