@@ -10,7 +10,6 @@ from websocket import create_connection
 from ..api.create_response import create_json_response
 
 
-
 def mean_rev_run(start_date, end_date, capital_base, shares, log_channel):
 
     ws = create_connection("ws://alpharithmic.herokuapp.com/ws/logs/%s/" % log_channel)

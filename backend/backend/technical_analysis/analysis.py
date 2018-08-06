@@ -234,7 +234,10 @@ def RSI(df, n):
     i = 0
     UpI = [0]
     DoI = [0]
-    while i + 1 <= df.index[-1]:
+
+    length = len(df.index)
+
+    while i + 1 < length:
         UpMove = df.get_value(i + 1, 'High') - df.get_value(i, 'High')
         DoMove = df.get_value(i, 'Low') - df.get_value(i + 1, 'Low')
         if UpMove > DoMove and UpMove > 0:
@@ -253,8 +256,7 @@ def RSI(df, n):
     PosDI = pd.Series(pd.ewma(UpI, span=n, min_periods=n - 1))
     NegDI = pd.Series(pd.ewma(DoI, span=n, min_periods=n - 1))
     RSI = pd.Series(PosDI / (PosDI + NegDI), name='RSI_' + str(n))
-    df = df.join(RSI)
-    return df
+    return RSI
 
 
 # True Strength Index
