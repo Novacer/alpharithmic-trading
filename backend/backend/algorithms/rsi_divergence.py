@@ -1,9 +1,11 @@
 from ..technical_analysis.analysis import RSI
+from ..api.create_response import create_json_response
 import pandas as pd
 import math
 from zipline.api import order_target, symbol, order_target_percent
 from zipline import run_algorithm
 from websocket import create_connection
+
 
 def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
 
@@ -158,9 +160,10 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
                            handle_data=handle_data, capital_base=capital_base,
                            bundle='quantopian-quandl')
 
-    return result
+    ws.send(msg_placeholder % "Simulation End")
+    ws.send(msg_placeholder % "Fetching backtest results from Redis Queue...")
 
+    result.dropna(inplace=True)
+    ws.close()
 
-result = rsi_div_run('2016-01-01', '2017-01-01', 1000000, 'FB', 'a')
-
-print(result.tail())
+    return create_json_response(result)
