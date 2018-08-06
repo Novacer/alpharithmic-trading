@@ -1,10 +1,9 @@
-import sys
-sys.path.append('..')
-from technical_analysis import analysis
+from ..technical_analysis.analysis import RSI
 import pandas as pd
 import math
 from zipline.api import order_target, symbol, order_target_percent
 from zipline import run_algorithm
+
 
 
 def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
@@ -100,7 +99,7 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
         prices = data.history(assets=context.stock, bar_count=lookback,
                               frequency='1d', fields='price')
 
-        rsi = analysis.RSI(prices, RSI_time_period)
+        rsi = RSI(prices, RSI_time_period)
 
         rsi_prices = create_rsi_price_array(rsi, prices_close)
         num_shares = math.floor(context.max_notional / data[context.stock].close_price)
