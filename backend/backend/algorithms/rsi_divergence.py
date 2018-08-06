@@ -3,10 +3,15 @@ import pandas as pd
 import math
 from zipline.api import order_target, symbol, order_target_percent
 from zipline import run_algorithm
-
-
+from websocket import create_connection
 
 def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
+
+    ws = create_connection("ws://alpharithmic.herokuapp.com/ws/logs/%s/" % log_channel)
+    msg_placeholder = "{\"message\": \"%s\"}"
+
+    ws.send(msg_placeholder % "Link Start")
+
     def create_rsi_price_array(rsi, closelist):
         price_rsi = []
         prices_close_list = list(closelist.values.flatten())
@@ -45,6 +50,9 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
                 pass
         # check to see if potential pattern.
         # A potential pattern means it is current and RSI is gaining strength (bullish)
+
+        ws.send(msg_placeholder % "Looking for potential patterns...")
+
         try:
             if trough_vals[-1] == get_rsi[-2] and trough_vals[-1] > trough_vals[-2]:
 
@@ -57,13 +65,21 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
 
                         if percent_dif >= percent_baseline:
 
+                            ws.send(msg_placeholder % "Found a promising pattern!")
+
                             trough_vals = trough_vals[-2:]
                             trough_one_index = (get_rsi.index(trough_vals[-1]))
                             trough_two_index = (get_rsi.index(trough_vals[-2]))
                             price_signal = get_price[trough_one_index]
                             price_setup = get_price[trough_two_index]
                             # confirm divergence by comparing price action
+
+                            ws.send(msg_placeholder % "Checking to confirm divergence...")
+
                             if price_signal < price_setup:
+
+                                ws.send(msg_placeholder % "Divergence confirmed!")
+
                                 payload.append(trough_vals)
                                 payload.append(len(delta))
                                 payload.append([price_setup, price_signal])
@@ -75,12 +91,16 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
         return
 
     def set_trailing_stop(context, data):
+
         if context.portfolio.positions[context.stock].amount:
             price = data[context.stock].price
             context.stop_price = max(context.stop_price, context.stop_percentage * price)
+            ws.send(msg_placeholder % ("Set a Stop Price of: " + str(context.stop_price)))
 
     def initialize(context):
-        context.max_notional = 100000
+
+        ws.send(msg_placeholder % "Simulation Start")
+        context.max_notional = capital_base
         context.stock = symbol(ticker)
         context.stop_price = 0
         context.stop_percentage = 0.85
@@ -104,17 +124,22 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
         rsi_prices = create_rsi_price_array(rsi, prices_close)
         num_shares = math.floor(context.max_notional / data[context.stock].close_price)
 
+        ws.send(msg_placeholder % "Calculated Relative Strength Index")
+
         if num_shares > 0:
             set_trailing_stop(context, data)
 
         if data[context.stock].price < context.stop_price:
             order_target(context.stock, 0)  # Sell all the stock
-            print("selling")
+            ws.send(msg_placeholder % ("Sold because Price: %s is less than Stop Price: %s"
+                                       % (data[context.stock].price, context.stop_price)))
             context.stop_price = 0
 
         current_shares = context.portfolio.positions[context.stock].amount
 
         divergence = bullish_divergence(rsi_prices, percent_baseline, low)
+
+        ws.send(msg_placeholder % "Calculated Divergence")
 
         if divergence is not None and divergence[1] > 1 and current_shares == 0:
             troughs = divergence[0]
@@ -122,7 +147,8 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
 
             if trough_diff > divergence_strength:
                 order_target_percent(context.stock, 1.0)
-                print("buying")
+                ws.send(msg_placeholder % ("Bought because Divergence Strength: %s is greater than %s"
+                                           % (trough_diff, divergence_strength)))
                 # Bought shares
 
     start = pd.to_datetime(start_date).tz_localize('US/Eastern')
