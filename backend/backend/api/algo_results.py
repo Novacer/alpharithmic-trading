@@ -97,15 +97,6 @@ class GetResult(APIView):
         job = queue.fetch_job(request.data['job_id'])
 
         if job is None or job.result is None:
-
-            failed_queue = django_rq.get_failed_queue()
-
-            while True:
-                failed_job = failed_queue.dequeue()
-                if not failed_job:
-                    break
-                failed_job.delete()
-
             return Response({'done': False})
 
         else:
