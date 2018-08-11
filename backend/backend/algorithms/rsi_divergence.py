@@ -124,7 +124,13 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
         rsi = RSI(prices, RSI_time_period)
 
         rsi_prices = create_rsi_price_array(rsi, prices_close)
-        num_shares = math.floor(context.max_notional / data[context.stock].close_price)
+
+        global num_shares
+
+        try:
+            num_shares = math.floor(context.max_notional / data[context.stock].close_price)
+        except ValueError:
+            num_shares = 0
 
         if num_shares > 0:
             set_trailing_stop(context, data)
