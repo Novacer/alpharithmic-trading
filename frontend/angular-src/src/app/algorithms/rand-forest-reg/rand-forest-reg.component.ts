@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
-import {ValidationService} from "../../services/validation.service";
+import {ValidateResponse, ValidationService} from "../../services/validation.service";
 import {MatSnackBar} from "@angular/material";
 
 @Component({
@@ -81,9 +81,4 @@ export class RandForestRegComponent implements OnInit {
     return form.value.toISOString().substring(0, 10);
   }
 
-}
-
-interface ValidateResponse {
-  success: boolean,
-  message: string
 }
