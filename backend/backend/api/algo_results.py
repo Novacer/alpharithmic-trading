@@ -100,4 +100,6 @@ class GetResult(APIView):
             return Response({'done': False})
 
         else:
-            return Response(job.result)
+            response = Response(job.result)
+            job.delete()
+            return response

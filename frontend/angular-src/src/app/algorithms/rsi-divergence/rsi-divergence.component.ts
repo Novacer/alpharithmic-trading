@@ -39,14 +39,14 @@ export class RsiDivergenceComponent implements OnInit {
 
     let start = new Date();
     start.setFullYear(2016);
-    start.setMonth(1);
+    start.setMonth(0);
     start.setDate(1);
 
     this.startDate = new FormControl(start);
 
     let end = new Date();
-    end.setFullYear(2018);
-    end.setMonth(1);
+    end.setFullYear(2017);
+    end.setMonth(0);
     end.setDate(1);
 
     this.endDate = new FormControl(end);
