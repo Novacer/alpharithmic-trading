@@ -1,0 +1,85 @@
+<div class="container-fluid">
+  <div class="body" id="top">
+    <div class="container">
+      <div class="py-5 text-center">
+        <img class="d-block mx-auto mb-4" src="../../../assets/icons/candlesticks.png" alt="" width="72" height="72">
+        <h2>RSI Divergence Strategy</h2>
+        <h4>Class: Naive Algorithm</h4>
+        <p class="lead">Search for bullish RSI Divergence patterns in a stock's price. If a pattern
+        is successfully identified, and the strength of the divergence is greater than the required value,
+        then buy the stock. Else, set a stop loss to be 85% of the stock's price. Sell if the stock's price
+        drops below the stop loss. Note that this is a very picky algorithm, so test it on longer periods of time.</p>
+      </div>
+      <mat-vertical-stepper [linear]="false" #stepper>
+        <mat-step [stepControl]="firstForm">
+          <form [formGroup]="firstForm">
+            <ng-template matStepLabel>Basic Configuration</ng-template>
+
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker1" placeholder="Simulation Start"
+                         [value]="startDate.value" [(ngModel)]="startDate.value" [ngModelOptions]="{standalone: true}">
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4 mb-3">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker2" placeholder="Simulation End"
+                         [value]="endDate.value" [(ngModel)]="endDate.value" [ngModelOptions]="{standalone: true}">
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4 mb-3">
+                <mat-form-field>
+                  <mat-icon matPrefix>attach_money</mat-icon>
+                  <input matInput type="number" placeholder="Initial Capital Base"
+                         [value]="capitalBase" [(ngModel)]="capitalBase" [ngModelOptions]="{standalone: true}">
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step [stepControl]="secondForm">
+          <form [formGroup]="secondForm">
+            <ng-template matStepLabel>Plan Your Transactions</ng-template>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <mat-form-field>
+                  <input matInput type="text" placeholder="Stock Ticker Symbol"
+                         [value]="ticker" [(ngModel)]="ticker" [ngModelOptions]="{standalone: true}">
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step [stepControl]="thirdForm">
+          <form [formGroup]="thirdForm">
+            <ng-template matStepLabel>Done</ng-template>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <button mat-button (click)="onDoneClick()">Begin Trading</button>
+              </div>
+            </div>
+          </form>
+        </mat-step>
+      </mat-vertical-stepper>
+    </div>
+  </div>
+  <div id="results">
+    <ng-container *ngIf="beginSim">
+      <div class="body">
+        <app-graph [type]="'rsi'"
+                   [start]="getDate(startDate)"
+                   [end]="getDate(endDate)"
+                   [capitalBase]="capitalBase"
+                   [ticker]="ticker"
+                   [minutes]="minutesAfterOpen"></app-graph>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
