@@ -53,8 +53,6 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
         # check to see if potential pattern.
         # A potential pattern means it is current and RSI is gaining strength (bullish)
 
-        ws.send(msg_placeholder % "Looking for potential patterns...")
-
         try:
             if trough_vals[-1] == get_rsi[-2] and trough_vals[-1] > trough_vals[-2]:
 
@@ -67,8 +65,6 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
 
                         if percent_dif >= percent_baseline:
 
-                            ws.send(msg_placeholder % "Found a promising pattern!")
-
                             trough_vals = trough_vals[-2:]
                             trough_one_index = (get_rsi.index(trough_vals[-1]))
                             trough_two_index = (get_rsi.index(trough_vals[-2]))
@@ -76,11 +72,11 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
                             price_setup = get_price[trough_two_index]
                             # confirm divergence by comparing price action
 
-                            ws.send(msg_placeholder % "Checking to confirm divergence...")
-
                             if price_signal < price_setup:
 
-                                ws.send(msg_placeholder % "Divergence confirmed!")
+                                ws.send(msg_placeholder % "Found a promising pattern!")
+                                ws.send(msg_placeholder % ("Price signal: %s < Price Setup: %s"
+                                        % (str(price_signal), str(price_setup))))
 
                                 payload.append(trough_vals)
                                 payload.append(len(delta))
@@ -125,8 +121,6 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
 
         rsi_prices = create_rsi_price_array(rsi, prices_close)
         num_shares = math.floor(context.max_notional / data[context.stock].close_price)
-
-        ws.send(msg_placeholder % "Calculated Relative Strength Index")
 
         if num_shares > 0:
             set_trailing_stop(context, data)
