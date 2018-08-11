@@ -150,6 +150,24 @@ export class GraphComponent implements OnInit {
           }
       });
     }
+
+    else if (this.type === 'rsi') {
+
+      this.result.rsiDivergenceResult(this.start, this.end, this.ticker,
+        this.capitalBase, this.logChannel).subscribe(response => {
+          if (!response) {
+            alert("Something went wrong!");
+          }
+
+          else {
+            this.jobId = response.job_id;
+
+            this.subscription = interval(5000).subscribe(repeat => {
+              this.extractDataFromAPI(this.result.fetchResult(this.jobId));
+            });
+          }
+      });
+    }
   }
 
   public static dateNumToString(num, date: Date) {

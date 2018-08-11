@@ -17,3 +17,8 @@ export class ValidationService {
     return this.http.get(this.validateSymbolURL, {params: httpParams});
   }
 }
+
+export interface ValidateResponse {
+  success: boolean,
+  message: string
+}

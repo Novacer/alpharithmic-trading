@@ -5,11 +5,11 @@ import {ValidateResponse, ValidationService} from "../../services/validation.ser
 import {MatSnackBar} from "@angular/material";
 
 @Component({
-  selector: 'app-rand-forest-reg',
-  templateUrl: './rand-forest-reg.component.html',
-  styleUrls: ['./rand-forest-reg.component.css']
+  selector: 'app-rsi-divergence',
+  templateUrl: './rsi-divergence.component.html',
+  styleUrls: ['./rsi-divergence.component.css']
 })
-export class RandForestRegComponent implements OnInit {
+export class RsiDivergenceComponent implements OnInit {
 
   public firstForm : FormGroup;
   public secondForm : FormGroup;
@@ -19,8 +19,8 @@ export class RandForestRegComponent implements OnInit {
   public endDate : FormControl;
 
   public capitalBase : number;
-  public ticker : string;
-  public minutesAfterOpen : number;
+
+  public ticker: string;
 
   public beginSim : boolean;
 
@@ -38,23 +38,22 @@ export class RandForestRegComponent implements OnInit {
     this.thirdForm = this.formBuilder.group({thirdCtrl: ['', Validators.required]});
 
     let start = new Date();
-    start.setFullYear(2017);
-    start.setMonth(3);
+    start.setFullYear(2016);
+    start.setMonth(0);
     start.setDate(1);
 
     this.startDate = new FormControl(start);
 
     let end = new Date();
-    end.setFullYear(2018);
-    end.setMonth(3);
+    end.setFullYear(2017);
+    end.setMonth(0);
     end.setDate(1);
 
     this.endDate = new FormControl(end);
 
     this.capitalBase = 1000000;
-    this.ticker = "";
-    this.minutesAfterOpen = 1;
     this.beginSim = false;
+    this.ticker = "";
   }
 
   onDoneClick() {
@@ -69,7 +68,7 @@ export class RandForestRegComponent implements OnInit {
 
       else {
         this.snackBar.open("Oops! We don't have your chosen stock in our database!",
-                            "Pick another one", {
+          "Pick another one", {
             duration: 10000
           })
       }
@@ -80,5 +79,4 @@ export class RandForestRegComponent implements OnInit {
   getDate(form: FormControl) {
     return form.value.toISOString().substring(0, 10);
   }
-
 }
