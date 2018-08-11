@@ -93,7 +93,9 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
         if context.portfolio.positions[context.stock].amount:
             price = data[context.stock].price
             context.stop_price = max(context.stop_price, context.stop_percentage * price)
-            ws.send(msg_placeholder % ("Set a Stop Price of: " + str(context.stop_price)))
+
+            if context.days_traded % 5 == 0:
+                ws.send(msg_placeholder % ("Set a Stop Price of: " + str(context.stop_price)))
 
     def initialize(context):
 
@@ -102,6 +104,7 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
         context.stock = symbol(ticker)
         context.stop_price = 0
         context.stop_percentage = 0.85
+        context.days_traded = 0
 
     def handle_data(context, data):
 
@@ -110,6 +113,7 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
         low = 30  # RSI low value
         RSI_time_period = 3
         divergence_strength = 0
+        context.days_traded += 1
 
         prices_close = data.history(assets=context.stock, bar_count=lookback,
                                     frequency='1d', fields='price')
