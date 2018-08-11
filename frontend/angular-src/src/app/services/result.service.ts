@@ -10,12 +10,14 @@ export class ResultService {
   private readonly buyAppleURL : string;
   private readonly meanReversionURL : string;
   private readonly randForestRegURL : string;
+  private readonly rsiDivergenceURL : string;
   private readonly fetchResultURL : string;
 
   constructor(private http: HttpClient) {
     this.buyAppleURL = "/api/post/buy-apple";
     this.meanReversionURL = "/api/post/mean-reversion";
     this.randForestRegURL = "/api/post/random-forest-regression";
+    this.rsiDivergenceURL = "api/post/rsi-divergence";
     this.fetchResultURL = "/api/post/result";
   }
 
@@ -69,7 +71,7 @@ export class ResultService {
 
 
   /**
-   * returns an Observable with the job_id the Random Forest Regression simulation
+   * returns an Observable with the job_id of the Random Forest Regression simulation
    * @param {string} start the simulation start date
    * @param {string} end the simulation end date
    * @param {string} ticker the stock ticker to trade
@@ -92,6 +94,32 @@ export class ResultService {
     };
 
     return this.http.post(this.randForestRegURL, body);
+  }
+
+  /**
+   * returns an Observable with the job_id of the RSI Divergence simulation
+   * @param {string} start the simulation start date
+   * @param {string} end the simulation end date
+   * @param {string} ticker the stock's ticker
+   * @param {number} capitalBase the initial capital base
+   * @param {string} logChannel the channel for which logs are pushed to
+   * @returns {Observable<any>}
+   */
+  rsiDivergenceResult(start: string, end: string,
+                      ticker: string, capitalBase: number,
+                      logChannel: string) : Observable<any>{
+
+    console.log(start, end);
+
+    let body = {
+      start: start,
+      end: end,
+      ticker: ticker,
+      capital_base: capitalBase,
+      log_channel: logChannel
+    };
+
+    return this.http.post(this.rsiDivergenceURL, body);
   }
 
 

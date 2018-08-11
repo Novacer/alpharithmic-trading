@@ -8,7 +8,6 @@ import { Component, OnInit } from '@angular/core';
 export class SelectAlgoComponent implements OnInit {
 
   constructor() {
-    console.log("Hi");
   }
 
   ngOnInit() {
