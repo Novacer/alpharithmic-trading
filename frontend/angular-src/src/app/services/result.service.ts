@@ -109,8 +109,6 @@ export class ResultService {
                       ticker: string, capitalBase: number,
                       logChannel: string) : Observable<any>{
 
-    console.log(start, end);
-
     let body = {
       start: start,
       end: end,
