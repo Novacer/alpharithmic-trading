@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ResultService} from "../services/result.service";
 import {interval} from "rxjs";
 import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
@@ -10,7 +10,7 @@ import {Observable} from "rxjs/internal/Observable";
   templateUrl: './graph.component.html',
   styleUrls: ['./graph.component.css']
 })
-export class GraphComponent implements OnInit {
+export class GraphComponent implements OnInit, OnDestroy {
 
   @Input()
   private type: string;
@@ -176,6 +176,12 @@ export class GraphComponent implements OnInit {
             });
           }
       });
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.subscription !== undefined && this.subscription !== null) {
+      this.subscription.unsubscribe();
     }
   }
 
