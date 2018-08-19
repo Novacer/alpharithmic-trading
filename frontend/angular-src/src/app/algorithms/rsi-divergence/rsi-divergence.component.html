@@ -60,9 +60,16 @@
             <ng-template matStepLabel>Done</ng-template>
 
             <div class="row">
-              <div class="col-md-6 mb-3">
+              <div class="col-md-6 mb-3" *ngIf="!beginSim; else reset;">
                 <button mat-button (click)="onDoneClick()">Begin Trading</button>
               </div>
+
+              <ng-template #reset>
+                <div class="col-md-6 mb-3">
+                  <button mat-button (click)="onResetClick()">Reset</button>
+                </div>
+              </ng-template>
+
             </div>
           </form>
         </mat-step>
