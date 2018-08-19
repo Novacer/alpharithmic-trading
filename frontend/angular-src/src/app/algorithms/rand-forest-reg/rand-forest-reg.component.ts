@@ -77,6 +77,10 @@ export class RandForestRegComponent implements OnInit {
 
   }
 
+  onResetClick() {
+    this.beginSim = false;
+  }
+
   getDate(form: FormControl) {
     return form.value.toISOString().substring(0, 10);
   }
