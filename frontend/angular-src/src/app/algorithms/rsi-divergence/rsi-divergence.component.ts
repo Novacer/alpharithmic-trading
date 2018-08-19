@@ -23,6 +23,7 @@ export class RsiDivergenceComponent implements OnInit {
   public ticker: string;
 
   public beginSim : boolean;
+  public validating : boolean;
 
   constructor(private formBuilder: FormBuilder, private scroll: ScrollToService,
               private validation: ValidationService, private snackBar: MatSnackBar) { }
@@ -45,7 +46,7 @@ export class RsiDivergenceComponent implements OnInit {
     this.startDate = new FormControl(start);
 
     let end = new Date();
-    end.setFullYear(2017);
+    end.setFullYear(2018);
     end.setMonth(0);
     end.setDate(1);
 
@@ -53,16 +54,20 @@ export class RsiDivergenceComponent implements OnInit {
 
     this.capitalBase = 1000000;
     this.beginSim = false;
+    this.validating = false;
     this.ticker = "";
   }
 
   onDoneClick() {
+
+    this.validating = true;
 
     this.validation.validateSymbol(this.ticker).subscribe((response : ValidateResponse) => {
       if (response && response.success) {
         this.scroll.scrollTo({
           target: "results"
         });
+        this.validating = false;
         this.beginSim = true;
       }
 
@@ -70,7 +75,9 @@ export class RsiDivergenceComponent implements OnInit {
         this.snackBar.open("Oops! We don't have your chosen stock in our database!",
           "Pick another one", {
             duration: 10000
-          })
+          });
+
+        this.validating = false;
       }
     });
 
