@@ -34,6 +34,7 @@ export class GraphComponent implements OnInit {
   private minutes: number;
 
   public done: boolean;
+  public finalAlpha: number;
 
   private xaxis: string[];
   private dataset1: any[];
@@ -109,6 +110,8 @@ export class GraphComponent implements OnInit {
         else {
           this.jobId = response.job_id;
 
+          this.log = this.log.concat("Request was queued, please be patient as it runs.", "\n");
+
           this.subscription = interval(3000).subscribe(repeat => {
             this.extractDataFromAPI(this.result.fetchResult(this.jobId));
           });
@@ -125,6 +128,8 @@ export class GraphComponent implements OnInit {
         }
         else {
           this.jobId = response.job_id;
+
+          this.log = this.log.concat("Request was queued, please be patient as it runs.", "\n");
 
           this.subscription = interval(3000).subscribe(repeat => {
             this.extractDataFromAPI(this.result.fetchResult(this.jobId));
@@ -144,6 +149,8 @@ export class GraphComponent implements OnInit {
           else {
             this.jobId = response.job_id;
 
+            this.log = this.log.concat("Request was queued, please be patient as it runs.", "\n");
+
             this.subscription = interval(3000).subscribe(repeat => {
               this.extractDataFromAPI(this.result.fetchResult(this.jobId));
             });
@@ -161,6 +168,8 @@ export class GraphComponent implements OnInit {
 
           else {
             this.jobId = response.job_id;
+
+            this.log = this.log.concat("Request was queued, please be patient as it runs.", "\n");
 
             this.subscription = interval(5000).subscribe(repeat => {
               this.extractDataFromAPI(this.result.fetchResult(this.jobId));
@@ -199,6 +208,7 @@ export class GraphComponent implements OnInit {
 
         let algoToBench = response.algo_to_benchmark;
         let rollingBeta = response.rolling_beta;
+        this.finalAlpha = response.alpha;
 
         let date = new Date();
 
@@ -225,7 +235,7 @@ export class GraphComponent implements OnInit {
         let beta = [];
 
         for (let point of rollingBeta.data.data01) {
-          beta.push(point[1] * 100);
+          beta.push(point[1]);
         }
 
         this.dataset2.push({
@@ -235,13 +245,13 @@ export class GraphComponent implements OnInit {
 
         this.done = true;
 
-        this.scroll.scrollTo({
-          target: "graph"
-        });
-
         if (this.ws) {
           this.ws.close();
         }
+
+        this.scroll.scrollTo({
+          target: "graph"
+        });
       }
     });
   }

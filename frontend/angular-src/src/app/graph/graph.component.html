@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container">
 
   <form>
     <div class="form-group">
@@ -9,24 +9,31 @@
     </div>
   </form>
 
-  <div id="graph">
-    <div style="display: block; padding-top: 65px;" *ngIf="done">
-      <canvas baseChart [datasets]="dataset1"
-              [labels]="xaxis"
-              [chartType]="'line'"
-              [options]="options"
-              [colors]="colors">
-      </canvas>
-      <canvas baseChart [datasets]="dataset2"
-              [labels]="xaxis"
-              [chartType]="'line'"
-              [options]="options">
-      </canvas>
+
+  <div id="graph" style="display: block; padding-top: 2.5%" *ngIf="done">
+    <div style="text-align: end;">
+      <h3>Final Alpha: </h3>
+      <h4>{{ finalAlpha }}</h4>
     </div>
-    <ng-container *ngIf="!done">
-      <div class="spinner">
-        <mat-spinner></mat-spinner>
-      </div>
-    </ng-container>
+    <canvas baseChart [datasets]="dataset1"
+            [labels]="xaxis"
+            [chartType]="'line'"
+            [options]="options"
+            [colors]="colors">
+    </canvas>
+
+    <div style="padding-top: 1.5%; padding-bottom: 1.5%"></div>
+
+    <canvas baseChart [datasets]="dataset2"
+            [labels]="xaxis"
+            [chartType]="'line'"
+            [options]="options">
+    </canvas>
   </div>
+
+  <ng-container *ngIf="!done">
+    <div class="spinner">
+      <mat-spinner></mat-spinner>
+    </div>
+  </ng-container>
 </div>
