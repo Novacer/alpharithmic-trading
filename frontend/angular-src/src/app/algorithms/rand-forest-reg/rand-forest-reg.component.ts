@@ -23,6 +23,7 @@ export class RandForestRegComponent implements OnInit {
   public minutesAfterOpen : number;
 
   public beginSim : boolean;
+  public validating : boolean;
 
   constructor(private formBuilder: FormBuilder, private scroll: ScrollToService,
               private validation: ValidationService, private snackBar: MatSnackBar) { }
@@ -55,15 +56,20 @@ export class RandForestRegComponent implements OnInit {
     this.ticker = "";
     this.minutesAfterOpen = 1;
     this.beginSim = false;
+    this.validating = false;
   }
 
   onDoneClick() {
+
+    this.validating = true;
 
     this.validation.validateSymbol(this.ticker).subscribe((response : ValidateResponse) => {
       if (response && response.success) {
         this.scroll.scrollTo({
           target: "results"
         });
+
+        this.validating = false;
         this.beginSim = true;
       }
 
@@ -71,10 +77,16 @@ export class RandForestRegComponent implements OnInit {
         this.snackBar.open("Oops! We don't have your chosen stock in our database!",
                             "Pick another one", {
             duration: 10000
-          })
+          });
+
+        this.validating = false;
       }
     });
 
+  }
+
+  onResetClick() {
+    this.beginSim = false;
   }
 
   getDate(form: FormControl) {
