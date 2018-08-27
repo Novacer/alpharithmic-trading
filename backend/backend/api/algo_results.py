@@ -90,6 +90,25 @@ class RsiDivergenceResult(APIView):
         return Response(json)
 
 
+class TrendFollowResult(APIView):
+    def post(self, request, format=None):
+
+        queue = django_rq.get_queue('high')
+
+        job = queue.enqueue(rsi_div_run,
+                            request.data['start'],
+                            request.data['end'],
+                            request.data['capital_base'],
+                            request.data['log_channel'])
+
+        json = {
+            'success': True,
+            'job_id': job.key
+        }
+
+        return Response(json)
+
+
 class GetResult(APIView):
     def post(self, request, format=None):
         queue = django_rq.get_queue('high')
