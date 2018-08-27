@@ -4,7 +4,6 @@ import statsmodels.api as sm
 from zipline.api import attach_pipeline, pipeline_output, schedule_function, get_open_orders, order_target_percent
 from zipline.pipeline import Pipeline
 from zipline.utils.events import date_rules, time_rules
-from zipline.pipeline.data import USEquityPricing
 from zipline.pipeline.factors import AverageDollarVolume
 
 
@@ -43,6 +42,11 @@ def trend_follow_run():
         pipe.set_screen(high_dollar_volume)
 
         return pipe
+
+    def before_trading_start(context, data):
+        context.pipe_output = pipeline_output('top_dollar_volume')
+
+        context.security_list = context.pipe_output.index
 
     def regression(context, data):
         prices = data.history(context.security_list, 'open', context.lookback, '1d')
