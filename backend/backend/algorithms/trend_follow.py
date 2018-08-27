@@ -135,7 +135,7 @@ def trend_follow_run(start_date, end_date, capital_base, log_channel):
                             ('Gained %+2d%% for %s, exited from long because profit take at top 95%% of bollinger band'
                              % (gain * 100, str(s))))
 
-                elif delta[-1] < -context.profittake * sd and context.weights[s] < 0:
+                elif delta[-1] < -context.profit_take * sd and context.weights[s] < 0:
                     context.weights[s] = 0
                     ws.send(msg_placeholder %
                             ('Gained %+2d%% for %s, exited from long because profit take at top 95%% of bollinger band'
@@ -149,10 +149,16 @@ def trend_follow_run(start_date, end_date, capital_base, log_channel):
                     context.weights[s] = slope
                     context.drawdown[s] = slope_min
 
+                    ws.send(msg_placeholder %
+                            ('Bought %s because trend is up and price crosses regression line' % (str(s))))
+
                 # Trend is down and price crosses the regression line
                 if slope < -slope_min and delta[-1] < 0 and delta[-2] > 0  and dd < context.max_drawdown:
                     context.weights[s] = slope
                     context.drawdown[s] = slope_min
+
+                    ws.send(msg_placeholder %
+                            ('Shorted %s because trend is down and price crosses regression line' % (str(s))))
 
     def execute_transactions(context, data):
         open_orders = get_open_orders()
@@ -161,15 +167,9 @@ def trend_follow_run(start_date, end_date, capital_base, log_channel):
             if not data.can_trade(s) or s in open_orders:
                 continue
 
-            num_shares = context.shares[s]
+            pct_shares = context.shares[s]
 
-            order_target_percent(s, num_shares)
-
-            if num_shares > 0:
-                ws.send("Bought %s shares of %s" % (str(num_shares), str(s)))
-
-            elif num_shares < 0:
-                ws.send("Shorted %s shares of %s" % (str(num_shares), str(s)))
+            order_target_percent(s, pct_shares)
 
     def trade(context, data):
         weights = context.weights
@@ -273,3 +273,4 @@ def trend_follow_run(start_date, end_date, capital_base, log_channel):
     ws.close()
 
     return create_json_response(result)
+
