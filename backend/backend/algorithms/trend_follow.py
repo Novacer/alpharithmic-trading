@@ -223,7 +223,7 @@ def trend_follow_run(start_date, end_date, capital_base, log_channel):
                 context.shares[s] = 0
 
                 ws.send(msg_placeholder %
-                        ('Exited from long because of stop loss with change of %+2d%% for %s,'
+                        ('Exited from short because of stop loss with change of %+2d%% for %s,'
                          % (gain * 100, str(s))))
 
     def drawdown(xs):
