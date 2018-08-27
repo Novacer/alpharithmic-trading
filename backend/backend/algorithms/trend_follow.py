@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
-from zipline.api import attach_pipeline, pipeline_output, schedule_function, get_open_orders
+from zipline.api import attach_pipeline, pipeline_output, schedule_function, get_open_orders, order_target_percent
 from zipline.pipeline import Pipeline
 from zipline.utils.events import date_rules, time_rules
 from zipline.pipeline.data import USEquityPricing
@@ -25,6 +25,12 @@ def trend_follow_run():
         schedule_function(stop_loss, date_rules.every_day(), time_rules.market_open(minutes=30))
         schedule_function(regression, date_rules.every_day(), time_rules.market_open(minutes=50))
         schedule_function(trade, date_rules.every_day(), time_rules.market_open(minutes=100))
+
+        for thirty_minute_interval in range(30, 391, 30):
+            schedule_function(execute_transactions, date_rules.every_day,
+                              time_rules.market_open(minutes=thirty_minute_interval))  # execute every 30 minutes
+
+        attach_pipeline(create_high_dollar_volume_pipeline(), 'top_dollar_volume')
 
 
     def create_high_dollar_volume_pipeline():
@@ -104,6 +110,15 @@ def trend_follow_run():
                 if slope < -slope_min and delta[-1] < 0 and delta[-2] > 0  and dd < context.maxdrawdown:
                     context.weights[s] = slope
                     context.drawdown[s] = slope_min
+
+    def execute_transactions(context, data):
+        open_orders = get_open_orders()
+
+        for s in context.shares:
+            if not data.can_trade(s) or s in open_orders:
+                continue
+
+            order_target_percent(s, context.shares[s])
 
     def trade(context, data):
         weights = context.weights
