@@ -44,7 +44,7 @@ export class GraphComponent implements OnInit, OnDestroy {
 
   private logChannel: string;
   private ws: WebSocket;
-  private log: string;
+  public log: string;
 
   private jobId: string;
   private subscription: Subscription;

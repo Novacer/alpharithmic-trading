@@ -2,8 +2,8 @@
 # This script is to automate the building of the angular frontend
 
 cd angular-src
-echo "Building angular source in prod mode"
-ng build --prod
+echo "Building angular source in dev mode"
+ng build
 cd ../
 echo "Copying contents of dist into static files"
 cp -R angular-src/dist/. ../backend/dist/
