@@ -87,6 +87,30 @@ def trend_follow_run():
                     context.weights[s] = slope
                     context.drawdown[s] = slope_min
 
+    def trade(context, data):
+        weights = context.weights
+
+        positions = sum(weights[weight] != 0 for weight in weights)
+        held_positions = [p for p in context.portfolio.positions if context.portfolio.positions[p].amount != 0]
+
+        context.securities = context.security_list.tolist() + held_positions
+
+        for security in context.securities:
+
+            if security not in weights:
+                context.shares.pop(security, 0)
+                context.drawdown.pop(security, 0)
+
+            elif weights[security] == 0:
+                context.shares.pop(security, 0)
+                context.drawdown.pop(security, 0)
+
+            elif weights[security] > 0:
+                context.shares[security] = context.max_leverage / positions
+
+            elif weights[security] < 0:
+                context.shares[security] = -(context.max_leverage / positions)
+
     def drawdown(xs):
         if len(xs) == 0:
             return 0
