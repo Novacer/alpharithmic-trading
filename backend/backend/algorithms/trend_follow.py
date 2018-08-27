@@ -3,6 +3,7 @@ import pandas as pd
 import statsmodels.api as sm
 from zipline.api import attach_pipeline, pipeline_output, schedule_function, get_open_orders
 from zipline.pipeline import Pipeline
+from zipline.utils.events import date_rules, time_rules
 from zipline.pipeline.data import USEquityPricing
 from zipline.pipeline.factors import AverageDollarVolume
 
@@ -20,6 +21,11 @@ def trend_follow_run():
         context.weights = {}          # Slope at time of entry
         context.drawdown = {}         # Drawdown at time of entry
         context.shares = {}           # Daily target share
+
+        schedule_function(stop_loss, date_rules.every_day(), time_rules.market_open(minutes=30))
+        schedule_function(regression, date_rules.every_day(), time_rules.market_open(minutes=50))
+        schedule_function(trade, date_rules.every_day(), time_rules.market_open(minutes=100))
+
 
     def create_high_dollar_volume_pipeline():
         pipe = Pipeline()
