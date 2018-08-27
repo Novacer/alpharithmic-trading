@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/post/mean-reversion', algo_results.MeanReversionResult.as_view()),
     path('api/post/random-forest-regression', algo_results.RandomForestRegressionResult.as_view()),
     path('api/post/rsi-divergence', algo_results.RsiDivergenceResult.as_view()),
+    path('api/post/trend-follow', algo_results.TrendFollowResult.as_view()),
     path('api/post/result', algo_results.GetResult.as_view()),
     path('django-rq/', include('django_rq.urls'))
 ]

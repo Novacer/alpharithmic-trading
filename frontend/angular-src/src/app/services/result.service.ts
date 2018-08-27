@@ -11,13 +11,15 @@ export class ResultService {
   private readonly meanReversionURL : string;
   private readonly randForestRegURL : string;
   private readonly rsiDivergenceURL : string;
+  private readonly trendFollowURL : string;
   private readonly fetchResultURL : string;
 
   constructor(private http: HttpClient) {
     this.buyAppleURL = "/api/post/buy-apple";
     this.meanReversionURL = "/api/post/mean-reversion";
     this.randForestRegURL = "/api/post/random-forest-regression";
-    this.rsiDivergenceURL = "api/post/rsi-divergence";
+    this.rsiDivergenceURL = "/api/post/rsi-divergence";
+    this.trendFollowURL = "/api/post/trend-follow";
     this.fetchResultURL = "/api/post/result";
   }
 
@@ -118,6 +120,28 @@ export class ResultService {
     };
 
     return this.http.post(this.rsiDivergenceURL, body);
+  }
+
+
+  /**
+   * returns an Observable with the job_id of the Trend Follow simulation
+   * @param {string} start the start date
+   * @param {string} end the simulation end date
+   * @param {number} capitalBase the initial capital base
+   * @param {string} logChannel the channel for which logs are pushed to
+   * @returns {Observable<any>}
+   */
+  trendFollowResult(start: string, end: string,
+                    capitalBase: number, logChannel: string) : Observable<any> {
+
+    let body = {
+      start: start,
+      end: end,
+      capital_base: capitalBase,
+      log_channel: logChannel
+    };
+
+    return this.http.post(this.trendFollowURL, body);
   }
 
 

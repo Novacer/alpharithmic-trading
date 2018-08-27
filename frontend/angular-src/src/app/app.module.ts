@@ -27,6 +27,7 @@ import { RandForestRegComponent } from './algorithms/rand-forest-reg/rand-forest
 import { TutorialComponent } from './tutorial/tutorial.component';
 import { BuilderComponent } from './builder/builder.component';
 import { RsiDivergenceComponent } from './algorithms/rsi-divergence/rsi-divergence.component';
+import { TrendFollowComponent } from './algorithms/trend-follow/trend-follow.component';
 
 const appRoutes : Routes = [
   { path: '', component: IntroComponent, pathMatch: 'full'},
@@ -35,6 +36,7 @@ const appRoutes : Routes = [
   { path: 'algorithms/mean-reversion', component: MeanReversionComponent },
   { path: 'algorithms/random-forest-regression', component: RandForestRegComponent },
   { path: 'algorithms/rsi-divergence', component: RsiDivergenceComponent },
+  { path: 'algorithms/trend-follow', component: TrendFollowComponent },
   { path: 'tutorial', component: TutorialComponent },
   { path: 'build', component: BuilderComponent },
   { path: '**', redirectTo: '' }
@@ -52,7 +54,8 @@ const appRoutes : Routes = [
     RandForestRegComponent,
     TutorialComponent,
     BuilderComponent,
-    RsiDivergenceComponent
+    RsiDivergenceComponent,
+    TrendFollowComponent
   ],
   imports: [
     BrowserModule,
