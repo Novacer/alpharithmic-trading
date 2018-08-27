@@ -21,6 +21,17 @@ def trend_follow_run():
         context.drawdown = {}         # Drawdown at time of entry
         context.shares = {}           # Daily target share
 
+    def create_high_dollar_volume_pipeline():
+        pipe = Pipeline()
+
+        dollar_volume = AverageDollarVolume(window_length=63)  # 63 days = 1 quarter
+        pipe.add(dollar_volume, 'dollar_volume')
+
+        high_dollar_volume = dollar_volume.percentile_between(95, 100)  # top 5% by dollar volume
+        pipe.set_screen(high_dollar_volume)
+
+        return pipe
+
     def regression(context, data):
         prices = data.history(context.security_list, 'open', context.lookback, '1d')
 
