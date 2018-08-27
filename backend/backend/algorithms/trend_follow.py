@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
-from zipline.api import attach_pipeline, pipeline_output, schedule_function
+from zipline.api import attach_pipeline, pipeline_output, schedule_function, get_open_orders
 from zipline.pipeline import Pipeline
 from zipline.pipeline.data import USEquityPricing
 from zipline.pipeline.factors import AverageDollarVolume
@@ -42,7 +42,7 @@ def trend_follow_run():
 
             # y = ax + b
             results = sm.OLS(Y, A).fit()
-            (b , a) = results.params
+            (b, a) = results.params
 
             slope = a / Y[-1] * 252  # Daily return regression * 1 year
 
@@ -63,7 +63,7 @@ def trend_follow_run():
             # Exit
             if context.weights[s] != 0 and s in context.weights:
 
-                # Long but slope turns down, then exit
+                # Long but slope turns down
                 if context.weights[s] > 0 and slope < 0:
                     context.weights[s] = 0
 
@@ -72,9 +72,10 @@ def trend_follow_run():
                     context.weights[s] = 0
 
                 # Profit take reaches top 95% bollinger band
-                if delta[-1] > context.profittake * sd and s in context.weights and context.weights[s] > 0:
+                elif delta[-1] > context.profittake * sd and s in context.weights and context.weights[s] > 0:
                     context.weights[s] = 0
 
+            # Enter
             else:
 
                 # Trend is up and price crosses the regression line
@@ -110,6 +111,29 @@ def trend_follow_run():
 
             elif weights[security] < 0:
                 context.shares[security] = -(context.max_leverage / positions)
+
+    def stop_loss(context, data):
+
+        prices = data.history(context.portfolio.positions.keys(), 'price', context.lookback, '1d')
+
+        for s in context.portfolio.positions:
+
+            if context.weights[s] == 0 or s not in context.weights:
+                context.shares[s] = 0
+                continue
+
+            if s not in prices or s in get_open_orders():
+                continue
+
+            gain = get_gain(context, s)
+
+            if context.portfolio.positions[s].amount > 0 and drawdown(prices[s].values) > context.drawdown[s]:
+                context.weights[s] = 0
+                context.shares[s] = 0  # stop loss
+
+            elif context.portfolio.positions[s].amount < 0 and drawdown(- prices[s].values) > context.drawdown[s]:
+                context.weights[s] = 0
+                context.shares[s] = 0
 
     def drawdown(xs):
         if len(xs) == 0:
