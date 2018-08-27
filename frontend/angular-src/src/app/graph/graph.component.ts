@@ -187,8 +187,6 @@ export class GraphComponent implements OnInit, OnDestroy {
 
           else {
 
-            console.log(response);
-
             this.jobId = response.job_id;
 
             this.log = this.log.concat("Request was queued, please be patient as it runs.", "\n");
