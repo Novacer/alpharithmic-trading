@@ -1,3 +1,77 @@
-<p>
-  trend-follow works!
-</p>
+<div class="container-fluid">
+  <div class="body" id="top">
+    <div class="container">
+      <div class="py-5 text-center">
+        <img class="d-block mx-auto mb-4" src="../../../assets/icons/candlesticks.png" alt="" width="72" height="72">
+        <h2>Trend Follower</h2>
+        <h4>Class: Advanced Algorithm</h4>
+        <p class="lead">For the top 5% of stocks by Average Dollar Volume, compute the regression line y=ax+b
+          If the slope exceeds 10% per year, and the past drawdown crosses the regression line,
+          then long/short the stock. Long if the trend is up, short if the trend is down.
+          While holding on to a long/short position, set a stop loss if the current drawdown exceeds
+          the drawdown at time of entry.</p>
+      </div>
+      <mat-vertical-stepper [linear]="false" #stepper>
+        <mat-step [stepControl]="firstForm">
+          <form [formGroup]="firstForm">
+            <ng-template matStepLabel>Basic Configuration</ng-template>
+
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker1" placeholder="Simulation Start"
+                         [value]="startDate.value" [(ngModel)]="startDate.value" [ngModelOptions]="{standalone: true}">
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4 mb-3">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker2" placeholder="Simulation End"
+                         [value]="endDate.value" [(ngModel)]="endDate.value" [ngModelOptions]="{standalone: true}">
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4 mb-3">
+                <mat-form-field>
+                  <mat-icon matPrefix>attach_money</mat-icon>
+                  <input matInput type="number" placeholder="Initial Capital Base"
+                         [value]="capitalBase" [(ngModel)]="capitalBase" [ngModelOptions]="{standalone: true}">
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step [stepControl]="secondForm">
+          <form [formGroup]="secondForm">
+            <ng-template matStepLabel>Done</ng-template>
+
+            <div class="row">
+              <div class="col-md-6 mb-3" *ngIf="!beginSim; else reset;">
+                <button mat-button (click)="onDoneClick()">Begin Trading</button>
+              </div>
+
+              <ng-template #reset>
+                <div class="col-md-6 mb-3">
+                  <button mat-button (click)="onResetClick()">Reset</button>
+                </div>
+              </ng-template>
+
+            </div>
+          </form>
+        </mat-step>
+      </mat-vertical-stepper>
+    </div>
+  </div>
+  <div id="results">
+    <ng-container *ngIf="beginSim">
+      <div class="body">
+        <app-graph [type]="'trend'"
+                   [start]="getDate(startDate)"
+                   [end]="getDate(endDate)"
+                   [capitalBase]="capitalBase"></app-graph>
+      </div>
+    </ng-container>
+  </div>
+</div>

@@ -36,6 +36,7 @@ const appRoutes : Routes = [
   { path: 'algorithms/mean-reversion', component: MeanReversionComponent },
   { path: 'algorithms/random-forest-regression', component: RandForestRegComponent },
   { path: 'algorithms/rsi-divergence', component: RsiDivergenceComponent },
+  { path: 'algorithms/trend-follow', component: TrendFollowComponent },
   { path: 'tutorial', component: TutorialComponent },
   { path: 'build', component: BuilderComponent },
   { path: '**', redirectTo: '' }
