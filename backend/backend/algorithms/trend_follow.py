@@ -1,10 +1,7 @@
 import numpy as np
-from ..technical_analysis import analysis
 import pandas as pd
-import scipy.optimize
-import operator
-from pytz import timezone
-from zipline.utils.tradingcalendar import get_early_closes
 import statsmodels.api as sm
-import statsmodels.tsa.stattools as ts
-
+from zipline.api import attach_pipeline, pipeline_output
+from zipline.pipeline import Pipeline
+from zipline.pipeline.data import USEquityPricing
+from zipline.pipeline.factors import AverageDollarVolume
