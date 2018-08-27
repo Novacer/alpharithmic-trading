@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
 
 @Component({
   selector: 'app-select-algo',
@@ -7,11 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SelectAlgoComponent implements OnInit {
 
-  constructor() {
+  constructor(private scroll: ScrollToService) {
   }
 
   ngOnInit() {
-
+    this.scroll.scrollTo({
+      target: 'top'
+    });
   }
 
 }
