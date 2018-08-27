@@ -27,6 +27,7 @@ import { RandForestRegComponent } from './algorithms/rand-forest-reg/rand-forest
 import { TutorialComponent } from './tutorial/tutorial.component';
 import { BuilderComponent } from './builder/builder.component';
 import { RsiDivergenceComponent } from './algorithms/rsi-divergence/rsi-divergence.component';
+import { TrendFollowComponent } from './algorithms/trend-follow/trend-follow.component';
 
 const appRoutes : Routes = [
   { path: '', component: IntroComponent, pathMatch: 'full'},
@@ -52,7 +53,8 @@ const appRoutes : Routes = [
     RandForestRegComponent,
     TutorialComponent,
     BuilderComponent,
-    RsiDivergenceComponent
+    RsiDivergenceComponent,
+    TrendFollowComponent
   ],
   imports: [
     BrowserModule,
