@@ -5,6 +5,9 @@ from zipline.api import attach_pipeline, pipeline_output, schedule_function, get
 from zipline.pipeline import Pipeline
 from zipline.utils.events import date_rules, time_rules
 from zipline.pipeline.factors import AverageDollarVolume
+from zipline import run_algorithm
+
+import matplotlib.pyplot as plt
 
 
 def trend_follow_run():
@@ -21,12 +24,17 @@ def trend_follow_run():
         context.drawdown = {}         # Drawdown at time of entry
         context.shares = {}           # Daily target share
 
-        schedule_function(stop_loss, date_rules.every_day(), time_rules.market_open(minutes=30))
-        schedule_function(regression, date_rules.every_day(), time_rules.market_open(minutes=50))
-        schedule_function(trade, date_rules.every_day(), time_rules.market_open(minutes=100))
+        schedule_function(func=stop_loss, date_rule=date_rules.every_day(),
+                          time_rule=time_rules.market_open(minutes=30))
+
+        schedule_function(func=regression, date_rule=date_rules.every_day(),
+                          time_rule=time_rules.market_open(minutes=50))
+
+        schedule_function(func=trade, date_rule=date_rules.every_day(),
+                          time_rule=time_rules.market_open(minutes=100))
 
         for thirty_minute_interval in range(30, 391, 30):
-            schedule_function(execute_transactions, date_rules.every_day,
+            schedule_function(execute_transactions, date_rules.every_day(),
                               time_rules.market_open(minutes=thirty_minute_interval))  # execute every 30 minutes
 
         attach_pipeline(create_high_dollar_volume_pipeline(), 'top_dollar_volume')
@@ -88,30 +96,30 @@ def trend_follow_run():
             gain = get_gain(context, s)
 
             # Exit
-            if context.weights[s] != 0 and s in context.weights:
+            if s in context.weights and context.weights[s] != 0 :
 
                 # Long but slope turns down
                 if context.weights[s] > 0 and slope < 0:
                     context.weights[s] = 0
 
                 # Short but slope turns up
-                elif context.weights < 0 and slope > 0:
+                elif context.weights[s] < 0 and slope > 0:
                     context.weights[s] = 0
 
                 # Profit take reaches top 95% bollinger band
-                elif delta[-1] > context.profittake * sd and s in context.weights and context.weights[s] > 0:
+                elif delta[-1] > context.profit_take * sd and s in context.weights and context.weights[s] > 0:
                     context.weights[s] = 0
 
             # Enter
             else:
 
                 # Trend is up and price crosses the regression line
-                if slope > slope_min and delta[-1] > 0 and delta[-2] < 0 and dd < context.maxdrawdown:
+                if slope > slope_min and delta[-1] > 0 and delta[-2] < 0 and dd < context.max_drawdown:
                     context.weights[s] = slope
                     context.drawdown[s] = slope_min
 
                 # Trend is down and price crosses the regression line
-                if slope < -slope_min and delta[-1] < 0 and delta[-2] > 0  and dd < context.maxdrawdown:
+                if slope < -slope_min and delta[-1] < 0 and delta[-2] > 0  and dd < context.max_drawdown:
                     context.weights[s] = slope
                     context.drawdown[s] = slope_min
 
@@ -150,11 +158,11 @@ def trend_follow_run():
 
     def stop_loss(context, data):
 
-        prices = data.history(context.portfolio.positions.keys(), 'price', context.lookback, '1d')
+        prices = data.history(list(context.portfolio.positions), 'price', context.lookback, '1d')
 
         for s in context.portfolio.positions:
 
-            if context.weights[s] == 0 or s not in context.weights:
+            if s not in context.weights or context.weights[s] == 0 :
                 context.shares[s] = 0
                 continue
 
@@ -181,7 +189,7 @@ def trend_follow_run():
             return 0
 
         period_start = np.argmax(xs[:period_end])
-        return abs((xs[period_start] - xs[period_end])/ xs[period_end])
+        return abs((xs[period_start] - xs[period_end]) / xs[period_end])
 
     def get_gain(context, s):
 
@@ -202,3 +210,22 @@ def trend_follow_run():
                 gain = 1 - price / cost
 
         return gain
+
+    start = pd.to_datetime("2015-01-01").tz_localize('US/Eastern')
+    end = pd.to_datetime("2016-01-01").tz_localize('US/Eastern')
+
+    result = run_algorithm(start, end,
+                           initialize=initialize, before_trading_start=before_trading_start,
+                           capital_base=1000000,
+                           bundle="quantopian-quandl")
+
+    return result
+
+res = trend_follow_run()
+
+plt.plot(res['algorithm_period_return'], label='algo')
+plt.plot(res['benchmark_period_return'], label='bench')
+
+plt.legend()
+
+plt.show()
