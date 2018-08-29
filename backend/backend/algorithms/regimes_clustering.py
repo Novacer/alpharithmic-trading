@@ -35,7 +35,7 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
         context.lookback = 8 * 250
         context.refresh_frequency = 30
 
-        context.use_classifier = True
+        context.use_classifier = False
 
         if context.use_classifier:
             context.ret_buckets = {
@@ -165,9 +165,15 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
                 if len(ret_buckets) == 1:
                     est = ret_buckets[0] + 2 * prediction - 1
                 else:
+
+                    vectorized_ret_buckets = np.array(ret_buckets)
+
                     v = [ret_buckets[0] - 1] \
-                        + list(0.5 * (np.array(ret_buckets)[1:] + np.array(ret_buckets)[:-1])) \
+                        + list(0.5 * (vectorized_ret_buckets[1:] + vectorized_ret_buckets[:-1])) \
                         + [ret_buckets[-1] + 1]
+
+                    v = np.array(v)
+
                     est = v[prediction]
 
             else:
@@ -195,7 +201,7 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
                     print("bought")
 
                 elif p < context.short_prob_ub:
-                    order_target_percent(context.security, context.long_only - 1)
+                    order_target_percent(context.security, context.no_shorts - 1)
                     context.last_traded_date = context.days_traded
 
                     print("shorted")
@@ -214,7 +220,7 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
                     print('bought')
 
                 elif estimate < context.short_threshold:
-                    order_target_percent(context.security, context.long_only - 1)
+                    order_target_percent(context.security, context.no_shorts - 1)
                     context.last_traded_date = context.days_traded
 
                     print('shorted')
@@ -327,6 +333,6 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
     return result
 
 
-result = regimes_clustering_run("2016-01-01", "2017-01-01", 1000000, "abc")
+result = regimes_clustering_run("2016-01-01", "2016-06-01", 1000000, "abc")
 
 print(result.head())
