@@ -35,7 +35,7 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
         context.lookback = 8 * 250
         context.refresh_frequency = 30
 
-        context.use_classifier = False
+        context.use_classifier = True
 
         if context.use_classifier:
             context.ret_buckets = {
@@ -72,7 +72,8 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
                     X = cluster_data.drop('rets', axis=1)
                     y = cluster_data['rets']
 
-                    kmeans = KMeans(n_clusters=context.n_clusters, n_init=100, max_iter=500, random_state=42)
+                    kmeans = KMeans(n_clusters=context.n_clusters, n_init=100, max_iter=500, random_state=42,
+                                    precompute_distances=True, n_jobs=-1)
                     kmeans.fit(X)
                     clusters[ret_window]['windows'][window_length] = {
                         "kmeans": kmeans,
@@ -335,4 +336,4 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
 
 result = regimes_clustering_run("2016-01-01", "2016-06-01", 1000000, "abc")
 
-print(result.head())
+print(result.tail())
