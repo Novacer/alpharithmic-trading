@@ -57,3 +57,16 @@ def regimes_clustering_run():
         context.return_projections = {}
         context.price_projections = {}
         context.bucket_probs = {}
+
+        attach_pipeline(create_high_dollar_volume_pipeline(), 'top_dollar_volume')
+
+    def create_high_dollar_volume_pipeline():
+        pipe = Pipeline()
+
+        dollar_volume = AverageDollarVolume(window_length=63)  # 63 days = 1 quarter
+        pipe.add(dollar_volume, 'dollar_volume')
+
+        high_dollar_volume = dollar_volume.percentile_between(95, 100)  # top 5% by dollar volume
+        pipe.set_screen(high_dollar_volume)
+
+        return pipe
