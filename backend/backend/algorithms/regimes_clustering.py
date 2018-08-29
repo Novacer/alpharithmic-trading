@@ -1,5 +1,5 @@
 # Zipline API
-from zipline.api import attach_pipeline, pipeline_output, symbol, set_long_only
+from zipline.api import symbol, set_long_only, order_target_percent
 from zipline.pipeline import Pipeline
 from zipline.pipeline.data import USEquityPricing
 from zipline.pipeline.factors import AverageDollarVolume
@@ -25,7 +25,7 @@ from collections import deque
 def regimes_clustering_run():
 
     def initialize(context):
-        context.security_list = []
+        context.security = symbol("AAPL")
         context.long_threshold = 0
         context.short_threshold = -0.06
 
@@ -56,24 +56,10 @@ def regimes_clustering_run():
         context.bucket_probs = {}
 
         context.days_traded = 0
+        context.last_traded_date = 0
 
-        attach_pipeline(create_high_dollar_volume_pipeline(), 'tdv')
-
-    def create_high_dollar_volume_pipeline():
-        pipe = Pipeline()
-
-        dollar_volume = AverageDollarVolume(window_length=63)
-        pipe.add(dollar_volume, 'dollar_volume')
-
-        high_dollar_volume = dollar_volume.percentile_between(99, 100)  # top 1% by dollar volume
-        pipe.set_screen(high_dollar_volume)
-
-        return pipe
 
     def before_trading_start(context, data):
-        context.output = pipeline_output('tdv')
-        context.security_list = context.output.index
-
         context.days_traded += 1
 
         if context.model == {} or context.model['refresh_date'] <= context.days_traded:
@@ -136,9 +122,113 @@ def regimes_clustering_run():
 
             context.model['clusters'] = clusters
 
+    def rebalance(context, data):
+        if context.last_traded_date != 0 \
+                and context.days_traded < context.last_traded_date + (context.ret_windows[0] * 7/5):
+
+            return
+
+        try:
+            clusters = context.model['clusters']
+        except KeyError:
+            return
+
+        for ret_window in context.ret_windows:
+            for window_length in context.window_lengths:
+                cluster_data = get_cluster_data(context, data, window_length, ret_window, for_training=False)
+                X = cluster_data.drop('rets', axis=1)
+                y = cluster_data['rets']
+
+                kmeans = clusters[ret_window]['windows'][window_length]['kmeans']
+                clusters[ret_window]['windows'][window_length]['regimes'] = kmeans.predict(X.values)
+                clusters[ret_window]['windows'][window_length]['rets'] = y
+
+        panel = get_X(clusters)
+
+        for ret_window, classifier in clusters.items():
+            df = panel[ret_window]
+            X = df.drop('rets', axis=1)
+
+            global est
+
+            if context.use_classifier:
+
+                global ret_buckets
+
+                try:
+                    ret_buckets = context.ret_buckets[ret_window]
+                except KeyError:
+                    ret_buckets = context.ret_buckets[ret_window]
+
+                clf = classifier['clf']
+
+                prediction = clf.predict(X.values)
+                context.bucket_probs[ret_window] = clf.predict_proba(X.values)[0]
+
+                if len(ret_buckets) == 1:
+                    est = ret_buckets[0] + 2 * prediction - 1
+                else:
+                    v = [ret_buckets[0] - 1] \
+                        + list(0.5 * (np.array(ret_buckets)[1:] + np.array(ret_buckets)[:-1])) \
+                        + [ret_buckets[-1] + 1]
+                    est = v[prediction]
+
+            else:
+                reg = classifier['reg']
+                est = reg.predict(X.values)
+
+            context.return_projections[ret_window] = est
+            projection_date = context.days_traded + ret_window
+            context.price_projections[projection_date] = (1 + est) * data.current(context.security, 'price')
+
+        make_trade(context, data)
+
+    def make_trade(context, data):
+        if len(context.ret_windows) == 1:
+            key = context.ret_windows[0]
+
+            if context.use_classifier:
+                probs = context.bucket_probs[key]
+                p = sum(probs[2:])
+
+                if p > context.long_prob_lb:
+                    order_target_percent(context.security, 1)
+                    context.last_traded_date = context.days_traded
+
+                    print("bought")
+
+                elif p < context.short_prob_ub:
+                    order_target_percent(context.security, context.long_only - 1)
+                    context.last_traded_date = context.days_traded
+
+                    print("shorted")
+
+                else:
+                    order_target_percent(context.security, 0)
+                    print("sold")
+
+            else:
+                estimate = context.return_projections[key]
+
+                if estimate > context.long_threshold:
+                    order_target_percent(context.security, 1)
+                    context.last_traded_date = context.days_traded
+
+                    print('bought')
+
+                elif estimate < context.short_threshold:
+                    order_target_percent(context.security, context.long_only - 1)
+                    context.last_traded_date = context.days_traded
+
+                    print('shorted')
+                else:
+                    order_target_percent(context.security, 0)
+
+                    print('sold')
+
     def get_cluster_data(context, data, window_length, ret_window, for_training=True):
         L = context.lookback if for_training else window_length + 1
-        ts = data.history(context.security_list, ['price', 'volume'], L, '1d')
+        ts = data.history(context.security, ['price', 'volume'], L, '1d')
         ts.dropna(inplace=True)
         ts['ret'] = ts['price'] / ts['price'].shift(1) - 1
 
