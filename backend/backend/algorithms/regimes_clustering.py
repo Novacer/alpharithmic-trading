@@ -1,28 +1,23 @@
 # Zipline API
-from zipline.api import symbol, set_long_only, order_target_percent
-from zipline.pipeline import Pipeline
-from zipline.pipeline.data import USEquityPricing
-from zipline.pipeline.factors import AverageDollarVolume
+from zipline.api import symbol, set_long_only, order_target_percent, schedule_function
+from zipline.utils.events import date_rules, time_rules
+from zipline import run_algorithm
 
-# Math
+# Data frame
 import numpy as np
 import pandas as pd
-from scipy import optimize
-from scipy import stats
 import statsmodels.api as sm
 
 # Machine Learning
 from sklearn.cluster import KMeans
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
-from sklearn.model_selection import train_test_split
 from sklearn.multiclass import OneVsRestClassifier
-from sklearn.metrics import classification_report, confusion_matrix
 
 # Data structures
 from collections import deque
 
 
-def regimes_clustering_run():
+def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
 
     def initialize(context):
         context.security = symbol("AAPL")
@@ -57,6 +52,8 @@ def regimes_clustering_run():
 
         context.days_traded = 0
         context.last_traded_date = 0
+
+        schedule_function(rebalance, date_rule=date_rules.every_day(), time_rule=time_rules.market_open(hours=1))
 
 
     def before_trading_start(context, data):
@@ -158,7 +155,7 @@ def regimes_clustering_run():
                 try:
                     ret_buckets = context.ret_buckets[ret_window]
                 except KeyError:
-                    ret_buckets = context.ret_buckets[ret_window]
+                    ret_buckets = context.ret_buckets['gen']
 
                 clf = classifier['clf']
 
@@ -283,8 +280,8 @@ def regimes_clustering_run():
             y_rets = sigs.copy() * np.nan
             y_rets.name = "rets"
 
-        df = pd.DataFrame([sigs, betas, resids, volumes]).T
-        df.drop('volume', axis=1)
+        df = pd.DataFrame([sigs, betas, resids, volumes, y_rets]).T
+        df.drop('volume', axis=1, inplace=True)
 
         df['beta'] *= 100
 
@@ -318,3 +315,18 @@ def regimes_clustering_run():
             output[ret_window] = extract(ret_window)
 
         return pd.Panel(output)
+
+    start = pd.to_datetime(start_date).tz_localize('US/Eastern')
+    end = pd.to_datetime(end_date).tz_localize('US/Eastern')
+
+    result = run_algorithm(start, end,
+                           initialize=initialize, before_trading_start=before_trading_start,
+                           capital_base=capital_base,
+                           bundle="quantopian-quandl")
+
+    return result
+
+
+result = regimes_clustering_run("2016-01-01", "2017-01-01", 1000000, "abc")
+
+print(result.head())
