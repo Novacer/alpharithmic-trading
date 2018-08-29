@@ -135,3 +135,96 @@ def regimes_clustering_run():
                     clusters[ret_window]['reg'] = rfr
 
             context.model['clusters'] = clusters
+
+    def get_cluster_data(context, data, window_length, ret_window, for_training=True):
+        L = context.lookback if for_training else window_length + 1
+        ts = data.history(context.security_list, ['price', 'volume'], L, '1d')
+        ts.dropna(inplace=True)
+        ts['ret'] = ts['price'] / ts['price'].shift(1) - 1
+
+        vols = {}
+        volumes = {}
+        resids = {}
+        trends = {}
+
+        volume_deque = deque(maxlen=window_length)
+        rets_deque = deque(maxlen=window_length)
+        prices_deque = deque(maxlen=window_length)
+
+        length = len(ts)
+
+        for i in range(1, length):
+            rets_deque.append(ts['ret'].iloc[i])
+            prices_deque.append(ts['price'].iloc[i])
+            volume_deque.append(ts['volume'].iloc[i])
+
+            if len(rets_deque) == rets_deque.maxlen:
+                volumes[ts.index[i]] = sum(volume_deque) / 1e9
+
+                regression_result = sm.OLS(np.array(prices_deque) / prices_deque[0],
+                                           sm.add_constant(range(prices_deque.maxlen)),
+                                           hasconst=True)\
+                                    .fit()
+
+                vols[ts.index[i]] = np.std(rets_deque, ddof=1) * np.sqrt(252)
+                resids[ts.index[i]] = regression_result.resid.std(ddof=1)
+
+                global beta
+
+                if regression_result.pvalues[1] < 0.05:
+                    beta = regression_result.params[1]
+                else:
+                    beta = 0
+
+                trends[ts.index[i]] = beta
+
+        sigs = pd.Series(vols, name='sig')
+        betas = pd.Series(trends, name='beta')
+        resids = pd.Series(resids, name='resid')
+        volumes = pd.Series(volumes, name='volume')
+
+        global y_rets
+
+        if for_training:
+            y_rets = ts['price'] / ts['price'].shift(ret_window) - 1
+            y_rets.name = "rets"
+
+        else:
+            y_rets = sigs.copy() * np.nan
+            y_rets.name = "rets"
+
+        df = pd.DataFrame([sigs, betas, resids, volumes]).T
+        df.drop('volume', axis=1)
+
+        df['beta'] *= 100
+
+        return df
+
+    def get_X(clusters):
+
+        ret_windows = clusters.keys()
+
+        def extract(ret_window):
+            l = min([len(d['regimes']) for wl, d in clusters[ret_window]['windows'].items()])
+
+            collector = {}
+
+            for wl, d in clusters[ret_window]['windows'].items():
+                try:
+                    collector[wl] = d['regimes'][-l:]
+                except TypeError:
+                    pass
+
+            df = pd.DataFrame(collector)
+
+            ret = d['rets'].values[-l:]
+            df['rets'] = ret
+
+            return df
+
+        output = {}
+
+        for ret_window in ret_windows:
+            output[ret_window] = extract(ret_window)
+
+        return pd.Panel(output)
