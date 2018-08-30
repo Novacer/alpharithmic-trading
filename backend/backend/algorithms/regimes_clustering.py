@@ -9,7 +9,7 @@ import pandas as pd
 import statsmodels.api as sm
 
 # Machine Learning
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, MiniBatchKMeans
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.multiclass import OneVsRestClassifier
 
@@ -20,7 +20,7 @@ from collections import deque
 def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
 
     def initialize(context):
-        context.security = symbol("AAPL")
+        context.security = symbol("AMZN")
         context.long_threshold = 0
         context.short_threshold = -0.06
 
@@ -31,7 +31,7 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
 
         context.n_clusters = 9
         context.ret_windows = [30]
-        context.window_lengths = [15, 30, 60, 90, 120, 150, 180, 210, 240]
+        context.window_lengths = [30, 90, 150, 210, 240]
         context.lookback = 8 * 250
         context.refresh_frequency = 30
 
@@ -73,7 +73,7 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
                     y = cluster_data['rets']
 
                     kmeans = KMeans(n_clusters=context.n_clusters, n_init=100, max_iter=500, random_state=42,
-                                    precompute_distances=True, n_jobs=-1)
+                                    precompute_distances=True)
                     kmeans.fit(X)
                     clusters[ret_window]['windows'][window_length] = {
                         "kmeans": kmeans,
@@ -334,6 +334,6 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
     return result
 
 
-result = regimes_clustering_run("2016-01-01", "2016-06-01", 1000000, "abc")
-
-print(result.tail())
+if __name__ == '__main__':
+    result = regimes_clustering_run("2016-01-01", "2016-06-01", 1000000, "abc")
+    print(result.tail())
