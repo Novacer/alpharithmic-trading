@@ -16,10 +16,21 @@ from sklearn.multiclass import OneVsRestClassifier
 # Data structures
 from collections import deque
 
+# Logging
+from websocket import create_connection
+
 
 def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, no_shorts, log_channel):
 
+    ws = create_connection("ws://alpharithmic.herokuapp.com/ws/logs/%s/" % log_channel)
+    msg_placeholder = "{\"message\": \"%s\"}"
+
+    ws.send(msg_placeholder % "Link Start")
+
     def initialize(context):
+
+        ws.send(msg_placeholder % "Simulation Start")
+
         context.security = symbol(ticker)
         context.long_threshold = 0
         context.short_threshold = -0.06
@@ -55,6 +66,8 @@ def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, 
 
         schedule_function(rebalance, date_rule=date_rules.every_day(), time_rule=time_rules.market_open(hours=1))
 
+        ws.send(msg_placeholder % "Execution of clustering scheduled at 1 hour after market open")
+
     def before_trading_start(context, data):
         context.days_traded += 1
 
@@ -62,11 +75,19 @@ def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, 
             context.model['refresh_date'] = context.days_traded + context.refresh_frequency
             clusters = {}
 
+            ws.send(msg_placeholder % "Retraining the clustering ML model")
+
             for ret_window in context.ret_windows:
                 clusters[ret_window] = {'windows': {}}
 
                 for window_length in context.window_lengths:
                     cluster_data = create_kmeans_features(context, data, window_length, ret_window)
+
+                    window_length_str = str(window_length)
+
+                    ws.send(msg_placeholder % ("Feature set for k-means with a look back of %s days trained"
+                                               % window_length_str))
+
                     cluster_data.dropna(inplace=True)
                     X = cluster_data.drop('rets', axis=1)
                     y = cluster_data['rets']
@@ -74,13 +95,20 @@ def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, 
                     kmeans = KMeans(n_clusters=context.n_clusters, n_init=100, max_iter=500, random_state=42,
                                     precompute_distances=True)
                     kmeans.fit(X)
+
+                    ws.send(msg_placeholder % ("K-means cluster for look back of %s days trained" % window_length_str))
+
                     clusters[ret_window]['windows'][window_length] = {
                         "kmeans": kmeans,
                         "regimes": kmeans.predict(X),
                         "rets": y
                     }
 
+            ws.send(msg_placeholder % "Retraining the Random Forest ML model")
+
             panel = create_rand_forest_features(clusters)
+
+            ws.send(msg_placeholder % "Feature set for Random Forest created")
 
             for ret_window, _ in clusters.items():
                 df = panel[ret_window]
@@ -112,10 +140,14 @@ def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, 
                     clf.fit(X_train, y_train)
                     clusters[ret_window]['clf'] = clf
 
+                    ws.send(msg_placeholder % "Random Forest Classifier trained")
+
                 else:
                     rfr = RandomForestRegressor(n_estimators=1000, random_state=42)
                     rfr.fit(X_train, ret.values)
                     clusters[ret_window]['reg'] = rfr
+
+                    ws.send(msg_placeholder % "Random Forest Regression trained")
 
             context.model['clusters'] = clusters
 
@@ -132,13 +164,25 @@ def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, 
 
         for ret_window in context.ret_windows:
             for window_length in context.window_lengths:
+
+                window_length_str = str(window_length)
+
+                ws.send(msg_placeholder % ("Adjusting clusters for the K-means with a look back of %s days"
+                                           % window_length_str))
+
                 cluster_data = create_kmeans_features(context, data, window_length, ret_window, for_training=False)
                 X = cluster_data.drop('rets', axis=1)
                 y = cluster_data['rets']
 
+                ws.send(msg_placeholder % ("New feature set created for the K-means with a look back of %s days"
+                                           % window_length_str))
+
                 kmeans = clusters[ret_window]['windows'][window_length]['kmeans']
                 clusters[ret_window]['windows'][window_length]['regimes'] = kmeans.predict(X.values)
                 clusters[ret_window]['windows'][window_length]['rets'] = y  # set all y's to NaN
+
+                ws.send(msg_placeholder % ("New clusters generated for the K-means with a look back of %s days"
+                                           % window_length_str))
 
         panel = create_rand_forest_features(clusters)
 
@@ -184,9 +228,12 @@ def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, 
             projection_date = context.days_traded + ret_window
             context.price_projections[projection_date] = (1 + est) * data.current(context.security, 'price')
 
-        make_trade(context)
+            ws.send(msg_placeholder % ("Random Forest produced a projected return of %s and projected price of %s"
+                    % (str(est), str(context.price_projections[projection_date]))))
 
-    def make_trade(context):
+        execute_transactions(context)
+
+    def execute_transactions(context):
         if len(context.ret_windows) == 1:
             key = context.ret_windows[0]
 
@@ -198,17 +245,20 @@ def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, 
                     order_target_percent(context.security, 1)
                     context.last_traded_date = context.days_traded
 
-                    print("bought")
+                    ws.send(msg_placeholder % ("Bought %s because probability %s is greater than lower bound %s"
+                                               % (str(context.security), str(p), str(context.long_prob_lb))))
 
                 elif p < context.short_prob_ub:
                     order_target_percent(context.security, context.no_shorts - 1)
                     context.last_traded_date = context.days_traded
 
-                    print("shorted")
+                    ws.send(msg_placeholder % ("Shorted %s because probability %s is lower than upper bound %s"
+                                               % (str(context.security), str(p), str(context.short_prob_ub))))
 
                 else:
                     order_target_percent(context.security, 0)
-                    print("sold")
+
+                    ws.send(msg_placeholder % ("Sold %s" % str(context.security)))
 
             else:
                 estimate = context.return_projections[key]
@@ -217,17 +267,20 @@ def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, 
                     order_target_percent(context.security, 1)
                     context.last_traded_date = context.days_traded
 
-                    print('bought')
+                    ws.send(msg_placeholder % ("Bought %s because estimate %s is greater than threshold %s"
+                                               % (str(context.security), str(estimate), str(context.long_threshold))))
 
                 elif estimate < context.short_threshold:
                     order_target_percent(context.security, context.no_shorts - 1)
                     context.last_traded_date = context.days_traded
 
-                    print('shorted')
+                    ws.send(msg_placeholder % ("Shorted %s because estimate %s is lower than threshold %s"
+                                               % (str(context.security), str(estimate), str(context.short_threshold))))
+
                 else:
                     order_target_percent(context.security, 0)
 
-                    print('sold')
+                    ws.send(msg_placeholder % ("Sold %s" % str(context.security)))
 
     def create_kmeans_features(context, data, window_length, ret_window, for_training=True):
         lookback = context.lookback if for_training else window_length + 1
@@ -324,5 +377,11 @@ def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, 
                            initialize=initialize, before_trading_start=before_trading_start,
                            capital_base=capital_base,
                            bundle="quantopian-quandl")
+
+    ws.send(msg_placeholder % "Simulation End")
+    ws.send(msg_placeholder % "Fetching backtest results from Redis Queue...")
+
+    result.dropna(inplace=True)
+    ws.close()
 
     return result
