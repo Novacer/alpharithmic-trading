@@ -17,10 +17,10 @@ from sklearn.multiclass import OneVsRestClassifier
 from collections import deque
 
 
-def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
+def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, log_channel):
 
     def initialize(context):
-        context.security = symbol("AAPL")
+        context.security = symbol(ticker)
         context.long_threshold = 0
         context.short_threshold = -0.06
 
@@ -35,7 +35,7 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
         context.lookback = 8 * 250
         context.refresh_frequency = 30
 
-        context.use_classifier = False
+        context.use_classifier = use_clf
 
         if context.use_classifier:
             context.ret_buckets = {
@@ -326,8 +326,3 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
                            bundle="quantopian-quandl")
 
     return result
-
-
-if __name__ == '__main__':
-    result = regimes_clustering_run("2016-01-01", "2016-06-01", 1000000, "abc")
-    print(result.tail())
