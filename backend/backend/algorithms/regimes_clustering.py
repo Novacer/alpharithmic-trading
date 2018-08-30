@@ -35,7 +35,7 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
         context.lookback = 8 * 250
         context.refresh_frequency = 30
 
-        context.use_classifier = True
+        context.use_classifier = False
 
         if context.use_classifier:
             context.ret_buckets = {
@@ -66,7 +66,7 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
                 clusters[ret_window] = {'windows': {}}
 
                 for window_length in context.window_lengths:
-                    cluster_data = get_cluster_data(context, data, window_length, ret_window)
+                    cluster_data = create_kmeans_features(context, data, window_length, ret_window)
                     cluster_data.dropna(inplace=True)
                     X = cluster_data.drop('rets', axis=1)
                     y = cluster_data['rets']
@@ -80,7 +80,7 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
                         "rets": y
                     }
 
-            panel = get_X(clusters)
+            panel = create_rand_forest_features(clusters)
 
             for ret_window, _ in clusters.items():
                 df = panel[ret_window]
@@ -132,15 +132,15 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
 
         for ret_window in context.ret_windows:
             for window_length in context.window_lengths:
-                cluster_data = get_cluster_data(context, data, window_length, ret_window, for_training=False)
+                cluster_data = create_kmeans_features(context, data, window_length, ret_window, for_training=False)
                 X = cluster_data.drop('rets', axis=1)
                 y = cluster_data['rets']
 
                 kmeans = clusters[ret_window]['windows'][window_length]['kmeans']
                 clusters[ret_window]['windows'][window_length]['regimes'] = kmeans.predict(X.values)
-                clusters[ret_window]['windows'][window_length]['rets'] = y
+                clusters[ret_window]['windows'][window_length]['rets'] = y  # set all y's to NaN
 
-        panel = get_X(clusters)
+        panel = create_rand_forest_features(clusters)
 
         for ret_window, classifier in clusters.items():
             df = panel[ret_window]
@@ -184,9 +184,9 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
             projection_date = context.days_traded + ret_window
             context.price_projections[projection_date] = (1 + est) * data.current(context.security, 'price')
 
-        make_trade(context, data)
+        make_trade(context)
 
-    def make_trade(context, data):
+    def make_trade(context):
         if len(context.ret_windows) == 1:
             key = context.ret_windows[0]
 
@@ -229,13 +229,13 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
 
                     print('sold')
 
-    def get_cluster_data(context, data, window_length, ret_window, for_training=True):
-        L = context.lookback if for_training else window_length + 1
-        ts = data.history(context.security, ['price', 'volume'], L, '1d')
+    def create_kmeans_features(context, data, window_length, ret_window, for_training=True):
+        lookback = context.lookback if for_training else window_length + 1
+        ts = data.history(context.security, ['price', 'volume'], lookback, '1d')
         ts.dropna(inplace=True)
         ts['ret'] = ts['price'] / ts['price'].shift(1) - 1
 
-        vols = {}
+        volatility = {}
         resids = {}
         trends = {}
 
@@ -255,7 +255,7 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
                                            hasconst=True)\
                                     .fit()
 
-                vols[ts.index[i]] = np.std(rets_deque, ddof=1) * np.sqrt(252)
+                volatility[ts.index[i]] = np.std(rets_deque, ddof=1) * np.sqrt(252)
                 resids[ts.index[i]] = regression_result.resid.std(ddof=1)
 
                 global beta
@@ -267,9 +267,9 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
 
                 trends[ts.index[i]] = beta * 100
 
-        sigs = pd.Series(vols, name='sig')
+        sigs = pd.Series(volatility, name='sig')
         betas = pd.Series(trends, name='beta')
-        resids = pd.Series(resids, name='resid')
+        residuals = pd.Series(resids, name='resid')
 
         global y_rets
 
@@ -277,35 +277,35 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
             y_rets = ts['price'] / ts['price'].shift(ret_window) - 1
             y_rets.name = "rets"
 
-            df = pd.DataFrame([sigs, betas, resids, y_rets]).T
+            df = pd.DataFrame([sigs, betas, residuals, y_rets]).T
 
             return df
 
         else:
-            df = pd.DataFrame([sigs, betas, resids]).T
+            df = pd.DataFrame([sigs, betas, residuals]).T
 
             df['rets'] = np.nan
 
             return df
 
-    def get_X(clusters):
+    def create_rand_forest_features(clusters):
 
         ret_windows = clusters.keys()
 
-        def extract(ret_window):
-            l = min([len(d['regimes']) for wl, d in clusters[ret_window]['windows'].items()])
+        def extract(ret_window_param):
+            min_regime_len = min([len(d['regimes']) for wl, d in clusters[ret_window_param]['windows'].items()])
 
             collector = {}
 
-            for wl, d in clusters[ret_window]['windows'].items():
+            for wl, d in clusters[ret_window_param]['windows'].items():
                 try:
-                    collector[wl] = d['regimes'][-l:]
+                    collector[wl] = d['regimes'][-min_regime_len:]
                 except TypeError:
                     pass
 
             df = pd.DataFrame(collector)
 
-            ret = d['rets'].values[-l:]
+            ret = d['rets'].values[-min_regime_len:]
             df['rets'] = ret
 
             return df
