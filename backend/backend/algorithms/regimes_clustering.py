@@ -19,6 +19,9 @@ from collections import deque
 # Logging
 from websocket import create_connection
 
+# Data frame to JSON
+from ..api.create_response import create_json_response
+
 
 def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, no_shorts, log_channel):
 
@@ -228,7 +231,7 @@ def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, 
             projection_date = context.days_traded + ret_window
             context.price_projections[projection_date] = (1 + est) * data.current(context.security, 'price')
 
-            ws.send(msg_placeholder % ("Random Forest produced a projected return of %s and projected price of %s"
+            ws.send(msg_placeholder % ("Random Forest produced a projected return of %s and price change of %s"
                     % (str(est), str(context.price_projections[projection_date]))))
 
         execute_transactions(context)
@@ -384,4 +387,4 @@ def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, 
     result.dropna(inplace=True)
     ws.close()
 
-    return result
+    return create_json_response(result)
