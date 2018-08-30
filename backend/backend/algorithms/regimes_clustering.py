@@ -9,7 +9,7 @@ import pandas as pd
 import statsmodels.api as sm
 
 # Machine Learning
-from sklearn.cluster import KMeans, MiniBatchKMeans
+from sklearn.cluster import KMeans
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.multiclass import OneVsRestClassifier
 
@@ -20,7 +20,7 @@ from collections import deque
 def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
 
     def initialize(context):
-        context.security = symbol("AMZN")
+        context.security = symbol("AAPL")
         context.long_threshold = 0
         context.short_threshold = -0.06
 
@@ -54,7 +54,6 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
         context.last_traded_date = 0
 
         schedule_function(rebalance, date_rule=date_rules.every_day(), time_rule=time_rules.market_open(hours=1))
-
 
     def before_trading_start(context, data):
         context.days_traded += 1
@@ -237,11 +236,9 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
         ts['ret'] = ts['price'] / ts['price'].shift(1) - 1
 
         vols = {}
-        volumes = {}
         resids = {}
         trends = {}
 
-        volume_deque = deque(maxlen=window_length)
         rets_deque = deque(maxlen=window_length)
         prices_deque = deque(maxlen=window_length)
 
@@ -250,10 +247,8 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
         for i in range(1, length):
             rets_deque.append(ts['ret'].iloc[i])
             prices_deque.append(ts['price'].iloc[i])
-            volume_deque.append(ts['volume'].iloc[i])
 
             if len(rets_deque) == rets_deque.maxlen:
-                volumes[ts.index[i]] = sum(volume_deque) / 1e9
 
                 regression_result = sm.OLS(np.array(prices_deque) / prices_deque[0],
                                            sm.add_constant(range(prices_deque.maxlen)),
@@ -270,12 +265,11 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
                 else:
                     beta = 0
 
-                trends[ts.index[i]] = beta
+                trends[ts.index[i]] = beta * 100
 
         sigs = pd.Series(vols, name='sig')
         betas = pd.Series(trends, name='beta')
         resids = pd.Series(resids, name='resid')
-        volumes = pd.Series(volumes, name='volume')
 
         global y_rets
 
@@ -283,16 +277,16 @@ def regimes_clustering_run(start_date, end_date, capital_base, log_channel):
             y_rets = ts['price'] / ts['price'].shift(ret_window) - 1
             y_rets.name = "rets"
 
+            df = pd.DataFrame([sigs, betas, resids, y_rets]).T
+
+            return df
+
         else:
-            y_rets = sigs.copy() * np.nan
-            y_rets.name = "rets"
+            df = pd.DataFrame([sigs, betas, resids]).T
 
-        df = pd.DataFrame([sigs, betas, resids, volumes, y_rets]).T
-        df.drop('volume', axis=1, inplace=True)
+            df['rets'] = np.nan
 
-        df['beta'] *= 100
-
-        return df
+            return df
 
     def get_X(clusters):
 
