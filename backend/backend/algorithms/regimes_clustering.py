@@ -17,14 +17,14 @@ from sklearn.multiclass import OneVsRestClassifier
 from collections import deque
 
 
-def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, log_channel):
+def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, no_shorts, log_channel):
 
     def initialize(context):
         context.security = symbol(ticker)
         context.long_threshold = 0
         context.short_threshold = -0.06
 
-        context.no_shorts = False
+        context.no_shorts = no_shorts
 
         if context.no_shorts:
             set_long_only()
