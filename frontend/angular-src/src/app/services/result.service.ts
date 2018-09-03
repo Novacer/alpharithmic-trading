@@ -21,7 +21,7 @@ export class ResultService {
     this.randForestRegURL = "/api/post/random-forest-regression";
     this.rsiDivergenceURL = "/api/post/rsi-divergence";
     this.trendFollowURL = "/api/post/trend-follow";
-    this.regimesClusteringURL = "";
+    this.regimesClusteringURL = "/api/post/regimes-clustering";
     this.fetchResultURL = "/api/post/result";
   }
 
