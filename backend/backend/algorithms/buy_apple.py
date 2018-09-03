@@ -1,8 +1,14 @@
+# Zipline API
 from zipline.api import order, symbol
-from websocket import create_connection
 from zipline import run_algorithm
+
+# Data frames
 import pandas as pd
 
+# Logging
+from websocket import create_connection
+
+# Data frame To JSON
 from ..api.create_response import create_json_response
 
 

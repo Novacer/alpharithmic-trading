@@ -13,6 +13,7 @@ export class ResultService {
   private readonly rsiDivergenceURL : string;
   private readonly trendFollowURL : string;
   private readonly fetchResultURL : string;
+  private readonly regimesClusteringURL: string;
 
   constructor(private http: HttpClient) {
     this.buyAppleURL = "/api/post/buy-apple";
@@ -20,6 +21,7 @@ export class ResultService {
     this.randForestRegURL = "/api/post/random-forest-regression";
     this.rsiDivergenceURL = "/api/post/rsi-divergence";
     this.trendFollowURL = "/api/post/trend-follow";
+    this.regimesClusteringURL = "/api/post/regimes-clustering";
     this.fetchResultURL = "/api/post/result";
   }
 
@@ -144,6 +146,33 @@ export class ResultService {
     return this.http.post(this.trendFollowURL, body);
   }
 
+  /**
+   * returns an Observable with the job_id of the Regimes Clustering simulation
+   * @param {string} start the start date
+   * @param {string} end the simulation end date
+   * @param {string} ticker the stock ticker to trade
+   * @param {number} capitalBase the initial capital base
+   * @param {boolean} useClf use random forest classifier instead of regressor
+   * @param {boolean} noShorts disable shorting
+   * @param {string} logChannel the channel for which logs are pushed to
+   * @returns {Observable<any>}
+   */
+  regimesClusteringResult(start: string, end: string, ticker: string,
+                          capitalBase: number, useClf: boolean, noShorts: boolean,
+                          logChannel: string) : Observable<any>{
+
+    let body = {
+      start: start,
+      end: end,
+      ticker: ticker,
+      use_clf: useClf,
+      no_shorts: noShorts,
+      capital_base: capitalBase,
+      log_channel: logChannel
+    };
+
+    return this.http.post(this.regimesClusteringURL, body);
+  }
 
   /**
    * Returns an Observable with the result of the job with job_id. The job may or may not be finished

@@ -33,6 +33,12 @@ export class GraphComponent implements OnInit, OnDestroy {
   @Input()
   private minutes: number;
 
+  @Input()
+  private useClf : boolean;
+
+  @Input()
+  private noShorts : boolean;
+
   public done: boolean;
   public finalAlpha: number;
 
@@ -181,6 +187,26 @@ export class GraphComponent implements OnInit, OnDestroy {
     else if (this.type === 'trend') {
       this.result.trendFollowResult(this.start, this.end,
         this.capitalBase, this.logChannel).subscribe(response => {
+          if (!response) {
+            alert("Something went wrong!");
+          }
+
+          else {
+
+            this.jobId = response.job_id;
+
+            this.log = this.log.concat("Request was queued, please be patient as it runs.", "\n");
+
+            this.subscription = interval(5000).subscribe(repeat => {
+              this.extractDataFromAPI(this.result.fetchResult(this.jobId));
+            });
+          }
+      });
+    }
+
+    else if (this.type === 'regime') {
+      this.result.regimesClusteringResult(this.start, this.end, this.ticker,
+        this.capitalBase, this.useClf, this.noShorts, this.logChannel).subscribe(response => {
           if (!response) {
             alert("Something went wrong!");
           }

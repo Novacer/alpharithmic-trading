@@ -1,13 +1,19 @@
-import numpy as np
-import pandas as pd
-import statsmodels.api as sm
+# Zipline API
 from zipline.api import attach_pipeline, pipeline_output, schedule_function, get_open_orders, order_target_percent
 from zipline.pipeline import Pipeline
 from zipline.utils.events import date_rules, time_rules
 from zipline.pipeline.factors import AverageDollarVolume
 from zipline import run_algorithm
 
+# Data frame
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+
+# Logging
 from websocket import create_connection
+
+# Data frame to JSON
 from ..api.create_response import create_json_response
 
 

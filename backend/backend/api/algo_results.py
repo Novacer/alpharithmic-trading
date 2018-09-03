@@ -7,6 +7,7 @@ from ..algorithms.mean_reversion import mean_rev_run
 from ..algorithms.random_forest_regression import rfr_run
 from ..algorithms.rsi_divergence import rsi_div_run
 from ..algorithms.trend_follow import trend_follow_run
+from ..algorithms.regimes_clustering import regimes_clustering_run
 import django_rq
 
 
@@ -109,6 +110,27 @@ class TrendFollowResult(APIView):
 
         return Response(json)
 
+
+class RegimesClusteringResult(APIView):
+    def post(self, request, format=None):
+
+        queue = django_rq.get_queue('high')
+
+        job = queue.enqueue(regimes_clustering_run,
+                            request.data['start'],
+                            request.data['end'],
+                            request.data['capital_base'],
+                            request.data['ticker'],
+                            request.data['use_clf'],
+                            request.data['no_shorts'],
+                            request.data['log_channel'])
+
+        json = {
+            'success': True,
+            'job_id': job.key
+        }
+
+        return Response(json)
 
 class GetResult(APIView):
     def post(self, request, format=None):
