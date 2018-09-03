@@ -40,15 +40,15 @@ export class RegimesClusteringComponent implements OnInit {
     this.thirdForm = this.formBuilder.group({thirdCtrl: ['', Validators.required]});
 
     let start = new Date();
-    start.setFullYear(2017);
-    start.setMonth(3);
+    start.setFullYear(2016);
+    start.setMonth(0);
     start.setDate(1);
 
     this.startDate = new FormControl(start);
 
     let end = new Date();
-    end.setFullYear(2018);
-    end.setMonth(3);
+    end.setFullYear(2016);
+    end.setMonth(5);
     end.setDate(1);
 
     this.endDate = new FormControl(end);
