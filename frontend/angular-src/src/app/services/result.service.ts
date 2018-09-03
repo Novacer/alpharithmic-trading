@@ -146,7 +146,17 @@ export class ResultService {
     return this.http.post(this.trendFollowURL, body);
   }
 
-
+  /**
+   * returns an Observable with the job_id of the Regimes Clustering simulation
+   * @param {string} start the start date
+   * @param {string} end the simulation end date
+   * @param {string} ticker the stock ticker to trade
+   * @param {number} capitalBase the initial capital base
+   * @param {boolean} useClf use random forest classifier instead of regressor
+   * @param {boolean} noShorts disable shorting
+   * @param {string} logChannel the channel for which logs are pushed to
+   * @returns {Observable<any>}
+   */
   regimesClusteringResult(start: string, end: string, ticker: string,
                           capitalBase: number, useClf: boolean, noShorts: boolean,
                           logChannel: string) : Observable<any>{
@@ -156,7 +166,7 @@ export class ResultService {
       end: end,
       ticker: ticker,
       use_clf: useClf,
-      long_only: noShorts,
+      no_shorts: noShorts,
       capital_base: capitalBase,
       log_channel: logChannel
     };
