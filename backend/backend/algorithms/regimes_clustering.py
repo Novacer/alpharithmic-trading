@@ -88,7 +88,7 @@ def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, 
 
                     window_length_str = str(window_length)
 
-                    ws.send(msg_placeholder % ("Feature set for k-means with a look back of %s days trained"
+                    ws.send(msg_placeholder % ("Feature set for k-means with a look back of %s days created"
                                                % window_length_str))
 
                     cluster_data.dropna(inplace=True)
