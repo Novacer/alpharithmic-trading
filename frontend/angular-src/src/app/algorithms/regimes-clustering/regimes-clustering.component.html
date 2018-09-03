@@ -1,0 +1,105 @@
+<div class="container-fluid">
+  <div class="body" id="top">
+    <div class="container">
+      <div class="py-5 text-center">
+        <img class="d-block mx-auto mb-4" src="../../../assets/icons/candlesticks.png" alt="" width="72" height="72">
+        <h2>Regimes Clustering</h2>
+        <h4>Class: Machine Learning Algorithm</h4>
+        <p class="lead">At the end of every week train a Random Forest Regression model. The feature set is the last
+          400 days of price changes, and the labels are the last 3 days of prices changes. Everyday at
+          a set time after market open, predict if the price change is positive or negative. Buy or sell the stock
+          based on this prediction.</p>
+      </div>
+      <mat-vertical-stepper [linear]="false" #stepper>
+        <mat-step [stepControl]="firstForm">
+          <form [formGroup]="firstForm">
+            <ng-template matStepLabel>Basic Configuration</ng-template>
+
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker1" placeholder="Simulation Start"
+                         [value]="startDate.value" [(ngModel)]="startDate.value" [ngModelOptions]="{standalone: true}">
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4 mb-3">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker2" placeholder="Simulation End"
+                         [value]="endDate.value" [(ngModel)]="endDate.value" [ngModelOptions]="{standalone: true}">
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4 mb-3">
+                <mat-form-field>
+                  <mat-icon matPrefix>attach_money</mat-icon>
+                  <input matInput type="number" placeholder="Initial Capital Base"
+                         [value]="capitalBase" [(ngModel)]="capitalBase" [ngModelOptions]="{standalone: true}">
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step [stepControl]="secondForm">
+          <form [formGroup]="secondForm">
+            <ng-template matStepLabel>Plan Your Transactions</ng-template>
+
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <mat-form-field>
+                  <input matInput type="text" placeholder="Stock Ticker Symbol"
+                         [value]="ticker" [(ngModel)]="ticker" [ngModelOptions]="{standalone: true}">
+                </mat-form-field>
+              </div>
+              <div class="col-md-3 mb-3" style="padding-top: 2%">
+                <mat-checkbox>Disable Shorting</mat-checkbox>
+              </div>
+              <div class="col-md-5 mb-3">
+                <mat-form-field>
+                  <mat-select placeholder="Use Random Forest">
+                    <mat-option [value]="true">Classifier</mat-option>
+                    <mat-option [value]="false">Regressor</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step [stepControl]="thirdForm">
+          <form [formGroup]="thirdForm">
+            <ng-template matStepLabel>Done</ng-template>
+
+            <div class="row">
+              <div class="col-md-6 mb-3" *ngIf="!beginSim; else reset;">
+                <button mat-button (click)="onDoneClick()">Begin Trading</button>
+
+                <p *ngIf="validating"> Validating Ticker... </p>
+              </div>
+
+              <ng-template #reset>
+                <div class="col-md-6 mb-3">
+                  <button mat-button (click)="onResetClick()">Reset</button>
+                </div>
+              </ng-template>
+
+            </div>
+          </form>
+        </mat-step>
+      </mat-vertical-stepper>
+    </div>
+  </div>
+  <div id="results">
+    <ng-container *ngIf="beginSim">
+      <div class="body">
+        <app-graph [type]="'rfr'"
+                   [start]="getDate(startDate)"
+                   [end]="getDate(endDate)"
+                   [capitalBase]="capitalBase"
+                   [ticker]="ticker"
+                   [minutes]="minutesAfterOpen"></app-graph>
+      </div>
+    </ng-container>
+  </div>
+</div>
