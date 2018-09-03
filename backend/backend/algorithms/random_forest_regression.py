@@ -1,11 +1,19 @@
-from sklearn.ensemble import RandomForestRegressor
-import numpy as np
-import pandas as pd
-from websocket import create_connection
+# Zipline API
 from zipline.api import schedule_function, order_target_percent, symbol
 from zipline.utils.events import date_rules, time_rules
 from zipline import run_algorithm
 
+# Data frame
+import numpy as np
+import pandas as pd
+
+# Machine Learning
+from sklearn.ensemble import RandomForestRegressor
+
+# Logging
+from websocket import create_connection
+
+# Data frame to JSON
 from ..api.create_response import create_json_response
 
 

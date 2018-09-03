@@ -1,12 +1,18 @@
-from scipy import stats
-import pandas as pd
+# Zipline API
 from zipline.pipeline import Pipeline
 from zipline.api import attach_pipeline, pipeline_output, schedule_function, order
 from zipline.pipeline.factors import AverageDollarVolume
 from zipline.utils.events import date_rules
 from zipline import run_algorithm
+
+# Data frame
+import pandas as pd
+from scipy import stats
+
+# Logging
 from websocket import create_connection
 
+# Data frame to JSON
 from ..api.create_response import create_json_response
 
 

@@ -1,10 +1,17 @@
-from ..technical_analysis.analysis import RSI
-from ..api.create_response import create_json_response
-import pandas as pd
-import math
+# Zipline API
 from zipline.api import order_target, symbol, order_target_percent
 from zipline import run_algorithm
+
+# Data frame
+import pandas as pd
+import math
+from ..technical_analysis.analysis import RSI
+
+# Logging
 from websocket import create_connection
+
+# Data frame to JSON
+from ..api.create_response import create_json_response
 
 
 def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
