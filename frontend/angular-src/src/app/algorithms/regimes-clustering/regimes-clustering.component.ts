@@ -20,7 +20,8 @@ export class RegimesClusteringComponent implements OnInit {
 
   public capitalBase : number;
   public ticker : string;
-  public minutesAfterOpen : number;
+  public noShorts : boolean;
+  public useClf : boolean;
 
   public beginSim : boolean;
   public validating : boolean;
@@ -54,7 +55,10 @@ export class RegimesClusteringComponent implements OnInit {
 
     this.capitalBase = 1000000;
     this.ticker = "";
-    this.minutesAfterOpen = 1;
+
+    this.noShorts = false;
+    this.useClf = true;
+
     this.beginSim = false;
     this.validating = false;
   }

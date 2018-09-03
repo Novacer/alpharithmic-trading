@@ -54,11 +54,11 @@
                 </mat-form-field>
               </div>
               <div class="col-md-3 mb-3" style="padding-top: 2%">
-                <mat-checkbox>Disable Shorting</mat-checkbox>
+                <mat-checkbox [(ngModel)]="noShorts">Disable Shorting</mat-checkbox>
               </div>
               <div class="col-md-5 mb-3">
                 <mat-form-field>
-                  <mat-select placeholder="Use Random Forest">
+                  <mat-select placeholder="Use Random Forest" [(value)]="useClf">
                     <mat-option [value]="true">Classifier</mat-option>
                     <mat-option [value]="false">Regressor</mat-option>
                   </mat-select>
@@ -97,8 +97,7 @@
                    [start]="getDate(startDate)"
                    [end]="getDate(endDate)"
                    [capitalBase]="capitalBase"
-                   [ticker]="ticker"
-                   [minutes]="minutesAfterOpen"></app-graph>
+                   [ticker]="ticker"></app-graph>
       </div>
     </ng-container>
   </div>
