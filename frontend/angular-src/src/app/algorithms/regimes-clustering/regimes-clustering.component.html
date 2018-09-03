@@ -55,7 +55,8 @@
                 </mat-form-field>
               </div>
               <div class="col-md-3 mb-3" style="padding-top: 2%">
-                <mat-checkbox [(ngModel)]="noShorts">Disable Shorting</mat-checkbox>
+                <mat-checkbox [(ngModel)]="noShorts"
+                              [ngModelOptions]="{standalone: true}">Disable Shorting</mat-checkbox>
               </div>
               <div class="col-md-5 mb-3">
                 <mat-form-field>
