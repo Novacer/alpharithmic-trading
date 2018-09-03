@@ -170,15 +170,9 @@ def regimes_clustering_run(start_date, end_date, capital_base, ticker, use_clf, 
 
                 window_length_str = str(window_length)
 
-                ws.send(msg_placeholder % ("Adjusting clusters for the K-means with a look back of %s days"
-                                           % window_length_str))
-
                 cluster_data = create_kmeans_features(context, data, window_length, ret_window, for_training=False)
                 X = cluster_data.drop('rets', axis=1)
                 y = cluster_data['rets']
-
-                ws.send(msg_placeholder % ("New feature set created for the K-means with a look back of %s days"
-                                           % window_length_str))
 
                 kmeans = clusters[ret_window]['windows'][window_length]['kmeans']
                 clusters[ret_window]['windows'][window_length]['regimes'] = kmeans.predict(X.values)
