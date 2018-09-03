@@ -57,7 +57,7 @@ export class RegimesClusteringComponent implements OnInit {
     this.ticker = "";
 
     this.noShorts = false;
-    this.useClf = true;
+    this.useClf = false;
 
     this.beginSim = false;
     this.validating = false;
