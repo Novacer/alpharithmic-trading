@@ -95,11 +95,13 @@
   <div id="results">
     <ng-container *ngIf="beginSim">
       <div class="body">
-        <app-graph [type]="'rfr'"
+        <app-graph [type]="'regime'"
                    [start]="getDate(startDate)"
                    [end]="getDate(endDate)"
                    [capitalBase]="capitalBase"
-                   [ticker]="ticker"></app-graph>
+                   [ticker]="ticker"
+                   [useClf]="useClf"
+                   [noShorts]="noShorts" ]></app-graph>
       </div>
     </ng-container>
   </div>
