@@ -15,8 +15,7 @@ import {
   MatDatepickerModule,
   MatFormFieldModule, MatIconModule, MatInputModule,
   MatNativeDateModule, MatProgressSpinnerModule, MatSliderModule, MatSnackBarModule,
-  MatStepperModule,
-  MatToolbarModule
+  MatStepperModule, MatToolbarModule, MatSelectModule, MatCheckboxModule
 } from "@angular/material";
 import { MatButtonModule } from "@angular/material/button";
 import { SelectAlgoComponent } from './select-algo/select-algo.component';
@@ -28,6 +27,7 @@ import { TutorialComponent } from './tutorial/tutorial.component';
 import { BuilderComponent } from './builder/builder.component';
 import { RsiDivergenceComponent } from './algorithms/rsi-divergence/rsi-divergence.component';
 import { TrendFollowComponent } from './algorithms/trend-follow/trend-follow.component';
+import { RegimesClusteringComponent } from './algorithms/regimes-clustering/regimes-clustering.component';
 
 const appRoutes : Routes = [
   { path: '', component: IntroComponent, pathMatch: 'full'},
@@ -37,6 +37,7 @@ const appRoutes : Routes = [
   { path: 'algorithms/random-forest-regression', component: RandForestRegComponent },
   { path: 'algorithms/rsi-divergence', component: RsiDivergenceComponent },
   { path: 'algorithms/trend-follow', component: TrendFollowComponent },
+  { path: 'algorithms/regimes-clustering', component: RegimesClusteringComponent },
   { path: 'tutorial', component: TutorialComponent },
   { path: 'build', component: BuilderComponent },
   { path: '**', redirectTo: '' }
@@ -55,7 +56,8 @@ const appRoutes : Routes = [
     TutorialComponent,
     BuilderComponent,
     RsiDivergenceComponent,
-    TrendFollowComponent
+    TrendFollowComponent,
+    RegimesClusteringComponent
   ],
   imports: [
     BrowserModule,
@@ -75,6 +77,8 @@ const appRoutes : Routes = [
     MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    MatSelectModule,
+    MatCheckboxModule,
     NgbModule.forRoot(),
     ScrollToModule.forRoot(),
     RouterModule.forRoot(appRoutes)
