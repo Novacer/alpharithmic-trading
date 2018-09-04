@@ -1,7 +1,90 @@
-<div class="container-fluid">
-  <div class="body">
-    <h5>
-      Coming Soon!
-    </h5>
-  </div>
-</div>
+<div class="container body">
+
+      <div class="blog-header">
+        <h1 class="blog-title">Alpharithmic Trading</h1>
+        <p class="lead blog-description">The official tutorial on how to best use this site.</p>
+      </div>
+
+      <div class="row">
+
+        <div class="col-sm-8 blog-main">
+
+          <div class="blog-post" id="intro">
+            <h2 class="blog-post-title">Introduction</h2>
+            <p class="blog-post-meta">Still a Work in Progress</p>
+
+            <p>Backtest your trading strategy at a click of a button! How much alpha can you generate? Alpharithmic Trading
+			allows you to see how trading algorithms work in real-time, with live logging, interactive graphs, and 
+			adjustable parameters.</p>
+            <hr>
+			<p>This web application provides hyper-realistic and interactive simulations for trading algorithms.</p>
+            <p>With a philosophy that "<em>seeing is believing</em>", every transaction, calculation, and event is logged live as the algorithm runs. This provides a superior user experience because the user can literally see the algorithm in action, allowing for a greater understanding of the algorithm's behaviour, strengths, and weaknesses.</p>
+            <p>The main driver behind this magic comes from the <a href="https://www.zipline.io/">Zipline Live Trading Engine</a> developed by <a href="https://www.quantopian.com/">Quantopian</a>, an educational platform for learning quantitative finance. Some of the algorithms found on this site are inspired by the research efforts and journals shared by the community of Quantopian.</p>
+			<p>The stock pricing data is sourced from the <a href="https://www.quandl.com/databases/WIKIP">Quandl WIKI</a> API, which is available for free for anyone with a Quandl account.</p>
+			<hr>
+			<div id="algo-type">
+				<h2>The Three Types of Trading Algorithms</h2>
+				<p>The example algorithms that can be found on this site are divided into three main categories (or classes).</p>
+				<h3>The Naive Class</h3>
+				<p>The Naive Class of algorithms is a class categorized by the fact that they track and trade a single stock using some strategy. You can tell if an algorithm falls under the Naive Class if you have to pick a stock to trade in the simulation parameters. Conceptually,these are the easiest algorithms to understand. However, simple does not mean it's ineffective! There are tons of great strategies that fall under this category. For starters, we recommend checking out the <a href="http://www.alpharithm.ca/algorithms/rsi-divergence">RSI Divergence Strategy!</a></p>
+				<h3>The Advanced Class</h3>
+				<p>The Advanced Class of algorithms differs from the Naive Class in that you do not get to pick a stock! Instead, the Advanced Class will scan the market to identify the best combination of stocks to long/short in your portfolio to maximize your return. These algorithms leverage the Pipeline API provided by Zipline, which provides a series of filters and sorts to identify the strongest stocks based on some quantitative factor. For a great demonstration of this, try out the <a href="http://www.alpharithm.ca/algorithms/trend-follower">Trend Follower Algorithm!</a></p>
+				<h3>The Machine Learning Class</h3>
+				<p>This is a special class of algorithms that specifically integrate machine learning classifiers and capabilities to derive a set of insights that the above two classes cannot. Both examples of Supervised and Unsupervised Learning techniques are used in the algorithms on this site. Try out <a href="http://www.alpharithm.ca/algorithms/regimes-clustering">Regimes Clustering</a> for an example that uses both!</p>
+			</div>
+			<hr>
+			<div id="terms">
+				<h3>Important Terminology</h3>
+				<p>The following section provides important terminology that is used when discussing many of the algorithms on this site.</p>
+				<ul>
+				  <li>Term 1</li>
+				  <li>Term 2</li>
+				  <li>Term 3</li>
+				</ul>
+				<p>Work in Progress</p>
+				<ol>
+				  <li>First point</li>
+				  <li>Second point</li>
+				  <li>Third point</li>
+				</ol>
+				<p>Work in Progress</p>
+			</div>
+          </div><!-- /.blog-post -->
+
+          <div class="blog-post" id="regimes">
+            <h2 class="blog-post-title">Regimes Clustering Strategy</h2>
+            <p class="blog-post-meta">September 4, 2018 | <em>Machine Learning Algorithm</em></p>
+
+            <p>Some description of Regimes Clustering here.</p>
+          </div><!-- /.blog-post -->
+
+        </div><!-- /.blog-main -->
+
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          <div class="sidebar-module sidebar-module-inset">
+            <h4>About</h4>
+            <p>Powered by the Zipline Live Trading Engine, this web app provides an educational platform
+			for trading algorithms in a realistic and interactive environment.</p>
+          </div>
+          <div class="sidebar-module">
+            <h4>Sections</h4>
+            <ol class="list-unstyled">
+              <li><a href="/tutorial#intro">Introduction</a></li>
+              <li><a href="/tutorial#algo-type">Types of trading algorithms</a></li>
+              <li><a href="/tutorial#terms">Important Terminology</a></li>
+              <li><a href="/tutorial#regimes">Regimes Clustering Strategy</a></li>
+            </ol>
+          </div>
+          <div class="sidebar-module">
+            <h4>Important Resources</h4>
+            <ol class="list-unstyled">
+              <li><a href="https://github.com/Novacer/alpharithmic-trading">GitHub</a></li>
+              <li><a href="https://www.quantopian.com/">Quantopian</a></li>
+              <li><a href="https://www.zipline.io/">Zipline Docs</a></li>
+            </ol>
+          </div>
+        </div><!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
