@@ -68,7 +68,12 @@ In case you haven't noticed yet, we are LIVE at www.alpharithm.ca!!!! More excit
   This is a special class of algorithms that specifically integrate machine learning classifiers and
   capabilities to derive a set of insights that the above two classes cannot. Here's a great example
   using a [Random Forest Regressor Algorithm!](http://www.alpharithm.ca/algorithms/random-forest-regression)
-    
+  
 
  ## Build Your Own
  (Coming soon...)
+ 
+ 
+ ## Diagrams
+ ![alpha arch](https://user-images.githubusercontent.com/29148427/46925503-27204500-cffa-11e8-9c21-550dff245b13.jpg)
+
