@@ -2,7 +2,7 @@
 Backtest your trading strategy at a click of a button! How much alpha can you generate?
 
 
-In case you haven't noticed yet, we are LIVE at www.alpharithm.ca!!!! More exciting features to come!
+In case you haven't noticed yet, we are LIVE at www.alpharithmic.herokuapp.com. More exciting features to come!
 
 ## Technologies used in this project:
 * Python Django REST Framework
@@ -53,7 +53,7 @@ In case you haven't noticed yet, we are LIVE at www.alpharithm.ca!!!! More excit
   in the simulation parameters. Conceptually,these are the easiest algorithms to understand. However, simple does not
   mean it's ineffective! There are tons of great strategies that fall under this 
   category. For starters, we recommend checking out the 
-  [RSI Divergence Strategy!](http://www.alpharithm.ca/algorithms/rsi-divergence)
+  [RSI Divergence Strategy!](http://www.alpharithmic.herokuapp.com/algorithms/rsi-divergence)
   
   ### The Advanced Class
   The Advanced Class of algorithms differs from the Naive Class in that you do not
@@ -62,12 +62,12 @@ In case you haven't noticed yet, we are LIVE at www.alpharithm.ca!!!! More excit
   These algorithms leverage the Pipeline API provided by Zipline, which provides a series
   of filters and sorts to identify the strongest stocks based on some quantitative factor.
   For a great demonstration of this, try out the 
-  [Trend Follower Algorithm!](http://www.alpharithm.ca/algorithms/trend-follower)
+  [Trend Follower Algorithm!](http://www.alpharithmic.herokuapp.com/algorithms/trend-follower)
   
   ### The Machine Learning Class
   This is a special class of algorithms that specifically integrate machine learning classifiers and
   capabilities to derive a set of insights that the above two classes cannot. Here's a great example
-  using a [Random Forest Regressor Algorithm!](http://www.alpharithm.ca/algorithms/random-forest-regression)
+  using a [Random Forest Regressor Algorithm!](http://www.alpharithmic.herokuapp.com/algorithms/random-forest-regression)
   
 
  ## Build Your Own
