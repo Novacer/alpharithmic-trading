@@ -24,4 +24,3 @@ def validate_single_stock(ticker):
     except:
         return False
 
-
