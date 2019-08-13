@@ -62,7 +62,7 @@ In case you haven't noticed yet, we are LIVE at http://alpharithmic.herokuapp.co
   These algorithms leverage the Pipeline API provided by Zipline, which provides a series
   of filters and sorts to identify the strongest stocks based on some quantitative factor.
   For a great demonstration of this, try out the 
-  [Trend Follower Algorithm!](http://alpharithmic.herokuapp.com/algorithms/trend-follower)
+  [Trend Follower Algorithm!](http://alpharithmic.herokuapp.com/algorithms/trend-follow)
   
   ### The Machine Learning Class
   This is a special class of algorithms that specifically integrate machine learning classifiers and
