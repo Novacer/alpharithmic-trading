@@ -2,7 +2,7 @@
 Backtest your trading strategy at a click of a button! How much alpha can you generate?
 
 
-In case you haven't noticed yet, we are LIVE at www.alpharithmic.herokuapp.com. More exciting features to come!
+In case you haven't noticed yet, we are LIVE at http://alpharithmic.herokuapp.com. More exciting features to come!
 
 ## Technologies used in this project:
 * Python Django REST Framework
