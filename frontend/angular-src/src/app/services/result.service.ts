@@ -7,23 +7,15 @@ import {HttpClient} from '@angular/common/http';
 })
 export class ResultService {
 
-  private readonly buyAppleURL: string;
-  private readonly meanReversionURL: string;
-  private readonly randForestRegURL: string;
-  private readonly rsiDivergenceURL: string;
-  private readonly trendFollowURL: string;
-  private readonly fetchResultURL: string;
-  private readonly regimesClusteringURL: string;
+  private readonly buyAppleURL = '/api/post/buy-apple';
+  private readonly meanReversionURL = '/api/post/mean-reversion';
+  private readonly randForestRegURL = '/api/post/random-forest-regression';
+  private readonly rsiDivergenceURL = '/api/post/rsi-divergence';
+  private readonly trendFollowURL = '/api/post/trend-follow';
+  private readonly regimesClusteringURL = '/api/post/regimes-clustering';
+  private readonly fetchResultURL = '/api/post/result';
 
-  constructor(private http: HttpClient) {
-    this.buyAppleURL = '/api/post/buy-apple';
-    this.meanReversionURL = '/api/post/mean-reversion';
-    this.randForestRegURL = '/api/post/random-forest-regression';
-    this.rsiDivergenceURL = '/api/post/rsi-divergence';
-    this.trendFollowURL = '/api/post/trend-follow';
-    this.regimesClusteringURL = '/api/post/regimes-clustering';
-    this.fetchResultURL = '/api/post/result';
-  }
+  constructor(private http: HttpClient) {}
 
   /**
    * Returns an Observable with the job_id of buying Apple Shares everyday
