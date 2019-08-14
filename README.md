@@ -41,6 +41,9 @@ In case you haven't noticed yet, we are LIVE at http://alpharithmic.herokuapp.co
   The stock pricing data is sourced from the [Quandl WIKI](https://www.quandl.com/databases/WIKIP) API,
   which is available for free for anyone with a Quandl account.
   
+  ## Build Your Own Algorithm
+  WIP! [Try out what's working so far!](http://alpharithmic.herokuapp.com/build)
+  
   
   ## The Three Types of Trading Algorithms
   The example algorithms that can be found on this site are divided into 
@@ -68,11 +71,7 @@ In case you haven't noticed yet, we are LIVE at http://alpharithmic.herokuapp.co
   This is a special class of algorithms that specifically integrate machine learning classifiers and
   capabilities to derive a set of insights that the above two classes cannot. Here's a great example
   using a [Random Forest Regressor Algorithm!](http://alpharithmic.herokuapp.com/algorithms/random-forest-regression)
-  
-
- ## Build Your Own
- (Coming soon...)
- 
+   
  
  ## Diagrams
  ![alpha arch](https://user-images.githubusercontent.com/29148427/46925503-27204500-cffa-11e8-9c21-550dff245b13.jpg)
