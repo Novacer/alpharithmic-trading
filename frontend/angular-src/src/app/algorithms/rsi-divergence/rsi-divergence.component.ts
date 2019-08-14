@@ -87,7 +87,7 @@ export class RsiDivergenceComponent implements OnInit {
   }
 
 
-  static getDate(form: FormControl) {
+  getDate(form: FormControl) {
     return form.value.toISOString().substring(0, 10);
   }
 }

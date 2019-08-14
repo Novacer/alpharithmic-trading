@@ -5,7 +5,7 @@ cd angular-src
 echo "Deleting previous static files"
 rm -r dist/ ../../backend/dist/
 echo "Building angular source in prod mode"
-ng build
+ng build --prod
 cd ../
 echo "Copying contents of dist into static files"
 cp -R angular-src/dist/. ../backend/dist/
