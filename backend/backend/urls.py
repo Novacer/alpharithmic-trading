@@ -16,15 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
-from .api import hello_world
-from .api import validator
-from .api import algo_results
+from .api import validator, algo_results, source_code_executor
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/get/hello/', hello_world.HelloWorld.as_view()),
     path('api/get/validate-symbol', validator.Validate.as_view()),
-    path('api/post/hello', hello_world.PostWorld.as_view()),
+    path('api/get/default-src-code', source_code_executor.GetDefaultSourceCodeFile.as_view()),
     path('api/post/buy-apple', algo_results.BuyAppleResult.as_view()),
     path('api/post/mean-reversion', algo_results.MeanReversionResult.as_view()),
     path('api/post/random-forest-regression', algo_results.RandomForestRegressionResult.as_view()),
