@@ -11,7 +11,7 @@ import {EditorService} from "../services/editor.service";
 })
 export class CodeEditorComponent implements OnInit, AfterViewInit {
   @ViewChild('editor') editor;
-  code = 'print("Hello World!")';
+  code = '';
 
   private readonly options = {
     enableBasicAutocompletion: true,
