@@ -90,7 +90,7 @@ def rfr_run(start_date, end_date, capital_base, ticker, minutes, log_channel):
 
     result = run_algorithm(start, end, initialize=initialize,
                            handle_data=handle_data,
-                           capital_base=capital_base, bundle='quantopian-quandl')
+                           capital_base=capital_base, bundle='quandl')
 
     ws.send(msg_placeholder % "Simulation End")
     ws.send(msg_placeholder % "Fetching backtest results from Redis Queue...")

@@ -270,7 +270,7 @@ def trend_follow_run(start_date, end_date, capital_base, log_channel):
     result = run_algorithm(start, end,
                            initialize=initialize, before_trading_start=before_trading_start,
                            capital_base=capital_base,
-                           bundle="quantopian-quandl")
+                           bundle="quandl")
 
     ws.send(msg_placeholder % "Simulation End")
     ws.send(msg_placeholder % "Fetching backtest results from Redis Queue...")

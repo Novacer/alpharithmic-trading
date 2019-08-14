@@ -167,7 +167,7 @@ def rsi_div_run(start_date, end_date, capital_base, ticker, log_channel):
 
     result = run_algorithm(start=start, end=end, initialize=initialize,
                            handle_data=handle_data, capital_base=capital_base,
-                           bundle='quantopian-quandl')
+                           bundle='quandl')
 
     ws.send(msg_placeholder % "Simulation End")
     ws.send(msg_placeholder % "Fetching backtest results from Redis Queue...")

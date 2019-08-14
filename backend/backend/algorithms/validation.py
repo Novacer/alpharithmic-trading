@@ -18,7 +18,7 @@ def validate_single_stock(ticker):
         run_algorithm(start, end, capital_base=1000000,
                       initialize=init,
                       handle_data=handle_data,
-                      bundle="quantopian-quandl")
+                      bundle="quandl")
 
         return True
     except:
