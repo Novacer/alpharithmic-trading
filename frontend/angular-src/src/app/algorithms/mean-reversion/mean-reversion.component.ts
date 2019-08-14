@@ -66,7 +66,7 @@ export class MeanReversionComponent implements OnInit {
     this.beginSim = false;
   }
 
-  static getDate(form: FormControl) {
+  getDate(form: FormControl) {
     return form.value.toISOString().substring(0, 10);
   }
 

@@ -2,6 +2,8 @@
 # This script is to automate the building of the angular frontend
 
 cd angular-src
+echo "Deleting previous static files"
+rm -r dist/ ../../backend/dist/
 echo "Building angular source in prod mode"
 ng build --prod
 cd ../
