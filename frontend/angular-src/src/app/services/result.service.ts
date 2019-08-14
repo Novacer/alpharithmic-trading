@@ -1,28 +1,28 @@
 import { Injectable } from '@angular/core';
-import {Observable} from "rxjs/internal/Observable";
-import {HttpClient} from "@angular/common/http";
+import {Observable} from 'rxjs/internal/Observable';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ResultService {
 
-  private readonly buyAppleURL : string;
-  private readonly meanReversionURL : string;
-  private readonly randForestRegURL : string;
-  private readonly rsiDivergenceURL : string;
-  private readonly trendFollowURL : string;
-  private readonly fetchResultURL : string;
+  private readonly buyAppleURL: string;
+  private readonly meanReversionURL: string;
+  private readonly randForestRegURL: string;
+  private readonly rsiDivergenceURL: string;
+  private readonly trendFollowURL: string;
+  private readonly fetchResultURL: string;
   private readonly regimesClusteringURL: string;
 
   constructor(private http: HttpClient) {
-    this.buyAppleURL = "/api/post/buy-apple";
-    this.meanReversionURL = "/api/post/mean-reversion";
-    this.randForestRegURL = "/api/post/random-forest-regression";
-    this.rsiDivergenceURL = "/api/post/rsi-divergence";
-    this.trendFollowURL = "/api/post/trend-follow";
-    this.regimesClusteringURL = "/api/post/regimes-clustering";
-    this.fetchResultURL = "/api/post/result";
+    this.buyAppleURL = '/api/post/buy-apple';
+    this.meanReversionURL = '/api/post/mean-reversion';
+    this.randForestRegURL = '/api/post/random-forest-regression';
+    this.rsiDivergenceURL = '/api/post/rsi-divergence';
+    this.trendFollowURL = '/api/post/trend-follow';
+    this.regimesClusteringURL = '/api/post/regimes-clustering';
+    this.fetchResultURL = '/api/post/result';
   }
 
   /**
@@ -35,9 +35,9 @@ export class ResultService {
    */
   buyAppleResult(start: string, end: string,
                  shares: number, capitalBase: number,
-                 logChannel: string) : Observable<any> {
+                 logChannel: string): Observable<any> {
 
-    let body = {
+    const body = {
       start: start,
       end: end,
       shares: shares,
@@ -60,9 +60,9 @@ export class ResultService {
    */
   meanReversionResult(start: string, end: string,
                       shares: number, capitalBase: number,
-                      logChannel: string) :Observable<any> {
+                      logChannel: string): Observable<any> {
 
-    let body = {
+    const body = {
       start: start,
       end: end,
       shares: shares,
@@ -86,9 +86,9 @@ export class ResultService {
    */
   randForestRegResult(start: string, end: string,
                       ticker: string, capitalBase: number,
-                      minutes: number, logChannel: string) : Observable<any> {
+                      minutes: number, logChannel: string): Observable<any> {
 
-    let body = {
+    const body = {
       start: start,
       end: end,
       ticker: ticker,
@@ -111,9 +111,9 @@ export class ResultService {
    */
   rsiDivergenceResult(start: string, end: string,
                       ticker: string, capitalBase: number,
-                      logChannel: string) : Observable<any>{
+                      logChannel: string): Observable<any> {
 
-    let body = {
+    const body = {
       start: start,
       end: end,
       ticker: ticker,
@@ -134,9 +134,9 @@ export class ResultService {
    * @returns {Observable<any>}
    */
   trendFollowResult(start: string, end: string,
-                    capitalBase: number, logChannel: string) : Observable<any> {
+                    capitalBase: number, logChannel: string): Observable<any> {
 
-    let body = {
+    const body = {
       start: start,
       end: end,
       capital_base: capitalBase,
@@ -159,9 +159,9 @@ export class ResultService {
    */
   regimesClusteringResult(start: string, end: string, ticker: string,
                           capitalBase: number, useClf: boolean, noShorts: boolean,
-                          logChannel: string) : Observable<any>{
+                          logChannel: string): Observable<any> {
 
-    let body = {
+    const body = {
       start: start,
       end: end,
       ticker: ticker,
@@ -179,9 +179,9 @@ export class ResultService {
    * @param {string} jobId the job_id
    * @returns {Observable<Object>}
    */
-  fetchResult(jobId : string) {
+  fetchResult(jobId: string) {
 
-    let body = {
+    const body = {
       job_id: jobId.substring(7)
     };
 

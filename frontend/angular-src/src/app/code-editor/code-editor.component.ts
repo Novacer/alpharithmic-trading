@@ -1,8 +1,8 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import "ace-builds/webpack-resolver";
-import "brace/mode/python";
-import "brace/theme/monokai";
-import {EditorService} from "../services/editor.service";
+import 'ace-builds/webpack-resolver';
+import 'brace/mode/python';
+import 'brace/theme/monokai';
+import {EditorService} from '../services/editor.service';
 
 @Component({
   selector: 'code-editor',

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {ScrollToService} from '@nicky-lenaers/ngx-scroll-to';
 
 @Component({
   selector: 'app-buy-apple',
@@ -9,17 +9,17 @@ import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
 })
 export class BuyAppleComponent implements OnInit {
 
-  public firstForm : FormGroup;
-  public secondForm : FormGroup;
-  public thirdForm : FormGroup;
+  firstForm: FormGroup;
+  secondForm: FormGroup;
+  thirdForm: FormGroup;
 
-  public startDate : FormControl;
-  public endDate : FormControl;
+  startDate: FormControl;
+  endDate: FormControl;
 
-  public capitalBase : number;
-  public numOfShares : number;
+  capitalBase: number;
+  numOfShares: number;
 
-  public beginSim : boolean;
+  beginSim: boolean;
 
   constructor(private formBuilder: FormBuilder, private scroll: ScrollToService) { }
 
@@ -32,14 +32,14 @@ export class BuyAppleComponent implements OnInit {
     this.secondForm = this.formBuilder.group({secondCtrl: ['', Validators.required]});
     this.thirdForm = this.formBuilder.group({thirdCtrl: ['', Validators.required]});
 
-    let start = new Date();
+    const start = new Date();
     start.setFullYear(2017);
     start.setMonth(3);
     start.setDate(1);
 
     this.startDate = new FormControl(start);
 
-    let end = new Date();
+    const end = new Date();
     end.setFullYear(2018);
     end.setMonth(3);
     end.setDate(1);
@@ -54,7 +54,7 @@ export class BuyAppleComponent implements OnInit {
   onDoneClick() {
 
     this.scroll.scrollTo({
-      target: "results"
+      target: 'results'
     });
     this.beginSim = true;
 
@@ -64,7 +64,7 @@ export class BuyAppleComponent implements OnInit {
     this.beginSim = false;
   }
 
-  getDate(form: FormControl) {
+  static getDate(form: FormControl) {
     return form.value.toISOString().substring(0, 10);
   }
 
