@@ -132,6 +132,7 @@ class RegimesClusteringResult(APIView):
 
         return Response(json)
 
+
 class GetResult(APIView):
     def post(self, request, format=None):
         queue = django_rq.get_queue('high')
