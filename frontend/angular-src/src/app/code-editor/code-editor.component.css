@@ -1,6 +1,6 @@
 .code-editor {
   z-index: 1;
-  min-height: 300px;
-  width:100%;
+  min-height: 400px;
+  width: 100%;
   overflow: auto;
 }

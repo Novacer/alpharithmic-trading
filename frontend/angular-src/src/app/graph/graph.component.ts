@@ -1,9 +1,9 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {ResultService} from "../services/result.service";
-import {interval} from "rxjs";
-import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
-import {Subscription} from "rxjs/internal/Subscription";
-import {Observable} from "rxjs/internal/Observable";
+import {ResultService} from '../services/result.service';
+import {interval} from 'rxjs';
+import {ScrollToService} from '@nicky-lenaers/ngx-scroll-to';
+import {Subscription} from 'rxjs/internal/Subscription';
+import {Observable} from 'rxjs/internal/Observable';
 
 @Component({
   selector: 'app-graph',
@@ -34,10 +34,10 @@ export class GraphComponent implements OnInit, OnDestroy {
   private minutes: number;
 
   @Input()
-  private useClf : boolean;
+  private useClf: boolean;
 
   @Input()
-  private noShorts : boolean;
+  private noShorts: boolean;
 
   public done: boolean;
   public finalAlpha: number;
@@ -62,7 +62,7 @@ export class GraphComponent implements OnInit, OnDestroy {
     this.dataset1 = [];
     this.dataset2 = [];
     this.ws = null;
-    this.log = "";
+    this.log = '';
     this.jobId = null;
     this.subscription = null;
 
@@ -100,10 +100,10 @@ export class GraphComponent implements OnInit, OnDestroy {
 
     this.logChannel = GraphComponent.generateRandomString();
 
-    this.ws = new WebSocket("ws://alpharithmic.herokuapp.com/ws/logs/" + this.logChannel + "/");
+    this.ws = new WebSocket('ws://alpharithmic.herokuapp.com/ws/logs/' + this.logChannel + '/');
     this.ws.onmessage = (event) => {
-      let msg = JSON.parse(event.data).message;
-      this.log = this.log.concat(msg, "\n");
+      const msg = JSON.parse(event.data).message;
+      this.log = this.log.concat(msg, '\n');
     };
 
     if (this.type === 'apple') {
@@ -111,111 +111,91 @@ export class GraphComponent implements OnInit, OnDestroy {
       this.result.buyAppleResult(this.start, this.end,
         this.numberOfShares, this.capitalBase, this.logChannel).subscribe(response => {
         if (!response) {
-          alert("Something went wrong!");
-        }
-        else {
+          alert('Something went wrong!');
+        } else {
           this.jobId = response.job_id;
 
-          this.log = this.log.concat("Request was queued, please be patient as it runs.", "\n");
+          this.log = this.log.concat('Request was queued, please be patient as it runs.', '\n');
 
           this.subscription = interval(3000).subscribe(repeat => {
             this.extractDataFromAPI(this.result.fetchResult(this.jobId));
           });
         }
       });
-    }
-
-    else if (this.type === 'mean-rev') {
+    } else if (this.type === 'mean-rev') {
 
       this.result.meanReversionResult(this.start, this.end,
         this.numberOfShares, this.capitalBase, this.logChannel).subscribe(response => {
         if (!response) {
-          alert("Something went wrong!");
-        }
-        else {
+          alert('Something went wrong!');
+        } else {
           this.jobId = response.job_id;
 
-          this.log = this.log.concat("Request was queued, please be patient as it runs.", "\n");
+          this.log = this.log.concat('Request was queued, please be patient as it runs.', '\n');
 
           this.subscription = interval(3000).subscribe(repeat => {
             this.extractDataFromAPI(this.result.fetchResult(this.jobId));
           });
         }
       });
-    }
-
-    else if (this.type === 'rfr') {
+    } else if (this.type === 'rfr') {
 
       this.result.randForestRegResult(this.start, this.end,
         this.ticker, this.capitalBase, this.minutes, this.logChannel).subscribe(response => {
           if (!response) {
-            alert("Something went wrong!");
-          }
-
-          else {
+            alert('Something went wrong!');
+          } else {
             this.jobId = response.job_id;
 
-            this.log = this.log.concat("Request was queued, please be patient as it runs.", "\n");
+            this.log = this.log.concat('Request was queued, please be patient as it runs.', '\n');
 
             this.subscription = interval(3000).subscribe(repeat => {
               this.extractDataFromAPI(this.result.fetchResult(this.jobId));
             });
           }
       });
-    }
-
-    else if (this.type === 'rsi') {
+    } else if (this.type === 'rsi') {
 
       this.result.rsiDivergenceResult(this.start, this.end, this.ticker,
         this.capitalBase, this.logChannel).subscribe(response => {
           if (!response) {
-            alert("Something went wrong!");
-          }
-
-          else {
+            alert('Something went wrong!');
+          } else {
             this.jobId = response.job_id;
 
-            this.log = this.log.concat("Request was queued, please be patient as it runs.", "\n");
+            this.log = this.log.concat('Request was queued, please be patient as it runs.', '\n');
 
             this.subscription = interval(5000).subscribe(repeat => {
               this.extractDataFromAPI(this.result.fetchResult(this.jobId));
             });
           }
       });
-    }
-
-    else if (this.type === 'trend') {
+    } else if (this.type === 'trend') {
       this.result.trendFollowResult(this.start, this.end,
         this.capitalBase, this.logChannel).subscribe(response => {
           if (!response) {
-            alert("Something went wrong!");
-          }
-
-          else {
+            alert('Something went wrong!');
+          } else {
 
             this.jobId = response.job_id;
 
-            this.log = this.log.concat("Request was queued, please be patient as it runs.", "\n");
+            this.log = this.log.concat('Request was queued, please be patient as it runs.', '\n');
 
             this.subscription = interval(5000).subscribe(repeat => {
               this.extractDataFromAPI(this.result.fetchResult(this.jobId));
             });
           }
       });
-    }
-
-    else if (this.type === 'regime') {
+    } else if (this.type === 'regime') {
       this.result.regimesClusteringResult(this.start, this.end, this.ticker,
         this.capitalBase, this.useClf, this.noShorts, this.logChannel).subscribe(response => {
           if (!response) {
-            alert("Something went wrong!");
-          }
-
-          else {
+            alert('Something went wrong!');
+          } else {
 
             this.jobId = response.job_id;
 
-            this.log = this.log.concat("Request was queued, please be patient as it runs.", "\n");
+            this.log = this.log.concat('Request was queued, please be patient as it runs.', '\n');
 
             this.subscription = interval(5000).subscribe(repeat => {
               this.extractDataFromAPI(this.result.fetchResult(this.jobId));
@@ -248,26 +228,22 @@ export class GraphComponent implements OnInit, OnDestroy {
 
       if (!response) {
         return;
-      }
-
-      else if (!response.done) {
+      } else if (!response.done) {
         return;
-      }
-
-      else {
+      } else {
 
         this.subscription.unsubscribe();
 
-        let algoToBench = response.algo_to_benchmark;
-        let rollingBeta = response.rolling_beta;
+        const algoToBench = response.algo_to_benchmark;
+        const rollingBeta = response.rolling_beta;
         this.finalAlpha = response.alpha;
 
-        let date = new Date();
+        const date = new Date();
 
-        let algo = [];
-        let bench = [];
+        const algo = [];
+        const bench = [];
 
-        for (let point of algoToBench.data.data01) {
+        for (const point of algoToBench.data.data01) {
           this.xaxis.push(GraphComponent.dateNumToString(point[0], date));
           algo.push(point[1] * 100);
           bench.push(point[2] * 100);
@@ -275,24 +251,24 @@ export class GraphComponent implements OnInit, OnDestroy {
 
         this.dataset1.push({
           data: algo,
-          label: "Algorithm Return %",
+          label: 'Algorithm Return %',
           fill: true,
         });
         this.dataset1.push({
           data: bench,
-          label: "Benchmark Return %",
+          label: 'Benchmark Return %',
           fill: false,
         });
 
-        let beta = [];
+        const beta = [];
 
-        for (let point of rollingBeta.data.data01) {
+        for (const point of rollingBeta.data.data01) {
           beta.push(point[1]);
         }
 
         this.dataset2.push({
           data: beta,
-          label: "Beta"
+          label: 'Beta'
         });
 
         this.done = true;
@@ -302,7 +278,7 @@ export class GraphComponent implements OnInit, OnDestroy {
         }
 
         this.scroll.scrollTo({
-          target: "graph"
+          target: 'graph'
         });
       }
     });

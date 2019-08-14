@@ -10,7 +10,7 @@ export class IntroComponent implements OnInit {
   public images: string[];
 
   constructor() {
-    this.images = [""]
+    this.images = [''];
   }
 
   ngOnInit() {
