@@ -8,12 +8,21 @@ from zipline.utils.events import date_rules
 # functions scheduled in init take context and data parameters
 def initialize(context):
     context.shares_per_day = 10
-    schedule_function(func=buy_apple_shares, date_rule=date_rules.every_day())
+    context.day = 0
+    schedule_function(func=buy_or_sell_apple_shares, date_rule=date_rules.every_day())
 
+
+# do action before the trading day starts
 def before_trading_start(context, data):
-    pass
+    context.day += 1
 
 
-# buy 10 apple shares every day
-def buy_apple_shares(context, data):
-    order(symbol('AAPL'), context.shares_per_day)
+# alternate between buying and selling AAPL everyday
+def buy_or_sell_apple_shares(context, data):
+    if context.day % 2 == 1:
+        # buy stock
+        order(symbol('AAPL'), context.shares_per_day)
+
+    else:
+        # sell stock
+        order(symbol('AAPL'), -context.shares_per_day)

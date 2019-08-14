@@ -28,7 +28,7 @@ import { BuilderComponent } from './builder/builder.component';
 import { RsiDivergenceComponent } from './algorithms/rsi-divergence/rsi-divergence.component';
 import { TrendFollowComponent } from './algorithms/trend-follow/trend-follow.component';
 import { RegimesClusteringComponent } from './algorithms/regimes-clustering/regimes-clustering.component';
-import { CodeEditorComponent } from './editor/code-editor/code-editor.component';
+import { CodeEditorComponent } from './code-editor/code-editor.component';
 import { AceEditorModule } from "ng2-ace-editor";
 
 const appRoutes : Routes = [
