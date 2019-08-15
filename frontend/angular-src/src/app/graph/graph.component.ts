@@ -4,6 +4,7 @@ import {interval} from 'rxjs';
 import {ScrollToService} from '@nicky-lenaers/ngx-scroll-to';
 import {Subscription} from 'rxjs/internal/Subscription';
 import {Observable} from 'rxjs/internal/Observable';
+import {EditorService} from "../services/editor.service";
 
 @Component({
   selector: 'app-graph',
@@ -39,6 +40,9 @@ export class GraphComponent implements OnInit, OnDestroy {
   @Input()
   private noShorts: boolean;
 
+  @Input()
+  private code: string;
+
   public done: boolean;
   public finalAlpha: number;
 
@@ -55,7 +59,9 @@ export class GraphComponent implements OnInit, OnDestroy {
   private jobId: string;
   private subscription: Subscription;
 
-  constructor(private result: ResultService, private scroll: ScrollToService) {
+  constructor(private result: ResultService,
+               private editor: EditorService,
+               private scroll: ScrollToService) {
     this.done = false;
     this.logChannel = null;
     this.xaxis = [];
@@ -203,6 +209,17 @@ export class GraphComponent implements OnInit, OnDestroy {
           }
       });
     }
+
+    else if (this.type === 'custom') {
+
+      this.log = this.log.concat('Sending code for compilation, fingers crossed it works!', '\n',
+                                  `Trying to execute between ${this.start} to ${this.end}`, '\n',
+                                  'If it takes a long time it probably failed (no failure msg yet) :(', '\n');
+
+      this.extractDataFromAPI(
+        this.editor.executeSrcCode(this.code, this.capitalBase, this.start, this.end, this.logChannel)
+      );
+    }
   }
 
   ngOnDestroy() {
@@ -232,7 +249,7 @@ export class GraphComponent implements OnInit, OnDestroy {
         return;
       } else {
 
-        this.subscription.unsubscribe();
+        if (this.subscription) this.subscription.unsubscribe();
 
         const algoToBench = response.algo_to_benchmark;
         const rollingBeta = response.rolling_beta;

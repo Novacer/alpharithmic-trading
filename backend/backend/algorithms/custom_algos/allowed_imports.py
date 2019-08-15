@@ -26,7 +26,10 @@ ALLOWED_IMPORTS = {
 }
 
 GLOBAL_FIELDS = {
-    '__builtins__': {},
+    '__builtins__': {
+        'str': str,
+        'len': len,
+    },
     '__metaclass__': type,
     '_write_': lambda x: x,
     '_getattr_': getattr,

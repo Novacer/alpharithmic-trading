@@ -2,3 +2,9 @@
   padding-top: 65px;
   padding-bottom: 10px;
 }
+
+.compile-btn {
+  float: right;
+  background-color: #c50000;
+  color: whitesmoke;
+}

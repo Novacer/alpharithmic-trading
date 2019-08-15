@@ -7,9 +7,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BuilderComponent implements OnInit {
 
+  code = '';
+
+  disableBtn = false;
+  beginSim = false;
+
   constructor() { }
 
   ngOnInit() {
   }
 
+  updateCode(newCode: string) {
+    this.code = newCode;
+    this.beginSim = false;
+    this.disableBtn = false;
+  }
+
+  sendCodeToCompile() {
+    this.beginSim = true;
+    this.disableBtn = true;
+  }
 }

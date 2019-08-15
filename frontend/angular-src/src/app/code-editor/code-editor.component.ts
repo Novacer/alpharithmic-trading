@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import 'ace-builds/webpack-resolver';
 import 'brace/mode/python';
 import 'brace/theme/monokai';
@@ -10,14 +10,16 @@ import {EditorService} from '../services/editor.service';
   styleUrls: ['./code-editor.component.css']
 })
 export class CodeEditorComponent implements OnInit, AfterViewInit {
-  @ViewChild('editor') editor;
-  code = '';
 
   private readonly options = {
     enableBasicAutocompletion: true,
     enableLiveAutocompletion: true,
     fontSize: 18,
   };
+
+  @ViewChild('editor') editor;
+  @Output() codeChangeEvent = new EventEmitter<string>();
+  code = '';
 
   constructor(private editorService: EditorService) { }
 
@@ -34,4 +36,7 @@ export class CodeEditorComponent implements OnInit, AfterViewInit {
     this.editor.getEditor().setOptions(this.options);
   }
 
+  emitCodeChangedEvent(code: string) {
+    this.codeChangeEvent.emit(code);
+  }
 }
