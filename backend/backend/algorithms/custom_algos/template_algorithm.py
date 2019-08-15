@@ -21,10 +21,11 @@ def template_algorithm(src_code, capital_base, start_date, end_date, log_channel
     def log(msg):
         logger.log(msg)
 
-    local_state = {'log': log}
+    local_fields = {'log': log}
+    local_state = {}
 
     byte_code = compile_restricted_exec(src_code)
-    exec(byte_code.code, GLOBAL_FIELDS, local_state)  # local state may be modified
+    exec(byte_code.code, {**GLOBAL_FIELDS, **local_fields}, local_state)  # local state may be modified
 
     start = pd.to_datetime(start_date).tz_localize('US/Eastern')
     end = pd.to_datetime(end_date).tz_localize('US/Eastern')

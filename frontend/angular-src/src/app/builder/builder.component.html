@@ -1,6 +1,27 @@
 <div class="container-fluid">
-  <div class="body">
-    <h5 style="padding-top: 2%; padding-bottom: 1%">Write code here! (WIP)</h5>
-    <code-editor></code-editor>
+  <div class="body" id="top">
+    <div class="row" style="padding-top: 2%; padding-bottom: 1%">
+      <div class="col-sm">
+        <h5>Write code here! (WIP)</h5>
+      </div>
+      <div class="col-sm">
+        <button mat-button class="compile-btn"
+                [disabled]="disableBtn"
+                (click)="sendCodeToCompile()">Compile</button>
+      </div>
+    </div>
+    <code-editor (codeChangeEvent)="updateCode($event)"></code-editor>
+  </div>
+
+  <div id="results">
+    <ng-container *ngIf="beginSim">
+      <div class="body">
+        <app-graph [type]="'custom'"
+                   [code]="code"
+                   [start]="'2016-01-01'"
+                   [end]="'2016-03-01'"
+                   [capitalBase]="100000"></app-graph>
+      </div>
+    </ng-container>
   </div>
 </div>
