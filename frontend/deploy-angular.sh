@@ -17,7 +17,7 @@ read deploy
 if [ $deploy == "yes" ]
 then
     git add .
-    git commit -m "deploy"
+    git commit --allow-empty -m "deploy"
     echo "git committed"
     echo "preparing to push to heroku"
     git push heroku master

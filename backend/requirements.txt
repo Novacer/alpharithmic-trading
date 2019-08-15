@@ -69,6 +69,6 @@ websocket-client==0.48.0
 git+https://github.com/Novacer/zipline.git@master#egg=zipline
 zope.interface==4.5.0
 django-rq==1.1.0
-rq==0.13
+rq==0.12
 django-spa==0.2.0
 RestrictedPython==4.0
