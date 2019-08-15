@@ -29,5 +29,6 @@ urlpatterns = [
     path('api/post/trend-follow', algo_results.TrendFollowResult.as_view()),
     path("api/post/regimes-clustering", algo_results.RegimesClusteringResult.as_view()),
     path('api/post/result', algo_results.GetResult.as_view()),
+    path('api/post/src-code', source_code_executor.ExecuteSourceCode.as_view()),
     path('django-rq/', include('django_rq.urls'))
 ]
