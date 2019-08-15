@@ -1,4 +1,4 @@
-from RestrictedPython import compile_restricted
+from RestrictedPython import compile_restricted_exec
 
 # Zipline API
 from zipline import run_algorithm
@@ -23,8 +23,8 @@ def template_algorithm(src_code, capital_base, start_date, end_date, log_channel
 
     local_state = {'log': log}
 
-    byte_code = compile_restricted(src_code, '<string>', 'exec')
-    exec(byte_code, GLOBAL_FIELDS, local_state)  # local state may be modified
+    byte_code = compile_restricted_exec(src_code)
+    exec(byte_code.code, GLOBAL_FIELDS, local_state)  # local state may be modified
 
     start = pd.to_datetime(start_date).tz_localize('US/Eastern')
     end = pd.to_datetime(end_date).tz_localize('US/Eastern')
