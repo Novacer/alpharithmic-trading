@@ -1,5 +1,3 @@
-
-
 UNSECURE_ERROR_MSGS = ['chartCloseOnly=True&token=']
 
 
