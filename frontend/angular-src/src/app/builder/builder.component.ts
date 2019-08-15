@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {ScrollToService} from "@nicky-lenaers/ngx-scroll-to";
 
 @Component({
   selector: 'app-builder',
@@ -12,9 +13,12 @@ export class BuilderComponent implements OnInit {
   disableBtn = false;
   beginSim = false;
 
-  constructor() { }
+  constructor(private scroll: ScrollToService) { }
 
   ngOnInit() {
+    this.scroll.scrollTo({
+      target: 'top'
+    });
   }
 
   updateCode(newCode: string) {
@@ -24,6 +28,11 @@ export class BuilderComponent implements OnInit {
   }
 
   sendCodeToCompile() {
+
+    this.scroll.scrollTo({
+      target: 'results'
+    });
+
     this.beginSim = true;
     this.disableBtn = true;
   }
