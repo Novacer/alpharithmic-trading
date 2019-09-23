@@ -43,6 +43,7 @@ In case you haven't noticed yet, we are LIVE at http://alpharithmic.herokuapp.co
   
   ## Build Your Own Algorithm
   WIP! [Try out what's working so far!](http://alpharithmic.herokuapp.com/build)
+  ![Demo](https://user-images.githubusercontent.com/29148427/65398267-3c622f80-dd84-11e9-8b5a-29dcd799cf18.gif)
   
   
   ## The Three Types of Trading Algorithms
