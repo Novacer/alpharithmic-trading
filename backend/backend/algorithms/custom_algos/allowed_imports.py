@@ -29,8 +29,11 @@ GLOBAL_FIELDS = {
     '__builtins__': {
         'str': str,
         'len': len,
+        'int': int,
+        'range': range,
     },
     '__metaclass__': type,
+    '_getiter_': lambda x: x,
     '_write_': lambda x: x,
     '_getattr_': getattr,
     '_setattr_': setattr,
