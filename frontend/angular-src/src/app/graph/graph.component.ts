@@ -250,6 +250,9 @@ export class GraphComponent implements OnInit, OnDestroy {
         return;
       } else if (response.hasOwnProperty('success') && !response.success) {
         this.failed = true;
+        if (this.ws) {
+          this.ws.close();
+        }
         return;
       } else {
 
