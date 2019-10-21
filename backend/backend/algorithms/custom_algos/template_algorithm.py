@@ -30,7 +30,9 @@ def template_algorithm(src_code, capital_base, start_date, end_date, log_channel
     if len(byte_code.errors) != 0:
         log('COMPILE ERROR =====')
         for error in byte_code.errors:
-            log(error)
+            formatted_error = error.replace('"', "'")
+            log(formatted_error)
+        logger.close()
         return {
             'done': True,
             'success': False,

@@ -44,6 +44,7 @@ export class GraphComponent implements OnInit, OnDestroy {
   private code: string;
 
   public done: boolean;
+  public failed: boolean;
   public finalAlpha: number;
 
   private xaxis: string[];
@@ -63,6 +64,7 @@ export class GraphComponent implements OnInit, OnDestroy {
                private editor: EditorService,
                private scroll: ScrollToService) {
     this.done = false;
+    this.failed = false;
     this.logChannel = null;
     this.xaxis = [];
     this.dataset1 = [];
@@ -213,8 +215,7 @@ export class GraphComponent implements OnInit, OnDestroy {
     else if (this.type === 'custom') {
 
       this.log = this.log.concat('Sending code for compilation, fingers crossed it works!', '\n',
-                                  `Trying to execute between ${this.start} to ${this.end}`, '\n',
-                                  'If it takes a long time it probably failed (no failure msg yet) :(', '\n');
+                                  `Executing backtest between ${this.start} to ${this.end}`, '\n');
 
       this.extractDataFromAPI(
         this.editor.executeSrcCode(this.code, this.capitalBase, this.start, this.end, this.logChannel)
@@ -246,6 +247,9 @@ export class GraphComponent implements OnInit, OnDestroy {
       if (!response) {
         return;
       } else if (!response.done) {
+        return;
+      } else if (response.hasOwnProperty('success') && !response.success) {
+        this.failed = true;
         return;
       } else {
 
