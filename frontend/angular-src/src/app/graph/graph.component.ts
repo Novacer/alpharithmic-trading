@@ -224,8 +224,12 @@ export class GraphComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.subscription !== undefined && this.subscription !== null) {
+    if (this.subscription) {
       this.subscription.unsubscribe();
+    }
+
+    if (this.ws) {
+      this.ws.close();
     }
   }
 
@@ -250,9 +254,6 @@ export class GraphComponent implements OnInit, OnDestroy {
         return;
       } else if (response.hasOwnProperty('success') && !response.success) {
         this.failed = true;
-        if (this.ws) {
-          this.ws.close();
-        }
         return;
       } else {
 
