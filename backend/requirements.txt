@@ -4,7 +4,7 @@ asgi-redis==1.4.3
 asgiref==2.3.2
 async-timeout==3.0.0
 attrs==18.1.0
-autobahn==18.6.1
+autobahn==20.12.3
 Automat==0.7.0
 bcolz==0.12.1
 Bottleneck==1.2.1
